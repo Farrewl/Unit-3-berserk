@@ -621,7 +621,7 @@ Item {
         currentCat  = "all"
         // Sync TextInput text avec la property vide
         searchInput.text = ""
-        if (!appsLoaded) desktopReader.running = true
+        if (!desktopReader.running) desktopReader.running = true
         wipeHide.stop()
         wipeReveal.start()
     }

@@ -12,7 +12,9 @@
   ],
   "modules-right": [
     "custom/pomodoro",
+    "custom/idle-inhibit",
     "cpu",
+    "battery",
     "memory",
     "network",
     "pulseaudio",
@@ -33,6 +35,14 @@
   "cpu": {
     "format": "CPU {usage}%",
     "interval": 3
+  },
+
+  "battery": {
+    "format": "BAT {capacity}%",
+    "format-charging": "CHR {capacity}%",
+    "format-plugged": "AC {capacity}%",
+    "format-full": "BAT 100%",
+    "interval": 30
   },
 
   "memory": {
@@ -70,6 +80,14 @@
     "interval": 1,
     "format": "{}",
     "on-click": "~/.config/waybar/scripts/pomodoro_toggle.sh"
+  },
+
+  "custom/idle-inhibit": {
+    "exec": "~/.config/waybar/scripts/idle_inhibit.sh status",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 8,
+    "on-click": "~/.config/waybar/scripts/idle_inhibit.sh toggle"
   },
 
   "custom/power": {
