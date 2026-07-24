@@ -49,6 +49,7 @@ window#waybar {
 /* MODULES DROITE */
 #cpu,
 #battery,
+#backlight,
 #memory,
 #network,
 #pulseaudio,
@@ -77,6 +78,10 @@ window#waybar {
 
 #battery {
   color: #c8a860;
+}
+
+#backlight {
+  color: #d6b35f;
 }
 
 #network {

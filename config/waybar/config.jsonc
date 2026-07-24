@@ -15,6 +15,7 @@
     "custom/idle-inhibit",
     "cpu",
     "battery",
+    "backlight",
     "memory",
     "network",
     "pulseaudio",
@@ -45,6 +46,11 @@
     "interval": 30
   },
 
+  "backlight": {
+    "format": "BRT {percent}%",
+    "on-click": "echo t >> /tmp/qs-brightness-popup"
+  },
+
   "memory": {
     "format": "MEM {percentage}%",
     "interval": 3
@@ -60,7 +66,8 @@
   "pulseaudio": {
     "format": "VOL {volume}%",
     "format-muted": "VOL --",
-    "on-click": "pavucontrol"
+    "on-click": "echo t >> /tmp/qs-volume-popup",
+    "on-click-right": "pavucontrol"
   },
 
   "clock": {

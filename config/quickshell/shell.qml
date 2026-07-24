@@ -16,11 +16,11 @@ ShellRoot {
     ControlCenter {}
 
 
-    // ── VOLUMEBAR ──
-    VolumeBar {}
+    // ── VOLUME POPUP ──
+    VolumePopup {}
 
-    // ── BRIGHTNESSBAR ──
-    BrightnessBar {}
+    // ── BRIGHTNESS POPUP ──
+    BrightnessPopup {}
 
     // ── PLAYERCTL ──
     property bool   playerVisible: false
@@ -74,14 +74,13 @@ ShellRoot {
     Process { id:chkMenu; command:["sh","-c","wc -l < /tmp/qs-menu 2>/dev/null || echo 0"]; running:false
         stdout:StdioCollector{ onStreamFinished:{ var n=parseInt(this.text.trim())||0; if(n!==root._lastMenu){root._lastMenu=n;detectMonitor.running=true} }}
     }
-
     Timer { interval:200; running:true; repeat:true
         onTriggered:{ chkToggle.running=true;chkFront.running=true;chkMenu.running=true }
     }
 
     Component.onCompleted: {
         Qt.createQmlObject(
-            'import Quickshell.Io; Process{command:["sh","-c","rm -f /tmp/qs-menu /tmp/qs-toggle /tmp/qs-front"];running:true}',
+            'import Quickshell.Io; Process{command:["sh","-c","rm -f /tmp/qs-menu /tmp/qs-toggle /tmp/qs-front /tmp/qs-volume-popup /tmp/qs-brightness-popup"];running:true}',
             root, "cleanup")
     }
 

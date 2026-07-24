@@ -4,5 +4,7 @@ Companions 1.0 Companions.qml
 Lockscreen 1.0 Lockscreen.qml
 Notifications 1.0 Notifications.qml
 VolumeBar 1.0 VolumeBar.qml
+VolumePopup 1.0 VolumePopup.qml
 BrightnessBar 1.0 BrightnessBar.qml
+BrightnessPopup 1.0 BrightnessPopup.qml
 ControlCenter 1.0 ControlCenter.qml
