@@ -3,8 +3,9 @@ hypr/lockbg.png
 **/lockbg.png
 
 # ─── Personal user override ────────────────────────────
-hypr/user.conf
-**/user.conf
+hypr/user.lua
+**/user.lua
+!config/hypr/user.lua
 
 # ─── Caches & logs ─────────────────────────────────────
 **/cache/

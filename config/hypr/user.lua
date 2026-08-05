@@ -1,0 +1,9 @@
+-- Personal Hyprland overrides
+--
+-- This file is preserved by the installer. Put monitor configuration,
+-- custom binds, environment variables, and theme tweaks here.
+--
+-- Examples:
+-- hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0", scale = 1 })
+-- hl.bind("SUPER + G", hl.dsp.exec_cmd("firefox"))
+-- hl.env("GTK_THEME", "Adwaita-dark")

@@ -1,13 +1,13 @@
 # Tested versions
 
 This config is known to work with the following versions of its main
-dependencies, last tested on 2026-04-25.
+dependencies, last tested on 2026-08-05.
 
 ## Main components
 
 | Component         | Version              |
 |-------------------|----------------------|
-| Hyprland          | 0.54.3-2             |
+| Hyprland          | 0.56.1-3.1           |
 | Hyprlock          | 0.9.5-1              |
 | Hypridle          | 0.1.7-8              |
 | Waybar            | 0.15.0-2             |
@@ -42,11 +42,14 @@ See the README's "When things break" section for details.
 If you want to downgrade just one package (e.g., Hyprland):
 
 ```bash
-sudo pacman -U https://archive.archlinux.org/packages/h/hyprland/hyprland-0.54.3-2-x86_64.pkg.tar.zst
+sudo pacman -U https://archive.archlinux.org/packages/h/hyprland/hyprland-0.56.1-3.1-x86_64.pkg.tar.zst
 ```
 
 Replace with the exact version you need from
 https://archive.archlinux.org/packages/.
+
+Hyprland 0.55 or newer is required because the main configuration uses the
+native Lua API.
 
 ## Known issues with newer versions
 

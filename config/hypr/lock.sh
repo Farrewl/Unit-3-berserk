@@ -1,6 +1,6 @@
 #!/bin/bash
 # lock.sh — Lance hyprlock avec fond pixel wave NieR
-# Bind hyprland : bindr = SUPER, L, exec, ~/.config/hypr/lock.sh
+# Hyprland Lua bind: hl.bind("SUPER + L", hl.dsp.exec_cmd("~/.config/hypr/lock.sh"), { release = true })
 
 BG="$HOME/.config/hypr/lockbg.png"
 SCRIPT="$HOME/.config/hypr/gen-lockbg.py"

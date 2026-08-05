@@ -91,7 +91,7 @@ QtObject {
     readonly property int waybarHeight: 28
 
 
-    // ── RACCOURCIS (à déclarer aussi dans hyprland.conf) ────────
+    // ── RACCOURCIS (à déclarer aussi dans hyprland.lua) ─────────
     //   SUPER+SHIFT+M  →  echo t >> /tmp/qs-toggle    (afficher/cacher player)
     //   SUPER+SHIFT+F  →  echo t >> /tmp/qs-front     (premier plan / arrière)
 

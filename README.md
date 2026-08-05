@@ -1,5 +1,5 @@
-> [!WARNING]
-> **Hyprland v0.55+ Lua migration** — This config uses legacy hyprlang syntax (supported until ~v0.57). Pin to v0.54 or wait for the Lua port. 
+> [!NOTE]
+> This configuration uses Hyprland's Lua API and requires Hyprland v0.55 or newer.
 
 # Unit-3
 
@@ -86,12 +86,15 @@ When you focus a sub-menu, the whole cross slides ("pulls the tablecloth") to br
 
 ## Customization
 
-Personal overrides go in `~/.config/hypr/user.conf` — this file is **never** overwritten by updates.
+Personal overrides go in `~/.config/hypr/user.lua` - this file is **never** overwritten by updates.
 
 Example:
-monitor = DP-1, 2560x1440@144, 0x0, 1
-input { kb_layout = us }
-bind = SUPER, B, exec, firefox
+
+```lua
+hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0", scale = 1 })
+hl.config({ input = { kb_layout = "us" } })
+hl.bind("SUPER + G", hl.dsp.exec_cmd("firefox"))
+```
 
 ## Keybinds
 
@@ -100,12 +103,17 @@ bind = SUPER, B, exec, firefox
 | `SUPER` (tap) | Open app menu |
 | `SUPER + L` | Lockscreen |
 | `SUPER + T` | Terminal (kitty) |
+| `SUPER + B` | Browser (Firefox) |
+| `SUPER + E` | File manager (Thunar) |
 | `SUPER + Return` | Toggle Quickshell player |
 | `SUPER + P` | Wallpaper picker |
 | `SUPER + Q` | Close window |
 | `SUPER + F` | Fullscreen |
 | `ALT + Tab` | Cycle windows |
-| `ALT + 1/2/3/...` | Switch workspace (QWERTY) |
+| `SUPER + 1/2/3/...` | Switch workspace |
+| `SUPER + ALT + 1/2/3/...` | Move window to workspace |
+| `SUPER + Page Up/Down` | Cycle workspaces |
+| `SUPER + ALT + Page Up/Down` | Move window to adjacent workspace |
 | `Print` | Screenshot |
 | `ALT SHIFT + S` | Region screenshot |
 

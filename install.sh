@@ -16,14 +16,14 @@ readonly CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 # Files that must NEVER be overwritten by re-running the installer.
 # Relative to $CONFIG_HOME.
 readonly PRESERVED_FILES=(
-    "hypr/user.conf"
+    "hypr/user.lua"
     "quickshell/settings/Settings.qml"
 )
 
 # Add support for flags
 PINNED_MODE=false
 VM_GL_TWEAKS=false          # Mesa llvmpipe + libgl software for Quickshell/Kitty (VirtualBox et al.)
-BOOT_WALLPAPER_VM=false     # exec-once awww img → first wallpaper in ~/Pictures/wallpapers
+BOOT_WALLPAPER_VM=false     # Hyprland start callback: first wallpaper in ~/Pictures/wallpapers
 
 [[ "${UNIT3_VM:-}" == "1" || "${UNIT3_VM:-}" == "yes" ]] && VM_GL_TWEAKS=true
 
@@ -289,57 +289,61 @@ deploy_configs() {
 
     # 5. Create the user override file if it still doesn't exist
     #    (first-time install, nothing to restore).
-    local user_conf="$CONFIG_HOME/hypr/user.conf"
-    if [[ ! -f "$user_conf" ]]; then
-        cat > "$user_conf" <<'EOF'
-# ═══════════════════════════════════════════════════════════════════
-# Personal Hyprland overrides
-# This file is created empty by the installer and is NEVER overwritten
-# by future updates. Put your monitor configs, custom binds, env vars,
-# theme tweaks, etc. here.
-#
-# Examples:
-#   monitor = DP-1, 2560x1440@144, 0x0, 1
-#   bind    = SUPER, B, exec, firefox
-#   env     = GTK_THEME, Adwaita-dark
-# ═══════════════════════════════════════════════════════════════════
+    local user_lua="$CONFIG_HOME/hypr/user.lua"
+    if [[ ! -f "$user_lua" ]]; then
+        cat > "$user_lua" <<'EOF'
+-- Personal Hyprland overrides
+-- This file is created empty by the installer and is NEVER overwritten
+-- by future updates. Put monitor configs, custom binds, environment
+-- variables, and theme tweaks here.
+--
+-- Examples:
+-- hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0", scale = 1 })
+-- hl.bind("SUPER + G", hl.dsp.exec_cmd("firefox"))
+-- hl.env("GTK_THEME", "Adwaita-dark")
 EOF
-        ok "Created empty user.conf for your personal overrides."
+        ok "Created empty user.lua for your personal overrides."
     else
-        ok "Existing user.conf preserved."
+        ok "Existing user.lua preserved."
     fi
 }
 
 # Patches after copying configs and having wallpapers if applicable (--vm): Quickshell/Kitty + awww first optional background
 apply_vm_software_gl_tweaks_deployed() {
     $VM_GL_TWEAKS || return 0
-    local h="$CONFIG_HOME/hypr/hyprland.conf"
-    local ucs="$CONFIG_HOME/hypr/user.conf"
+    local h="$CONFIG_HOME/hypr/hyprland.lua"
+    local ucs="$CONFIG_HOME/hypr/user.lua"
 
-    if [[ -f "$h" ]] && grep -qE '^exec-once = env QT_MEDIA_BACKEND=ffmpeg qs[[:space:]]*$' "$h" 2>/dev/null; then
+    local qs_software_gl='hl.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe QT_MEDIA_BACKEND=ffmpeg QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 /usr/bin/qs")'
+    if [[ -f "$h" ]] && grep -qF 'hl.exec_cmd("env QT_MEDIA_BACKEND=ffmpeg qs")' "$h" 2>/dev/null; then
         cp -a "$h" "${h}.bak-vmgl-$(date +%Y%m%d%H%M%S)"
-        sed -i 's|^exec-once = env QT_MEDIA_BACKEND=ffmpeg qs$|exec-once = env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe QT_MEDIA_BACKEND=ffmpeg QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 /usr/bin/qs|' "$h"
-        ok "Patched hyprland.conf: Quickshell exec-once uses software OpenGL (llvmpipe)."
+        sed -i 's|hl\.exec_cmd("env QT_MEDIA_BACKEND=ffmpeg qs")|hl.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe QT_MEDIA_BACKEND=ffmpeg QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 /usr/bin/qs")|' "$h"
+        ok "Patched hyprland.lua: Quickshell autostart uses software OpenGL (llvmpipe)."
+    elif [[ -f "$h" ]] && grep -qF "$qs_software_gl" "$h" 2>/dev/null; then
+        ok "Quickshell software-GL autostart is already configured."
     else
-        warn "Could not find default Quickshell exec-once line in hyprland.conf — skip auto-patch (edit manually if needed)."
+        warn "Could not find the default Quickshell autostart in hyprland.lua — skipping the automatic patch."
     fi
 
-    local mark="# unit3-install-vm-gl"
-    if [[ -f "$ucs" ]] && ! grep -qF "$mark" "$ucs" 2>/dev/null; then
+    local mark="-- unit3-install-vm-gl"
+    local kitty_software_gl='hl.bind("SUPER + T", hl.dsp.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe KITTY_GPU_DISABLED=1 /usr/bin/kitty"))'
+    if [[ -f "$h" ]] && grep -qF "$kitty_software_gl" "$h" 2>/dev/null; then
+        ok "Kitty software-GL bind is already configured."
+    elif [[ -f "$ucs" ]] && ! grep -qF -- "$mark" "$ucs" 2>/dev/null; then
         cat >>"$ucs" <<'VMGL'
 
-# unit3-install-vm-gl — Kitty + software GL (VirtualBox / GPU limitada; Quickshell ya va en hyprland.conf)
-unbind = SUPER, T
-bind = SUPER, T, exec, env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe KITTY_GPU_DISABLED=1 /usr/bin/kitty
+-- unit3-install-vm-gl - Kitty + software GL (VirtualBox / limited GPU)
+hl.unbind("SUPER + T")
+hl.bind("SUPER + T", hl.dsp.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe KITTY_GPU_DISABLED=1 /usr/bin/kitty"))
 VMGL
-        ok "Appended Kitty software-GL binds to user.conf."
+        ok "Appended Kitty software-GL binds to user.lua."
     fi
 
     $BOOT_WALLPAPER_VM || return 0
     local first
     first="$(find "$HOME/Pictures/wallpapers" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | sort | head -n1)"
     if [[ -z "$first" ]]; then
-        warn "No images in ~/Pictures/wallpapers — skipping boot wallpaper exec-once."
+        warn "No images in ~/Pictures/wallpapers — skipping the boot wallpaper callback."
         return 0
     fi
     local wb="# unit3-install-boot-wallpaper"
@@ -348,10 +352,12 @@ VMGL
     fi
     cat >>"$ucs" <<EOF
 
-${wb}
-exec-once = sleep 4 && awww img ${first}
+-- ${wb}
+hl.on("hyprland.start", function()
+    hl.exec_cmd([[sleep 4 && awww img ${first}]])
+end)
 EOF
-    ok "Added exec-once to apply wallpaper at login: ${first}"
+    ok "Added a Hyprland start callback to apply the wallpaper: ${first}"
 }
 
 # ─── System files (PAM, etc.) ───────────────────────────────────────
@@ -464,7 +470,7 @@ finalize() {
         echo "    - VirtualBox/software-GL: from TTY login, prefer: exec start-hyprland"
         echo "      (bare Hyprland prints a warning; start-hyprland sets session properly)."
     fi
-    echo "    2. Customise via ~/.config/hypr/user.conf — never edit hyprland.conf directly unless you know why."
+    echo "    2. Customise via ~/.config/hypr/user.lua — never edit hyprland.lua directly unless you know why."
     echo "    3. Bashrc personal overrides go in ~/.bashrc.local"
     echo "    4. Wallpapers go in ~/Pictures/wallpapers/ (use SUPER+P to pick one)."
     if [[ -d "$BACKUP_DIR" ]]; then
