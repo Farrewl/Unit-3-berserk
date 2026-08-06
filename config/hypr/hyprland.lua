@@ -25,6 +25,17 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,ssh,pkcs11")
 end)
 
+-- Waybar 0.15 uses legacy workspace dispatchers that are incompatible with
+-- Hyprland's Lua provider. Refresh the custom workspace buttons on changes.
+local function refresh_waybar_workspaces()
+    hl.exec_cmd("pkill -RTMIN+9 waybar")
+end
+
+hl.on("workspace.active", refresh_waybar_workspaces)
+hl.on("workspace.created", refresh_waybar_workspaces)
+hl.on("workspace.removed", refresh_waybar_workspaces)
+hl.on("workspace.move_to_monitor", refresh_waybar_workspaces)
+
 -- Environment
 hl.env("PATH", "/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin")
 hl.env("XCURSOR_SIZE", "24")

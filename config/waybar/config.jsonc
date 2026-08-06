@@ -4,7 +4,16 @@
   "height": 28,
   "spacing": 0,
   "modules-left": [
-    "hyprland/workspaces",
+    "custom/workspace#1",
+    "custom/workspace#2",
+    "custom/workspace#3",
+    "custom/workspace#4",
+    "custom/workspace#5",
+    "custom/workspace#6",
+    "custom/workspace#7",
+    "custom/workspace#8",
+    "custom/workspace#9",
+    "custom/workspace#10",
     "hyprland/window"
   ],
   "modules-center": [
@@ -23,9 +32,96 @@
     "custom/power"
   ],
 
-  "hyprland/workspaces": {
-    "format": "{id}",
-    "on-click": "activate"
+  // Waybar 0.15's native Hyprland workspace click uses legacy dispatch syntax.
+  "custom/workspace#1": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 1",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 1",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#2": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 2",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 2",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#3": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 3",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 3",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#4": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 4",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 4",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#5": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 5",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 5",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#6": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 6",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 6",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#7": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 7",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 7",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#8": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 8",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 8",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#9": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 9",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 9",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
+  },
+  "custom/workspace#10": {
+    "exec": "~/.config/waybar/scripts/workspace_button.sh status 10",
+    "return-type": "json",
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/workspace_button.sh activate 10",
+    "on-scroll-up": "~/.config/waybar/scripts/workspace_button.sh previous",
+    "on-scroll-down": "~/.config/waybar/scripts/workspace_button.sh next",
+    "tooltip": false
   },
 
   "hyprland/window": {

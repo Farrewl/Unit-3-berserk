@@ -15,21 +15,27 @@ window#waybar {
 }
 
 /* WORKSPACES */
-#workspaces button {
+#custom-workspace {
   padding: 0 8px;
   color: rgba(200, 184, 154, 0.3);
   border-bottom: 2px solid transparent;
   transition: all 0.15s;
 }
 
-#workspaces button.active {
+#custom-workspace.active {
   color: #c8b89a;
   border-bottom: 2px solid #c8b89a;
 }
 
-#workspaces button:hover {
+#custom-workspace:hover {
   color: rgba(200, 184, 154, 0.7);
   background: rgba(200, 184, 154, 0.05);
+}
+
+#custom-workspace.hidden {
+  min-width: 0;
+  padding: 0;
+  border-bottom: 0;
 }
 
 /* WINDOW TITLE */
