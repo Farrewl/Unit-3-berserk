@@ -25,6 +25,7 @@ ShellRoot {
     // ── PLAYERCTL ──
     property bool   playerVisible: false
     property bool   playerOnTop:   false
+    property bool   companionVisible: Settings.companionsEnabled
     property string mpTitle:    "END OF EVANGELION"
     property string mpArtist:   "NEON GENESIS // ANNO"
     property string mpCoverUrl: ""
@@ -76,6 +77,20 @@ ShellRoot {
     }
     Timer { interval:200; running:true; repeat:true
         onTriggered:{ chkToggle.running=true;chkFront.running=true;chkMenu.running=true }
+    }
+
+    Process {
+        command: ["sh", "-c", "\"$HOME/.config/waybar/scripts/companion_toggle.sh\" raw"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: root.companionVisible = this.text.trim() !== "off"
+        }
+    }
+
+    IpcHandler {
+        target: "companion"
+        function setVisible(visible: bool): void { root.companionVisible = visible }
+        function toggle(): void { root.companionVisible = !root.companionVisible }
     }
 
     Component.onCompleted: {
@@ -145,7 +160,7 @@ ShellRoot {
 
     // ── COMPANIONS ──
     Variants {
-        model:Settings.companionsEnabled ? Quickshell.screens : []
+        model:root.companionVisible ? Quickshell.screens : []
         PanelWindow {
             required property var modelData;screen:modelData
             anchors.bottom:true;anchors.right:true;margins.right:Settings.companionsMarginRight

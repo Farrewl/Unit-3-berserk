@@ -22,6 +22,7 @@
   "modules-right": [
     "custom/pomodoro",
     "custom/idle-inhibit",
+    "custom/companion",
     "cpu",
     "battery",
     "backlight",
@@ -191,6 +192,14 @@
     "interval": 5,
     "signal": 8,
     "on-click": "~/.config/waybar/scripts/idle_inhibit.sh toggle"
+  },
+
+  "custom/companion": {
+    "exec": "~/.config/waybar/scripts/companion_toggle.sh status",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 10,
+    "on-click": "~/.config/waybar/scripts/companion_toggle.sh toggle"
   },
 
   "custom/power": {
