@@ -54,10 +54,7 @@ ShellRoot {
     function applyWallpaper(idx, monitor) {
         if (root.wallpapers.length === 0) return
         var file = root.wallpaperDir + "/" + root.wallpapers[idx]
-        var cmd = monitor === "both"
-            ? "awww img \"" + file + "\""
-            : "awww img --outputs " + monitor + " \"" + file + "\""
-        applyProc.command = ["sh", "-c", cmd]
+        applyProc.command = [root.xdgConfigHome + "/quickshell/setwallpaper.sh", file, monitor]
         applyProc.running = true
     }
 

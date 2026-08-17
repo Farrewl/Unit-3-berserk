@@ -14,6 +14,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("pkill mako")
     hl.exec_cmd("pkill swaync")
     hl.exec_cmd("awww-daemon")
+    hl.exec_cmd("sleep 1 && ~/.config/quickshell/scripts/display_mode.sh restore && ~/.config/quickshell/setwallpaper.sh restore")
     hl.exec_cmd("pgrep -x hypridle >/dev/null || hypridle")
     hl.exec_cmd("~/.config/quickshell/lock.sh")
     hl.exec_cmd("udiskie")
@@ -23,6 +24,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("~/.config/quickshell/scripts/battery-watch.sh")
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,ssh,pkcs11")
+end)
+
+hl.on("monitor.added", function()
+    hl.exec_cmd("sleep 1 && ~/.config/quickshell/scripts/display_mode.sh restore && ~/.config/quickshell/setwallpaper.sh restore")
 end)
 
 -- Waybar 0.15 uses legacy workspace dispatchers that are incompatible with

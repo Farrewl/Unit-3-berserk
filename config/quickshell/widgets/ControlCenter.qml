@@ -48,6 +48,7 @@ ShellRoot {
                   {key:"bluetooth", label:"Bluetooth"} ],
         bottom: [ {key:"output",    label:"Output"},
                   {key:"volume",    label:"Volume"} ],
+        display:[ {key:"mode",      label:"Mode"} ],
         left:   [ {key:"send",      label:"Send"},
                   {key:"receive",   label:"Receive"} ],
         right:  [ {key:"history",   label:"History"},
@@ -63,6 +64,9 @@ ShellRoot {
                               actions:[{key:"placeholder",label:"Sub-menu coming"}]},
         "bottom.volume":    {h3:"Volume",              status:"—",    on:false,
                               actions:[{key:"placeholder",label:"Sub-menu coming"}]},
+        "display.mode":     {h3:"Display Mode",        status:"—",    on:false,
+                              actions:[{key:"extend",label:"Extend"},
+                                       {key:"mirror",label:"Mirror"}]},
         "left.send":        {h3:"Send Files",          status:"Ready", on:false,
                               actions:[{key:"placeholder",label:"Sub-menu coming"}]},
         "left.receive":     {h3:"Receive Files",       status:"—",    on:false,
@@ -132,6 +136,16 @@ ShellRoot {
         if (key === "bottom.volume") {
             return [{key:"mute-toggle", label: audioMuted ? "Unmute" : "Mute"}]
         }
+        // Display : choix du mode pour tous les écrans externes
+        if (key === "display.mode") {
+            if (displayMode === "single") {
+                return [{key:"none", label:"No external display"}]
+            }
+            return [
+                {key:"extend", label:(displayMode === "extend" ? "✓ " : "  ") + "Extend"},
+                {key:"mirror", label:(displayMode === "mirror" ? "✓ " : "  ") + "Mirror"}
+            ]
+        }
         // Quickshare Send (qshare.py)
         if (key === "left.send") {
             var acts4 = []
@@ -198,6 +212,7 @@ ShellRoot {
         if (key === "top.bluetooth")     return "Bluetooth"
         if (key === "bottom.output")     return "Audio Output"
         if (key === "bottom.volume")     return "Volume"
+        if (key === "display.mode")      return "Display Mode"
         if (key === "left.send")         return "Send Files"
         if (key === "left.receive")      return "Receive Files"
         if (key === "right.history")     return "Notifications"
@@ -229,6 +244,11 @@ ShellRoot {
             if (audioMuted) return "Muted"
             return Math.round(audioVolume * 100) + "%"
         }
+        if (key === "display.mode") {
+            if (displayMode === "single") return "No external display"
+            var name = displayExternal !== "" ? " · " + displayExternal : ""
+            return (displayMode === "mirror" ? "Mirror" : "Extend") + name
+        }
         if (key === "left.send") {
             if (pendingFilePath === "") return "Ready · pick a file"
             return qshareTunnel ? "Tunnel mode" : "LAN mode"
@@ -252,6 +272,7 @@ ShellRoot {
         if (key === "top.bluetooth")     return btEnabled
         if (key === "bottom.output")     return true
         if (key === "bottom.volume")     return !audioMuted
+        if (key === "display.mode")      return displayMode !== "single"
         if (key === "left.send")         return pendingFilePath !== ""
         if (key === "left.receive")      return qshareUrl !== ""
         if (key === "right.history")     return notifications.length > 0
@@ -369,6 +390,36 @@ ShellRoot {
                     sinks[j].isDefault = sinks[j].name === root.audioDefaultSink
                 }
                 root.audioSinks = sinks
+            }
+        }
+    }
+
+    // ── Données système : Display ──
+    property string displayMode: "single"
+    property string displayExternal: ""
+    readonly property string displayModeScript: xdgConfigHome + "/quickshell/scripts/display_mode.sh"
+
+    function displayCardStatus() {
+        if (displayMode === "single") return "No external display"
+        return displayMode === "mirror" ? "Mirror" : "Extend"
+    }
+
+    Timer {
+        interval: 1500
+        running: root.open
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: pollDisplay.running = true
+    }
+    Process {
+        id: pollDisplay
+        command: [root.displayModeScript, "status"]
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var parts = this.text.trim().split("|")
+                root.displayMode = parts[0] || "single"
+                root.displayExternal = parts.length > 1 ? parts[1] : ""
             }
         }
     }
@@ -731,6 +782,7 @@ ShellRoot {
         cancelWifiPrompt()
         if (slot === "top")    { pollWifi.running = true; pollBt.running = true }
         if (slot === "bottom") { pollAudio.running = true }
+        if (slot === "display"){ pollDisplay.running = true }
         if (slot === "right")  {
             pollNotifsHistory.running = true
             pollNotifsDnd.running = true
@@ -839,6 +891,12 @@ ShellRoot {
                 cmd = "pactl set-sink-volume @DEFAULT_SINK@ " + vol + "%"
             }
         }
+        // ── Display Mode ──
+        else if (slotKey === "display" && subKey === "mode") {
+            if (actionKey === "extend" || actionKey === "mirror") {
+                cmd = "'" + displayModeScript + "' " + actionKey
+            }
+        }
         // ── Quickshare Send (qshare.py) ──
         else if (slotKey === "left" && subKey === "send") {
             if (actionKey === "pick-file") {
@@ -942,7 +1000,12 @@ ShellRoot {
     Timer {
         id: refreshTimer
         interval: 800; repeat: false
-        onTriggered: { pollWifi.running = true; pollBt.running = true }
+        onTriggered: {
+            pollWifi.running = true
+            pollBt.running = true
+            pollAudio.running = true
+            pollDisplay.running = true
+        }
     }
     // Refresh BT répété après une action pair/connect (peut prendre 5-10s)
     Timer {
@@ -1043,7 +1106,16 @@ ShellRoot {
             var actIdx = actKeys.indexOf(action)
 
             if (dir === "up" || dir === "down") {
-                if (dir === "up") {
+                if (dir === "down" && slot === "bottom" && subIdx === subKeys.length - 1) {
+                    slot = "display"
+                    sub = firstSub(slot)
+                    action = firstAction()
+                } else if (dir === "up" && slot === "display" && subIdx === 0) {
+                    slot = "bottom"
+                    var audioSubs = subList(slot)
+                    sub = audioSubs[audioSubs.length - 1].key
+                    action = firstAction()
+                } else if (dir === "up") {
                     if (subIdx > 0) { sub = subKeys[subIdx - 1]; action = firstAction() }
                     else            { level = 1; sub = ""; action = ""; slot = "center" }
                 } else {
@@ -1153,6 +1225,7 @@ ShellRoot {
                         if (root.level !== 3) return 0
                         if (root.slot === "top")    return  root.panShiftV
                         if (root.slot === "bottom") return -root.panShiftV
+                        if (root.slot === "display")return -root.panShiftV
                         return 0
                     }
                     Behavior on anchors.horizontalCenterOffset {
@@ -1194,6 +1267,17 @@ ShellRoot {
                         anchors.verticalCenterOffset: (root.open && !root.closing) ? root.slotGapV : 0
                         Behavior on anchors.verticalCenterOffset {
                             NumberAnimation { duration: 250; easing.type: Easing.InCirc; }
+                        }
+                    }
+                    Slot {
+                        slotKey: "display"
+                        title: "Display"
+                        subtitle: root.displayCardStatus()
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenterOffset: (root.open && !root.closing) ? root.slotGapV + 74 : 0
+                        Behavior on anchors.verticalCenterOffset {
+                            NumberAnimation { duration: 290; easing.type: Easing.InCirc; }
                         }
                     }
                     Slot {
@@ -1467,8 +1551,9 @@ ShellRoot {
 
         readonly property bool isFocus:    root.slot === slotKey
         readonly property bool isOpposite: !isCenter && (
-              (slotKey === "top"    && root.slot === "bottom") ||
+              (slotKey === "top"    && (root.slot === "bottom" || root.slot === "display")) ||
               (slotKey === "bottom" && root.slot === "top")    ||
+              (slotKey === "display"&& root.slot === "top")    ||
               (slotKey === "left"   && root.slot === "right")  ||
               (slotKey === "right"  && root.slot === "left"))
         readonly property bool isInL3: isFocus && root.level === 3
@@ -1709,6 +1794,7 @@ ShellRoot {
             anchors.verticalCenterOffset: {
                 if (sl.slotKey === "top")    return -200
                 if (sl.slotKey === "bottom") return  100
+                if (sl.slotKey === "display")return  100
                 return 0
             }
             width: 300
