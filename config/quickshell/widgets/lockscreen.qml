@@ -134,7 +134,7 @@ ShellRoot {
             // ── Hide ──
             MediaPlayer {
                 id: hide
-                source: "file://" + root.xdgConfigHome + "/quickshell/videos/wave_hide.mp4"
+                source: root.fastMode ? "" : ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_hide.mp4")
                 videoOutput: voHide
                 audioOutput: null
                 loops: 1
@@ -147,7 +147,7 @@ ShellRoot {
                 id: voHide
                 anchors.fill: parent
                 z: 1
-                visible: root.hiding || root.done
+                visible: !root.fastMode && (root.hiding || root.done)
                 opacity: 1.0
             }
 
@@ -408,6 +408,11 @@ ShellRoot {
                 }
                 function onHidingChanged() {
                     if (root.hiding) {
+                        if (root.fastMode) {
+                            root.done = true
+                            if (isPrimary) exitTimer.restart()
+                            return
+                        }
                         reveal.stop()
                         panelHide.start()
                         hide.position = 0

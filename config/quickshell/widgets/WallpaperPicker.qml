@@ -7,6 +7,8 @@ import Quickshell.Wayland
 ShellRoot {
     id: root
 
+    property bool fastMode: Quickshell.env("UNIT3_WALLPAPER_FAST") === "1"
+
     // ── État partagé ──
     property bool   revealing: false
     property bool   frozen:    false
@@ -32,7 +34,8 @@ ShellRoot {
             onStreamFinished: {
                 var n = this.text.trim()
                 if (n !== "") root.activeMonitor = n
-                root.revealing = true
+                if (root.fastMode) root.frozen = true
+                else root.revealing = true
             }
         }
     }
@@ -95,10 +98,21 @@ ShellRoot {
             property bool isPrimary: modelData.name === root.activeMonitor
             property bool isActive:  modelData.name === root.activeMonitor
 
+            Image {
+                anchors.fill: parent
+                source: root.fastMode
+                    ? ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_last_frame.png")
+                    : ""
+                visible: root.fastMode && !root.done
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: false
+                cache: true
+            }
+
             // ── Vidéo reveal ──
             MediaPlayer {
                 id: reveal
-                source: "file://" + root.xdgConfigHome + "/quickshell/videos/wave_reveal.mp4"
+                source: root.fastMode ? "" : ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_reveal.mp4")
                 videoOutput: voReveal
                 audioOutput: null
                 loops: 1; autoPlay: false
@@ -115,13 +129,13 @@ ShellRoot {
             VideoOutput {
                 id: voReveal
                 anchors.fill: parent
-                visible: !root.done
+                visible: !root.fastMode && !root.done
             }
 
             // ── Vidéo hide ──
             MediaPlayer {
                 id: hide
-                source: "file://" + root.xdgConfigHome + "/quickshell/videos/wave_hide.mp4"
+                source: root.fastMode ? "" : ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_hide.mp4")
                 videoOutput: voHide
                 audioOutput: null
                 loops: 1; autoPlay: false
@@ -129,7 +143,7 @@ ShellRoot {
             VideoOutput {
                 id: voHide
                 anchors.fill: parent; z:1
-                visible: root.hiding || root.done
+                visible: !root.fastMode && (root.hiding || root.done)
                 opacity: 1.0
             }
 
@@ -156,7 +170,10 @@ ShellRoot {
                 z: 2
 
                 property real uiOp: (root.frozen || root.revealing) ? 1 : 0
-                Behavior on uiOp { NumberAnimation { duration:400 } }
+                Behavior on uiOp {
+                    enabled: !root.fastMode
+                    NumberAnimation { duration:400 }
+                }
 
                 // Scroll souris sur toute la surface
                 MouseArea {
@@ -363,7 +380,9 @@ ShellRoot {
                                 Image {
                                     anchors.fill: parent
                                     anchors.margins: 2
-                                    source: "file://" + root.wallpaperDir + "/" + root.wallpapers[thumb.wIdx]
+                                    source: thumb.absDelta <= 2
+                                        ? ("file://" + root.wallpaperDir + "/" + root.wallpapers[thumb.wIdx])
+                                        : ""
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
                                     smooth: true
@@ -411,6 +430,11 @@ ShellRoot {
                 }
                 function onHidingChanged() {
                     if (root.hiding) {
+                        if (root.fastMode) {
+                            root.done = true
+                            if (isPrimary) exitTimer.restart()
+                            return
+                        }
                         reveal.stop()
                         hide.position = 0
                         hide.play()

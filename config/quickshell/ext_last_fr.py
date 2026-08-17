@@ -1,31 +1,41 @@
-##sudo pacman -S python-opencv
+#!/usr/bin/env python3
+"""Extract the final visible frame used by fast Quickshell overlays."""
 
-import cv2
+import subprocess
 import sys
+from pathlib import Path
 
 
-video_path = sys.argv[1] if len(sys.argv) > 1 else 'input_video.mp4'
+def main() -> int:
+    if len(sys.argv) != 2:
+        print("Usage: ext_last_fr.py <wave_reveal.mp4>", file=sys.stderr)
+        return 1
 
-def open_video_capture(video_source):
-    # Open the video source using OpenCV
-    cap = cv2.VideoCapture(video_source)
-    # ... (error handling)
-    return cap
+    video = Path(sys.argv[1]).expanduser().resolve()
+    if not video.is_file():
+        print(f"Video not found: {video}", file=sys.stderr)
+        return 1
 
-def get_last_frame(cap):
-    # Iterate through frames and get the last one
-    last_frame = None
-    while True:
-        ret, tmp_frame = cap.read()
-        if not ret:
-            break
-        last_frame = tmp_frame
-    return last_frame
+    output = video.with_name("wave_last_frame.png")
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-loglevel",
+            "error",
+            "-y",
+            "-sseof",
+            "-0.1",
+            "-i",
+            str(video),
+            "-frames:v",
+            "1",
+            str(output),
+        ],
+        check=True,
+    )
+    print(output)
+    return 0
 
-def extract_last_frame_from_path(video_path):
-    cap = open_video_capture(video_path)
-    last_frame = get_last_frame(cap)
-    cv2.imwrite('/home/samyns/.config/quickshell/videos/wave_last_frame.png', last_frame)  # Save the last frame as an image
-    print(video_path)
 
-extract_last_frame_from_path(video_path)
+if __name__ == "__main__":
+    raise SystemExit(main())
