@@ -7,4 +7,5 @@ VolumeBar 1.0 VolumeBar.qml
 VolumePopup 1.0 VolumePopup.qml
 BrightnessBar 1.0 BrightnessBar.qml
 BrightnessPopup 1.0 BrightnessPopup.qml
+AudioVisualizer 1.0 AudioVisualizer.qml
 ControlCenter 1.0 ControlCenter.qml

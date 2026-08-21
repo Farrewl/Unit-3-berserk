@@ -114,6 +114,7 @@ hl.bind("SUPER + Tab", hl.dsp.exec_cmd("~/.config/quickshell/ctrl.sh"))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("~/.config/quickshell/lock.sh --fast"), { release = true })
 hl.bind("SUPER + Return", hl.dsp.exec_cmd("echo t >> /tmp/qs-toggle"))
 hl.bind("SUPER + SHIFT + Return", hl.dsp.exec_cmd("echo t >> /tmp/qs-front"))
+hl.bind("SUPER + SHIFT + V", hl.dsp.exec_cmd("~/.config/quickshell/scripts/visualizer_toggle.sh toggle"))
 
 -- Applications
 hl.bind("SUPER + T", hl.dsp.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe KITTY_GPU_DISABLED=1 /usr/bin/kitty"))

@@ -22,6 +22,9 @@ ShellRoot {
     // ── BRIGHTNESS POPUP ──
     BrightnessPopup {}
 
+    // ── AUDIO VISUALIZER ──
+    AudioVisualizer { mediaPlaying: root.mpPlaying }
+
     // ── PLAYERCTL ──
     property bool   playerVisible: false
     property bool   playerOnTop:   false
