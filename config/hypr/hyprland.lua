@@ -111,7 +111,7 @@ hl.window_rule({ match = { class = "^(qs-yazi-picker)$" }, center = true })
 -- Launcher and Quickshell
 hl.bind("SUPER + Super_L", hl.dsp.exec_cmd("echo t >> /tmp/qs-menu"), { release = true })
 hl.bind("SUPER + Tab", hl.dsp.exec_cmd("~/.config/quickshell/ctrl.sh"))
-hl.bind("SUPER + L", hl.dsp.exec_cmd("~/.config/quickshell/lock.sh --fast"), { release = true })
+hl.bind("SUPER + L", hl.dsp.exec_cmd("~/.config/quickshell/lock.sh"), { release = true })
 hl.bind("SUPER + Return", hl.dsp.exec_cmd("echo t >> /tmp/qs-toggle"))
 hl.bind("SUPER + SHIFT + Return", hl.dsp.exec_cmd("echo t >> /tmp/qs-front"))
 hl.bind("SUPER + SHIFT + V", hl.dsp.exec_cmd("~/.config/quickshell/scripts/visualizer_toggle.sh toggle"))
