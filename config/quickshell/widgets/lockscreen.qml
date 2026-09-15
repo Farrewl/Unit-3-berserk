@@ -383,8 +383,13 @@ ShellRoot {
                     }
                 }
 
-                Timer{id:focusRetry;interval:50;repeat:true;property int cnt:0
-                    onTriggered:{pwInput.forceActiveFocus();if(++cnt>=8){running=false;cnt=0}}}
+                Timer {
+                    id: focusRetry
+                    interval: 100
+                    repeat: true
+                    running: root.frozen && !root.hiding && !root.done
+                    onTriggered: if (!pwInput.activeFocus) pwInput.forceActiveFocus()
+                }
 
                 Rectangle {
                     anchors.fill: parent
