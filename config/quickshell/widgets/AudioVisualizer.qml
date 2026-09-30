@@ -75,6 +75,7 @@ ShellRoot {
             anchors.bottom: true
             exclusionMode: ExclusionMode.Ignore
             color: "transparent"
+            mask: Region {}
             implicitWidth: modelData.width
             implicitHeight: root.visualizerHeight
             WlrLayershell.layer: WlrLayer.Overlay
