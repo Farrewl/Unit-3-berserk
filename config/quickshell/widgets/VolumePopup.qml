@@ -26,10 +26,10 @@ ShellRoot {
     readonly property int segActiveW: 5
     readonly property int segActiveH: 22
 
-    readonly property color colFilled: "#a89a7e"
-    readonly property color colEmpty:  "#c8b89a"
-    readonly property color colBg:     "#0f0d0a"
-    readonly property color colMuted:  "#6e2a2a"
+    readonly property color colFilled: "#A8A395"
+    readonly property color colEmpty:  "#E0DBCA"
+    readonly property color colBg:     "#1A1610"
+    readonly property color colMuted:  "#8B1A1A"
 
     property bool popupOpen: false
     property bool muted: false

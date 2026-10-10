@@ -9,7 +9,7 @@ Item {
     anchors.fill: parent
     enabled:      false   // ne capte pas les événements
 
-    property color  lineColor: Qt.rgba(200/255, 184/255, 154/255, 0.4)
+    property color  lineColor: Qt.rgba(224/255, 219/255, 202/255, 0.4)
     property int    size:      18    // px de chaque coin
     property real   lineWidth: 0.8
 

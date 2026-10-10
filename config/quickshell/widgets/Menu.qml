@@ -21,13 +21,13 @@ Item {
     implicitHeight: screenH
 
     // Palette
-    readonly property color paper:     "#d6cfb5"
-    readonly property color ink:       "#463f2e"
-    readonly property color inkStrong: "#2e2a1f"
-    readonly property color inkSoft:   "#7a7358"
-    readonly property color lineSoft:  Qt.rgba(70/255,63/255,46/255,0.25)
-    readonly property color lineVsoft: Qt.rgba(70/255,63/255,46/255,0.12)
-    readonly property color accent:    "#6e2a2a"
+    readonly property color paper:     "#EAE4D3"
+    readonly property color ink:       "#8B8066"
+    readonly property color inkStrong: "#3A342C"
+    readonly property color inkSoft:   "#A89F8A"
+    readonly property color lineSoft:  Qt.rgba(38/255, 33/255, 27/255,0.25)
+    readonly property color lineVsoft: Qt.rgba(38/255, 33/255, 27/255,0.12)
+    readonly property color accent:    "#8B1A1A"
 
     // Apps
     property var  apps: []
@@ -176,7 +176,7 @@ Item {
     // ── Overlay ──
     Rectangle {
         anchors.fill: parent
-        color: root.menuOpen ? Qt.rgba(184/255,175/255,147/255,0.55) : "transparent"
+        color: root.menuOpen ? Qt.rgba(160/255, 155/255, 138/255,0.55) : "transparent"
         visible: true
         Behavior on color { ColorAnimation { duration: 260 } }
         MouseArea {
@@ -293,7 +293,7 @@ Item {
 
                                 Rectangle {
                                     anchors.fill:parent
-                                    color: parent.isActive ? root.ink : (catMA.containsMouse ? Qt.rgba(70/255,63/255,46/255,0.07) : "transparent")
+                                    color: parent.isActive ? root.ink : (catMA.containsMouse ? Qt.rgba(38/255, 33/255, 27/255,0.07) : "transparent")
                                     Behavior on color { ColorAnimation { duration:150 } }
                                 }
                                 Row {
@@ -318,7 +318,7 @@ Item {
                                     anchors { right:parent.right; rightMargin:12; verticalCenter:parent.verticalCenter }
                                     text: root.apps.filter(function(a){ return modelData==="all"||a.cat===modelData }).length.toString().padStart(2,"0")
                                     font.pixelSize:9; font.letterSpacing:1
-                                    color: parent.isActive ? Qt.rgba(214/255,207/255,181/255,0.6) : Qt.rgba(122/255,115/255,88/255,0.5)
+                                    color: parent.isActive ? Qt.rgba(228/255, 223/255, 206/255,0.6) : Qt.rgba(168/255, 159/255, 138/255,0.5)
                                 }
                                 MouseArea { id:catMA; anchors.fill:parent; hoverEnabled:true
                                     onClicked: { root.currentCat=modelData; root.focusIdx=0; searchInput.forceActiveFocus() } }
@@ -445,18 +445,18 @@ Item {
                                     Text {
                                         anchors.verticalCenter:parent.verticalCenter
                                         text:modelData.id; width:22; font.pixelSize:9; font.letterSpacing:1.5
-                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,0.5) : root.inkSoft
+                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.5) : root.inkSoft
                                         Behavior on color { ColorAnimation { duration:120 } }
                                     }
                                     Rectangle {
                                         anchors.verticalCenter:parent.verticalCenter
                                         width:28; height:28; color:"transparent"
-                                        border.color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,0.8) : root.ink
+                                        border.color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.8) : root.ink
                                         border.width:1
                                         Behavior on border.color { ColorAnimation { duration:120 } }
                                         Text {
                                             anchors.centerIn:parent; text:modelData.icon; font.pixelSize:12
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,0.9) : root.ink
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.9) : root.ink
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                     }
@@ -464,12 +464,12 @@ Item {
                                         anchors.verticalCenter:parent.verticalCenter; spacing:2
                                         Text {
                                             text:modelData.name; font.pixelSize:12; font.letterSpacing:1.2; font.weight:Font.Medium
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,1) : root.ink
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,1) : root.ink
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                         Text {
                                             text:modelData.meta; font.pixelSize:9; font.letterSpacing:1.5
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,0.5) : root.inkSoft
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.5) : root.inkSoft
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                     }
@@ -478,7 +478,7 @@ Item {
                                         anchors.verticalCenter:parent.verticalCenter
                                         text:(root.catLabels[modelData.cat]||modelData.cat).toUpperCase()
                                         font.pixelSize:9; font.letterSpacing:2
-                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(214/255,207/255,181/255,0.4) : root.inkSoft
+                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.4) : root.inkSoft
                                         Behavior on color { ColorAnimation { duration:120 } }
                                     }
                                     Text {
@@ -568,7 +568,7 @@ Item {
         Rectangle {
             id:wipeCurtain
             anchors{top:parent.top;bottom:parent.bottom}
-            color:"#c8b89a"; z:50; width:2; x:root.lw-2
+            color:"#E0DBCA"; z:50; width:2; x:root.lw-2
         }
     }
 

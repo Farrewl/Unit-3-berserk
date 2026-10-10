@@ -21,12 +21,12 @@ ShellRoot {
     property string arrowPng:      "file://" + assetsDir + "/nier-arrow.png"
 
     // ── Palette NieR ──
-    readonly property color colCard:     "#e8e0c8"
-    readonly property color colCardSoft: Qt.rgba(232/255, 224/255, 200/255, 0.4)
-    readonly property color colInk:      "#3a342a"
-    readonly property color colInkSoft:  "#6a604a"
-    readonly property color colHi:       "#1f1c16"
-    readonly property color colLight:    "#f5edd5"
+    readonly property color colCard:     "#EDE7D7"
+    readonly property color colCardSoft: Qt.rgba(237/255, 231/255, 215/255, 0.4)
+    readonly property color colInk:      "#3A342C"
+    readonly property color colInkSoft:  "#8B867A"
+    readonly property color colHi:       "#26211B"
+    readonly property color colLight:    "#F2ECDA"
 
     // ── Layout ──
     readonly property int  slotGapV: 150
@@ -1170,7 +1170,7 @@ ShellRoot {
             // Fond dim
             Rectangle {
                 anchors.fill: parent
-                color: "#0b0906"
+                color: "#14100B"
                 opacity: (root.open && !root.closing) ? 0.6 : 0
                 Behavior on opacity { NumberAnimation { duration: 400 } }
                 MouseArea { anchors.fill: parent; onClicked: root.close() }
@@ -2248,7 +2248,7 @@ ShellRoot {
                             text: root.wifiError
                             font.family: "Inter"
                             font.pixelSize: 10
-                            color: "#a04030"
+                            color: "#8B1A1A"
                         }
 
                         // Boutons Connect / Cancel

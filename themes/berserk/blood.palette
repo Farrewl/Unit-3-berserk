@@ -1,0 +1,82 @@
+; ── Berserk "blood" palette (light + red) ── EXPERIMENTAL ───
+; Diekstrak dari preview-berserk-blood.png.
+; bg terang #E7DECD · teks gelap #27231D · aksen merah kuat #8B1A1A
+; Role dibalik dari base gelap Unit-3 → belum diverifikasi visual.
+; Format: sama seperti ink.palette (OLD<TAB>NEW, OLD = regex, case-insensitive).
+
+[GLOBAL]
+#c8b89a	#27231D
+#d6cfb5	#1D1914
+#e8e0c8	#3A352D
+#f5edd5	#14100B
+#d4c8a8	#27231D
+#0b0a09	#E7DECD
+#0b0906	#E8E0CF
+#0f0d0a	#E0D8C6
+#111008	#DCD4C4
+#1a1814	#D6C8B9
+#1c1a17	#DCD4C4
+#1f1c16	#D6C8B9
+#2a2420	#C9BFAE
+#2e2a1f	#B4A894
+#3a342a	#A89F8C
+#463f2e	#6E6252
+#7a7358	#93857A
+#7a6a3e	#8A6E3C
+#c87060	#9D413E
+#c8a860	#A8864A
+#d6b35f	#A8864A
+#60a880	#5E8570
+#6090c8	#5E7E94
+#6e2a2a	#8B1A1A
+#8a3a3a	#9D413E
+#a04030	#8B1A1A
+#c97a6f	#9D413E
+#a89a7e	#93857A
+#6b6453	#7A6E5C
+#6a604a	#7A6E5C
+c8b89aee	27231Dee
+1a1814aa	D6C8B9aa
+#406e2a2a	#408B1A1A
+
+[QML]
+rgba\(11/255\s*,\s*10/255\s*,\s*9/255\s*,	rgba(231/255, 222/255, 205/255,
+rgba\(200/255\s*,\s*184/255\s*,\s*154/255\s*,	rgba(39/255, 35/255, 29/255,
+rgba\(214/255\s*,\s*207/255\s*,\s*181/255\s*,	rgba(62/255, 56/255, 46/255,
+rgba\(122/255\s*,\s*115/255\s*,\s*88/255\s*,	rgba(122/255, 115/255, 96/255,
+rgba\(184/255\s*,\s*175/255\s*,\s*147/255\s*,	rgba(147/255, 138/255, 122/255,
+rgba\(70/255\s*,\s*63/255\s*,\s*46/255\s*,	rgba(74/255, 68/255, 58/255,
+rgba\(232/255\s*,\s*224/255\s*,\s*200/255\s*,	rgba(62/255, 56/255, 46/255,
+rgba\(88/255\s*,\s*158/255\s*,\s*110/255\s*,	rgba(94/255, 133/255, 112/255,
+
+[CSS]
+rgba\(11\s*,\s*10\s*,\s*9\s*,	rgba(231, 222, 205,
+rgba\(11\s*,\s*9\s*,\s*6\s*,	rgba(232, 224, 207,
+rgba\(200\s*,\s*184\s*,\s*154\s*,	rgba(39, 35, 29,
+rgba\(214\s*,\s*207\s*,\s*181\s*,	rgba(62, 56, 46,
+rgba\(70\s*,\s*63\s*,\s*46\s*,	rgba(74, 68, 58,
+rgba\(122\s*,\s*115\s*,\s*88\s*,	rgba(122, 115, 96,
+rgba\(110\s*,\s*42\s*,\s*42\s*,	rgba(139, 26, 26,
+rgba\(200\s*,\s*96\s*,\s*96\s*,	rgba(157, 65, 62,
+
+[KITTY]
+#0b0906	#E8E0CF
+#c8b89a	#27231D
+#6e2a2a	#8B1A1A
+#463f2e	#6E6252
+#7a6a3e	#8A6E3C
+#3a4a5a	#4E5A64
+#5a3a4a	#7A4A52
+#3a5a5a	#4E625E
+#2a2420	#C9BFAE
+#8a3a3a	#9D413E
+#6a5f4a	#7A6E5C
+#9a8a5a	#A8945A
+#4a6a7a	#5E7E8A
+#7a4a6a	#8A5E70
+#4a7a7a	#5E7E7A
+#d6cfb5	#14100B
+
+[PIXEL]
+\b11,\s*9,\s*6\b	232, 224, 207
+#0b0906	#E8E0CF

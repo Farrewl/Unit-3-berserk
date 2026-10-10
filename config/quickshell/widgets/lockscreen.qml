@@ -188,38 +188,38 @@ ShellRoot {
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
                         Row { spacing:5
-                            Rectangle { width:5;height:5;radius:3;color:"#6e2a2a"
+                            Rectangle { width:5;height:5;radius:3;color:"#8B1A1A"
                                 anchors.verticalCenter:parent.verticalCenter
                                 SequentialAnimation on opacity { running:root.frozen; loops:Animation.Infinite
                                     NumberAnimation{to:0.3;duration:900} NumberAnimation{to:1;duration:900} }
                             }
-                            Text{text:"SESSION LOCKED";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e"}
+                            Text{text:"SESSION LOCKED";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                         }
-                        Text{text:"NODE · "+root.currentUser+"@arch";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e"}
-                        Text{text:"セッションロック中";font.family:"Noto Sans JP";font.pixelSize:8;color:"#463f2e";opacity:0.7}
+                        Text{text:"NODE · "+root.currentUser+"@arch";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                        Text{text:"セッションロック中";font.family:"Noto Sans JP";font.pixelSize:8;color:"#8B8066";opacity:0.7}
                     }
                 }
                 Item {
                     anchors { top:parent.top; right:parent.right; topMargin:28; rightMargin:30 }
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
-                        Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e";width:200;horizontalAlignment:Text.AlignRight}
-                        Text{text:"LONGVIC · FR";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e";width:200;horizontalAlignment:Text.AlignRight}
+                        Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
+                        Text{text:"LONGVIC · FR";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
                     }
                 }
                 Item {
                     anchors { bottom:parent.bottom; left:parent.left; bottomMargin:28; leftMargin:30 }
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
-                        Text{text:"KERNEL 6.13.2";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e"}
-                        Text{text:"WM · hyprland";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e"}
+                        Text{text:"KERNEL 6.13.2";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                        Text{text:"WM · hyprland";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                     }
                 }
                 Item {
                     anchors { bottom:parent.bottom; right:parent.right; bottomMargin:28; rightMargin:30 }
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
-                        Text{text:"ARCH LINUX · RX 6700 XT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#463f2e";width:220;horizontalAlignment:Text.AlignRight}
+                        Text{text:"ARCH LINUX · RX 6700 XT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:220;horizontalAlignment:Text.AlignRight}
                     }
                 }
 
@@ -230,7 +230,7 @@ ShellRoot {
                     Text {
                         id:tickTxt
                         text:"SYSTEM SCAN · OK ▸ MEMORY INTEGRITY · VERIFIED ▸ SESSION LOCKED · SECURE ▸ NETWORK UPLINK · STABLE ▸ THERMAL · NOMINAL ▸ AUTH DAEMON · LISTENING ▸ "
-                        font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:3;color:"#463f2e";y:2
+                        font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:3;color:"#8B8066";y:2
                         NumberAnimation on x { from:modelData.width; to:-tickTxt.implicitWidth; duration:55000; loops:Animation.Infinite; running:root.frozen }
                     }
                 }
@@ -282,18 +282,18 @@ ShellRoot {
 
                     Rectangle {
                         id: panelRect
-                        width:380; color:"#d6cfb5"
+                        width:380; color:"#EAE4D3"
                         height: panelCol.implicitHeight + 72
-                        border.color:"#463f2e"; border.width:1
+                        border.color:"#8B8066"; border.width:1
 
-                        Repeater { model:20; Rectangle{x:index*20;y:0;width:1;height:panelRect.height;color:Qt.rgba(70/255,63/255,46/255,0.06)} }
-                        Repeater { model:Math.ceil(panelRect.height/20); Rectangle{x:0;y:index*20;width:panelRect.width;height:1;color:Qt.rgba(70/255,63/255,46/255,0.06)} }
+                        Repeater { model:20; Rectangle{x:index*20;y:0;width:1;height:panelRect.height;color:Qt.rgba(38/255, 33/255, 27/255,0.06)} }
+                        Repeater { model:Math.ceil(panelRect.height/20); Rectangle{x:0;y:index*20;width:panelRect.width;height:1;color:Qt.rgba(38/255, 33/255, 27/255,0.06)} }
 
                         Rectangle {
                             x:0;width:parent.width;height:1;z:20
                             gradient:Gradient{ orientation:Gradient.Horizontal
                                 GradientStop{position:0;color:"transparent"}
-                                GradientStop{position:0.5;color:"#6e2a2a"}
+                                GradientStop{position:0.5;color:"#8B1A1A"}
                                 GradientStop{position:1;color:"transparent"} }
                             SequentialAnimation on y {
                                 running:root.frozen;loops:Animation.Infinite
@@ -303,7 +303,7 @@ ShellRoot {
                         }
 
                         Rectangle {
-                            id:wipeCurtain;anchors.fill:parent;color:"#c8b89a";z:50
+                            id:wipeCurtain;anchors.fill:parent;color:"#E0DBCA";z:50
                             transform:Scale{id:wipeScale;xScale:1;yScale:1;origin.x:0;origin.y:0}
                         }
 
@@ -314,30 +314,30 @@ ShellRoot {
                             spacing:0
 
                             Item { width:parent.width;height:90
-                                Rectangle{width:76;height:76;border.color:"#463f2e";border.width:1;color:"transparent"
+                                Rectangle{width:76;height:76;border.color:"#8B8066";border.width:1;color:"transparent"
                                     anchors.horizontalCenter:parent.horizontalCenter
-                                    Rectangle{width:52;height:52;color:"#463f2e";anchors.centerIn:parent
+                                    Rectangle{width:52;height:52;color:"#8B8066";anchors.centerIn:parent
                                         transform:Rotation{angle:45;origin.x:26;origin.y:26}}
-                                    Text{text:"NR";font.family:"Share Tech Mono";font.pixelSize:7;color:"#7a7358";opacity:0.5;anchors.top:parent.top;anchors.left:parent.left;anchors.margins:3}
-                                    Text{text:"2B";font.family:"Share Tech Mono";font.pixelSize:7;color:"#7a7358";opacity:0.5;anchors.bottom:parent.bottom;anchors.right:parent.right;anchors.margins:3}
+                                    Text{text:"NR";font.family:"Share Tech Mono";font.pixelSize:7;color:"#A89F8A";opacity:0.5;anchors.top:parent.top;anchors.left:parent.left;anchors.margins:3}
+                                    Text{text:"2B";font.family:"Share Tech Mono";font.pixelSize:7;color:"#A89F8A";opacity:0.5;anchors.bottom:parent.bottom;anchors.right:parent.right;anchors.margins:3}
                                 }
                             }
-                            Text{text:root.currentUser.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:13;font.letterSpacing:3;color:"#463f2e";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.currentUser.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:13;font.letterSpacing:3;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:4}
-                            Text{text:"ユニット · アクティブ";font.family:"Noto Sans JP";font.pixelSize:8;color:"#7a7358";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:"ユニット · アクティブ";font.family:"Noto Sans JP";font.pixelSize:8;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:20}
-                            Text{text:root.clockStr;font.family:"Share Tech Mono";font.pixelSize:46;font.letterSpacing:2;color:"#463f2e";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.clockStr;font.family:"Share Tech Mono";font.pixelSize:46;font.letterSpacing:2;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:6}
-                            Text{text:root.dateStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:3;color:"#7a7358";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.dateStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:3;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:20}
-                            Rectangle{width:parent.width;height:1;color:Qt.rgba(70/255,63/255,46/255,0.22)}
+                            Rectangle{width:parent.width;height:1;color:Qt.rgba(38/255, 33/255, 27/255,0.22)}
                             Item{width:1;height:22}
 
                             Item { width:parent.width;height:40
                                 Rectangle{anchors.fill:parent;color:"transparent"
-                                    border.color:inputScope.activeFocus?"#463f2e":Qt.rgba(70/255,63/255,46/255,0.22);border.width:1
+                                    border.color:inputScope.activeFocus?"#8B8066":Qt.rgba(38/255, 33/255, 27/255,0.22);border.width:1
                                     Behavior on border.color{ColorAnimation{duration:200}}}
-                                Text{anchors.left:parent.left;anchors.leftMargin:10;anchors.verticalCenter:parent.verticalCenter;text:"▸";font.pixelSize:10;color:"#6e2a2a"}
+                                Text{anchors.left:parent.left;anchors.leftMargin:10;anchors.verticalCenter:parent.verticalCenter;text:"▸";font.pixelSize:10;color:"#8B1A1A"}
                                 FocusScope {
                                     id:inputScope
                                     anchors{fill:parent;leftMargin:26;rightMargin:10}
@@ -346,35 +346,35 @@ ShellRoot {
                                         id:pwInput;anchors.fill:parent
                                         verticalAlignment:TextInput.AlignVCenter
                                         font.family:"Share Tech Mono";font.pixelSize:12;font.letterSpacing:2
-                                        color:"#463f2e";echoMode:TextInput.Password;passwordCharacter:"·"
+                                        color:"#8B8066";echoMode:TextInput.Password;passwordCharacter:"·"
                                         focus:true;readOnly:false
                                         text:root.lockInput
                                         onTextEdited: { root.lockInput=text }
                                         Keys.onReturnPressed: { root.doAuth() }
                                         Keys.onEscapePressed: { root.lockInput="" }
                                         Text{visible:parent.text==="";anchors.verticalCenter:parent.verticalCenter
-                                            text:"mot de passe...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#7a7358";opacity:0.5}
+                                            text:"mot de passe...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#A89F8A";opacity:0.5}
                                     }
                                 }
                             }
                             Item{width:1;height:8}
 
                             Row{anchors.horizontalCenter:parent.horizontalCenter;spacing:6
-                                Repeater{model:6;Rectangle{width:6;height:6;color:"transparent";border.color:"#7a7358";border.width:1
-                                    Rectangle{visible:index<root.lockInput.length;anchors.fill:parent;color:"#463f2e"}}}}
+                                Repeater{model:6;Rectangle{width:6;height:6;color:"transparent";border.color:"#A89F8A";border.width:1
+                                    Rectangle{visible:index<root.lockInput.length;anchors.fill:parent;color:"#8B8066"}}}}
                             Item{width:1;height:6}
 
-                            Text{text:"AUTHENTIFICATION ÉCHOUÉE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#6e2a2a"
+                            Text{text:"AUTHENTIFICATION ÉCHOUÉE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#8B1A1A"
                                 anchors.horizontalCenter:parent.horizontalCenter
                                 opacity:root.lockError?1:0;height:14;Behavior on opacity{NumberAnimation{duration:200}}}
                             Item{width:1;height:10}
 
                             Item{width:parent.width;height:42
-                                Rectangle{anchors.fill:parent;color:"transparent";border.color:"#463f2e";border.width:1}
-                                Rectangle{id:unlockFill;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#463f2e";width:0
+                                Rectangle{anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1}
+                                Rectangle{id:unlockFill;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
                                     Behavior on width{NumberAnimation{duration:280;easing.type:Easing.InOutQuart}}}
                                 Text{anchors.centerIn:parent;text:"Login";font.family:"Share Tech Mono";font.pixelSize:10;font.letterSpacing:3
-                                    color:unlockMA.containsMouse?"#d6cfb5":"#463f2e";Behavior on color{ColorAnimation{duration:200}}}
+                                    color:unlockMA.containsMouse?"#EAE4D3":"#8B8066";Behavior on color{ColorAnimation{duration:200}}}
                                 MouseArea{id:unlockMA;anchors.fill:parent;hoverEnabled:true
                                     onEntered:unlockFill.width=parent.width;onExited:unlockFill.width=0
                                     onClicked:root.doAuth()}

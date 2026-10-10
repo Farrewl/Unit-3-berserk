@@ -51,7 +51,7 @@ SPRING_K = 0.28
 SPRING_D = 0.62
 WAVE_SPEED = 7.2
 
-BG_R, BG_G, BG_B = 11, 9, 6           # fond sombre #0b0906
+BG_R, BG_G, BG_B = 20, 16, 11           # fond sombre #14100B
 SEPIA_R, SEPIA_G, SEPIA_B = 230, 215, 180
 
 

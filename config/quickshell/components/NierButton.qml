@@ -8,10 +8,10 @@ Item {
     id: root
 
     property string label:      ""
-    property color  fgColor:    Qt.rgba(200/255, 184/255, 154/255, 0.5)
-    property color  fgHover:    Qt.rgba(11/255,  10/255,  9/255,  1.0)
-    property color  fillColor:  Qt.rgba(200/255, 184/255, 154/255, 1.0)
-    property color  borderColor: Qt.rgba(200/255, 184/255, 154/255, 0.18)
+    property color  fgColor:    Qt.rgba(224/255, 219/255, 202/255, 0.5)
+    property color  fgHover:    Qt.rgba(20/255, 16/255, 11/255,  1.0)
+    property color  fillColor:  Qt.rgba(224/255, 219/255, 202/255, 1.0)
+    property color  borderColor: Qt.rgba(224/255, 219/255, 202/255, 0.18)
     property int    fontSize:   8
     property real   letterSpacing: 1.5
     property int    padH:       12   // padding horizontal

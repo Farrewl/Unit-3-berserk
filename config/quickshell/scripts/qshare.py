@@ -34,7 +34,7 @@ except ImportError:
     sys.exit("Manque la dépendance : pacman -S python-qrcode  (ou pip install qrcode[pil])")
 
 
-NIER_BG, NIER_FG, NIER_ACCENT, NIER_DIM = "#1c1a17", "#a89a7e", "#d4c8a8", "#6b6453"
+NIER_BG, NIER_FG, NIER_ACCENT, NIER_DIM = "#1D1913", "#A8A395", "#E0DBCA", "#8B867A"
 ANSI_FG = "\033[38;2;168;154;126m"
 ANSI_DIM = "\033[38;2;107;100;83m"
 ANSI_RESET = "\033[0m"
@@ -219,7 +219,7 @@ UPLOAD_HTML = """<!doctype html>
   .progress > div {{ height:100%; width:0%; background:var(--accent); transition:width 0.1s linear; }}
   .status {{ margin-top:1rem; min-height:1.4em; font-size:0.9rem; }}
   .ok {{ color:var(--accent); }}
-  .err {{ color:#c97a6f; }}
+  .err {{ color:#AD2E2A; }}
 </style>
 </head><body>
 <main>

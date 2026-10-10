@@ -36,7 +36,7 @@ QtObject {
     readonly property bool playerBackground: true
 
     // Couleur du fond (utilisée seulement si playerBackground = true)
-    readonly property color playerBgColor: Qt.rgba(11/255, 10/255, 9/255, 0.92)
+    readonly property color playerBgColor: Qt.rgba(20/255, 16/255, 11/255, 0.92)
 
     // Position verticale du player (0.0 = haut, 1.0 = bas de l'écran)
     readonly property real playerPositionY: 0.39
@@ -62,15 +62,15 @@ QtObject {
     // ── COULEURS GLOBALES ────────────────────────────────────────
 
     // Palette sépia NieR (ne pas modifier sauf si tu changes de thème)
-    readonly property color fg:   "#c8b89a"      // texte principal
-    readonly property color bg:   "#0b0a09"      // fond principal
-    readonly property color a1:   "#c87060"      // accent rouge
-    readonly property color a2:   "#60a880"      // accent vert
-    readonly property color a3:   "#6090c8"      // accent bleu
-    readonly property color a4:   "#c8a860"      // accent or
-    readonly property color ln:   Qt.rgba(200/255, 184/255, 154/255, 0.12)  // bordure fine
-    readonly property color lnm:  Qt.rgba(200/255, 184/255, 154/255, 0.22) // bordure medium
-    readonly property color curtainColor: "#c8b89a"  // couleur du rideau wipe
+    readonly property color fg:   "#E0DBCA"      // texte principal
+    readonly property color bg:   "#14100B"      // fond principal
+    readonly property color a1:   "#AD2E2A"      // accent rouge
+    readonly property color a2:   "#7A7568"      // accent vert
+    readonly property color a3:   "#6A6358"      // accent bleu
+    readonly property color a4:   "#A89A78"      // accent or
+    readonly property color ln:   Qt.rgba(224/255, 219/255, 202/255, 0.12)  // bordure fine
+    readonly property color lnm:  Qt.rgba(224/255, 219/255, 202/255, 0.22) // bordure medium
+    readonly property color curtainColor: "#E0DBCA"  // couleur du rideau wipe
 
 
     // ── ANIMATIONS ──────────────────────────────────────────────

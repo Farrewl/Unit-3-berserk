@@ -52,7 +52,7 @@ Item {
                 var x = Math.floor(Math.random() * width)
                 var y = Math.floor(Math.random() * height)
                 var a = Math.random() * 0.12
-                ctx.fillStyle = "rgba(200,184,154," + a + ")"
+                ctx.fillStyle = "rgba(224, 219, 202," + a + ")"
                 ctx.fillRect(x, y, 1, 1)
             }
         }

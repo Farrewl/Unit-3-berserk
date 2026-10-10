@@ -1,0 +1,88 @@
+; ── Berserk "ink" palette (dark) ─────────────────────────────
+; Diekstrak dari preview-berserk-ink.png (800x449, 16 warna dominan).
+; bg #14100B · surface #26211B · fg #E0DBCA · accent merah #8B1A1A
+;
+; Format: OLD<TAB>NEW — OLD adalah regex (case-insensitive).
+; Sections:
+;   [GLOBAL] semua file config KECUALI kitty.conf & pixel scripts
+;   [QML]    tuple Qt rgba(R/255, G/255, B/255, a)
+;   [CSS]    tuple plain rgba(R, G, B, a) — waybar + hyprlock
+;   [KITTY]  hanya config/kitty/kitty.conf (palet ANSI penuh)
+;   [PIXEL]  hanya pixel_wave*.py (background video transisi)
+
+[GLOBAL]
+#c8b89a	#E0DBCA
+#d6cfb5	#EAE4D3
+#e8e0c8	#EDE7D7
+#f5edd5	#F2ECDA
+#d4c8a8	#E0DBCA
+#0b0a09	#14100B
+#0b0906	#14100B
+#0f0d0a	#1A1610
+#111008	#1D1913
+#1a1814	#26211B
+#1c1a17	#1D1913
+#1f1c16	#26211B
+#2a2420	#2E2822
+#2e2a1f	#3A342C
+#3a342a	#3A342C
+#463f2e	#8B8066
+#7a7358	#A89F8A
+#7a6a3e	#C2A25A
+#c87060	#AD2E2A
+#c8a860	#A89A78
+#d6b35f	#C2A25A
+#60a880	#7A7568
+#6090c8	#6A6358
+#6e2a2a	#8B1A1A
+#8a3a3a	#B03A34
+#a04030	#8B1A1A
+#c97a6f	#AD2E2A
+#a89a7e	#A8A395
+#6b6453	#8B867A
+#6a604a	#8B867A
+c8b89aee	E0DBCAee
+1a1814aa	26211Baa
+#406e2a2a	#408B1A1A
+
+[QML]
+rgba\(11/255\s*,\s*10/255\s*,\s*9/255\s*,	rgba(20/255, 16/255, 11/255,
+rgba\(200/255\s*,\s*184/255\s*,\s*154/255\s*,	rgba(224/255, 219/255, 202/255,
+rgba\(214/255\s*,\s*207/255\s*,\s*181/255\s*,	rgba(228/255, 223/255, 206/255,
+rgba\(122/255\s*,\s*115/255\s*,\s*88/255\s*,	rgba(168/255, 159/255, 138/255,
+rgba\(184/255\s*,\s*175/255\s*,\s*147/255\s*,	rgba(160/255, 155/255, 138/255,
+rgba\(70/255\s*,\s*63/255\s*,\s*46/255\s*,	rgba(38/255, 33/255, 27/255,
+rgba\(232/255\s*,\s*224/255\s*,\s*200/255\s*,	rgba(237/255, 231/255, 215/255,
+rgba\(88/255\s*,\s*158/255\s*,\s*110/255\s*,	rgba(122/255, 117/255, 104/255,
+
+[CSS]
+rgba\(11\s*,\s*10\s*,\s*9\s*,	rgba(20, 16, 11,
+rgba\(11\s*,\s*9\s*,\s*6\s*,	rgba(20, 16, 11,
+rgba\(200\s*,\s*184\s*,\s*154\s*,	rgba(224, 219, 202,
+rgba\(214\s*,\s*207\s*,\s*181\s*,	rgba(228, 223, 206,
+rgba\(70\s*,\s*63\s*,\s*46\s*,	rgba(38, 33, 27,
+rgba\(122\s*,\s*115\s*,\s*88\s*,	rgba(168, 159, 138,
+rgba\(110\s*,\s*42\s*,\s*42\s*,	rgba(139, 26, 26,
+rgba\(200\s*,\s*96\s*,\s*96\s*,	rgba(200, 64, 62,
+
+[KITTY]
+#0b0906	#14100B
+#c8b89a	#E0DBCA
+#6e2a2a	#8B1A1A
+#463f2e	#7A6E52
+#7a6a3e	#C2A25A
+#3a4a5a	#5A6068
+#5a3a4a	#6E4A52
+#3a5a5a	#52625E
+#2a2420	#2E2822
+#8a3a3a	#B03A34
+#6a5f4a	#8A7E62
+#9a8a5a	#B8A86A
+#4a6a7a	#6A7A84
+#7a4a6a	#8A5E72
+#4a7a7a	#5E7A78
+#d6cfb5	#EEE8DB
+
+[PIXEL]
+\b11,\s*9,\s*6\b	20, 16, 11
+#0b0906	#14100B

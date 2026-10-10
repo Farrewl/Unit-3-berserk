@@ -18,9 +18,9 @@ PS1='\[\033[38;2;110;42;42m\]▸\[\033[0m\] \[\033[38;2;70;63;46m\]\w\[\033[0m\]
 
 # Animated cursor color (NieR aesthetic)
 _nier_prompt_cmd() {
-    printf '\033]12;#6e2a2a\007'
+    printf '\033]12;#8B1A1A\007'
     sleep 0.06
-    printf '\033]12;#c8b89a\007'
+    printf '\033]12;#E0DBCA\007'
 }
 PROMPT_COMMAND='_nier_prompt_cmd'
 

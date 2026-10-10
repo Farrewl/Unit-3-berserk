@@ -67,8 +67,8 @@ Item {
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: 0.0; color: "transparent" }
-                        GradientStop { position: 0.2; color: Qt.rgba(200/255,184/255,154/255,0.5) }
-                        GradientStop { position: 0.8; color: Qt.rgba(200/255,184/255,154/255,0.5) }
+                        GradientStop { position: 0.2; color: Qt.rgba(224/255, 219/255, 202/255,0.5) }
+                        GradientStop { position: 0.8; color: Qt.rgba(224/255, 219/255, 202/255,0.5) }
                         GradientStop { position: 1.0; color: "transparent" }
                     }
                 }
@@ -83,7 +83,7 @@ Item {
                         font.family: "Share Tech Mono"
                         font.pixelSize: s(8)
                         font.letterSpacing: 1
-                        color: Qt.rgba(200/255,184/255,154/255,0.2)
+                        color: Qt.rgba(224/255, 219/255, 202/255,0.2)
                         y: 3
                         NumberAnimation on x {
                             from: 320; to: -ticker.implicitWidth
@@ -93,7 +93,7 @@ Item {
                     Rectangle {
                         anchors.bottom: parent.bottom
                         width: parent.width; height: 1
-                        color: Qt.rgba(200/255,184/255,154/255,0.06)
+                        color: Qt.rgba(224/255, 219/255, 202/255,0.06)
                     }
                 }
 
@@ -105,7 +105,7 @@ Item {
                     Rectangle {
                         anchors.bottom: parent.bottom
                         width: parent.width; height: 1
-                        color: Qt.rgba(200/255,184/255,154/255,0.07)
+                        color: Qt.rgba(224/255, 219/255, 202/255,0.07)
                     }
 
                     // Cover 100×100 — grille 32×32 niveaux de gris
@@ -383,7 +383,7 @@ Item {
                         Rectangle {
                             anchors.right: parent.right; z: 4
                             width: 1; height: parent.height
-                            color: Qt.rgba(200/255,184/255,154/255,0.1)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.1)
                         }
                     }
 
@@ -403,7 +403,7 @@ Item {
                                 font.family: "Share Tech Mono"
                                 font.pixelSize: 9
                                 font.letterSpacing: 1.5
-                                color: Qt.rgba(200/255,184/255,154/255,0.9)
+                                color: Qt.rgba(224/255, 219/255, 202/255,0.9)
                                 elide: Text.ElideRight
 
                                 // Animation slide-in quand le titre change
@@ -427,7 +427,7 @@ Item {
                                 font.family: "Share Tech Mono"
                                 font.pixelSize: 7
                                 font.letterSpacing: 1
-                                color: Qt.rgba(200/255,184/255,154/255,0.42)
+                                color: Qt.rgba(224/255, 219/255, 202/255,0.42)
                                 elide: Text.ElideRight
                             }
 
@@ -443,8 +443,8 @@ Item {
                                         height: 13; color: "transparent"
                                         border.width: 1
                                         border.color: index < 2
-                                            ? Qt.rgba(200/255,184/255,154/255,0.3)
-                                            : Qt.rgba(200/255,184/255,154/255,0.14)
+                                            ? Qt.rgba(224/255, 219/255, 202/255,0.3)
+                                            : Qt.rgba(224/255, 219/255, 202/255,0.14)
                                         Text {
                                             id: tagTxt
                                             anchors.centerIn: parent
@@ -453,8 +453,8 @@ Item {
                                             font.pixelSize: 6
                                             font.letterSpacing: 1
                                             color: index < 2
-                                                ? Qt.rgba(200/255,184/255,154/255,0.6)
-                                                : Qt.rgba(200/255,184/255,154/255,0.3)
+                                                ? Qt.rgba(224/255, 219/255, 202/255,0.6)
+                                                : Qt.rgba(224/255, 219/255, 202/255,0.3)
                                         }
                                     }
                                 }
@@ -523,13 +523,13 @@ Item {
                             anchors { left: parent.left; verticalCenter: parent.verticalCenter; leftMargin: 0 }
                             text: root.fmtTime(root.mpPosition)
                             font.family: "Share Tech Mono"; font.pixelSize: 7; font.letterSpacing: 1
-                            color: Qt.rgba(200/255,184/255,154/255,0.2)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.2)
                         }
                         Text {
                             anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 0 }
                             text: root.fmtTime(root.mpLength)
                             font.family: "Share Tech Mono"; font.pixelSize: 7; font.letterSpacing: 1
-                            color: Qt.rgba(200/255,184/255,154/255,0.2)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.2)
                         }
                     }
 
@@ -542,13 +542,13 @@ Item {
                         Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: parent.width; height: 2
-                            color: Qt.rgba(200/255,184/255,154/255,0.08)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.08)
                         }
                         // Fill
                         Rectangle {
                             anchors { verticalCenter: parent.verticalCenter; left: parent.left }
                             height: 2
-                            color:  Qt.rgba(200/255,184/255,154/255,0.6)
+                            color:  Qt.rgba(224/255, 219/255, 202/255,0.6)
                             width:  root.mpLength > 0
                                     ? seekBar.width * root.mpPosition / root.mpLength
                                     : 0
@@ -560,7 +560,7 @@ Item {
                                    ? seekBar.width * root.mpPosition / root.mpLength - 0.5
                                    : 0
                             width: 1; height: 8
-                            color: Qt.rgba(200/255,184/255,154/255,0.8)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.8)
                         }
 
                         MouseArea {
@@ -587,7 +587,7 @@ Item {
                     Rectangle {
                         anchors.top: parent.top
                         width: parent.width; height: 1
-                        color: Qt.rgba(200/255,184/255,154/255,0.05)
+                        color: Qt.rgba(224/255, 219/255, 202/255,0.05)
                     }
 
                     Row {
@@ -602,8 +602,8 @@ Item {
                             Rectangle {
                                 width: 4; height: 4
                                 color: root.mpPlaying
-                                    ? Qt.rgba(88/255,158/255,110/255,0.55)
-                                    : Qt.rgba(200/255,184/255,154/255,0.15)
+                                    ? Qt.rgba(122/255, 117/255, 104/255,0.55)
+                                    : Qt.rgba(224/255, 219/255, 202/255,0.15)
                                 SequentialAnimation on opacity {
                                     running: root.mpPlaying; loops: Animation.Infinite
                                     NumberAnimation { to: 0; duration: 700 }
@@ -614,7 +614,7 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: root.mpPlaying ? "STREAMING" : "IDLE"
                                 font.family: "Share Tech Mono"; font.pixelSize: 6; font.letterSpacing: 1
-                                color: Qt.rgba(200/255,184/255,154/255,0.15)
+                                color: Qt.rgba(224/255, 219/255, 202/255,0.15)
                             }
                         }
 
@@ -624,7 +624,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: root.clockStr
                             font.family: "Share Tech Mono"; font.pixelSize: 6; font.letterSpacing: 1
-                            color: Qt.rgba(200/255,184/255,154/255,0.15)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.15)
                         }
 
                         Item { width: 8; height: 1 }
@@ -633,7 +633,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: "LOSSLESS 48k"
                             font.family: "Share Tech Mono"; font.pixelSize: 6; font.letterSpacing: 1
-                            color: Qt.rgba(200/255,184/255,154/255,0.15)
+                            color: Qt.rgba(224/255, 219/255, 202/255,0.15)
                         }
                     }
                 }
@@ -643,7 +643,7 @@ Item {
             CornerDeco {
                 width:  pw
                 height: playerCol.implicitHeight
-                lineColor: Qt.rgba(200/255,184/255,154/255,0.3)
+                lineColor: Qt.rgba(224/255, 219/255, 202/255,0.3)
                 size: 18
                 z:    5
             }
@@ -653,7 +653,7 @@ Item {
         Rectangle {
             id:    curtain
             anchors { top: parent.top; bottom: parent.bottom }
-            color: "#c8b89a"
+            color: "#E0DBCA"
             z:     10
 
             // État initial : caché (width=2, à droite)
@@ -877,15 +877,15 @@ Item {
             anchors.fill: parent; color: "transparent"
             border.width: 1
             border.color: parent.isPlay
-                ? Qt.rgba(200/255,184/255,154/255,0.3)
-                : Qt.rgba(200/255,184/255,154/255,0.1)
+                ? Qt.rgba(224/255, 219/255, 202/255,0.3)
+                : Qt.rgba(224/255, 219/255, 202/255,0.1)
 
             // Fill slide gauche→droite
             Rectangle {
                 id:    cbFill
                 anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
                 width: 0; z: 0
-                color: Qt.rgba(200/255,184/255,154/255,0.8)
+                color: Qt.rgba(224/255, 219/255, 202/255,0.8)
                 Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.InOutQuart } }
             }
         }
@@ -893,10 +893,10 @@ Item {
         // Texte ou icône (mis via children)
         // La couleur change via MouseArea hover
         property color textColor: cbMa.containsMouse
-            ? "#0b0a09"
+            ? "#14100B"
             : (isPlay
-                ? Qt.rgba(200/255,184/255,154/255,0.85)
-                : Qt.rgba(200/255,184/255,154/255,0.38))
+                ? Qt.rgba(224/255, 219/255, 202/255,0.85)
+                : Qt.rgba(224/255, 219/255, 202/255,0.38))
 
         MouseArea {
             id:           cbMa

@@ -7,7 +7,7 @@ Item {
 
     readonly property var companions: [
         {
-            name:  "AMAZON", color: "#c87060",
+            name:  "AMAZON", color: "#AD2E2A",
             src:   Qt.resolvedUrl("../assets/amazon.gif"),
             lines: [
                 "Tu tapes vite. Pas aussi vite qu'une hache.",
@@ -27,7 +27,7 @@ Item {
             ]
         },
         {
-            name:  "MAI SHIRANUI", color: "#c8a860",
+            name:  "MAI SHIRANUI", color: "#A89A78",
             src:   Qt.resolvedUrl("../assets/mai.gif"),
             lines: [
                 "Tu pourrais taper plus gracieusement.",
@@ -47,7 +47,7 @@ Item {
             ]
         },
         {
-            name:  "2B // YoRHa", color: "#c8b89a",
+            name:  "2B // YoRHa", color: "#E0DBCA",
             src:   Qt.resolvedUrl("../assets/2b.gif"),
             lines: [
                 "Les émotions sont interdites. Pourtant... je veille.",
@@ -100,8 +100,8 @@ Item {
             id:      bubble
             width:   parent.width
             height:  86
-            color:   Qt.rgba(11/255, 10/255, 9/255, 0.97)
-            border.color: root.isReactionBubble ? "#c8a860" : Qt.rgba(200/255,184/255,154/255,0.22)
+            color:   Qt.rgba(20/255, 16/255, 11/255, 0.97)
+            border.color: root.isReactionBubble ? "#A89A78" : Qt.rgba(224/255, 219/255, 202/255,0.22)
             border.width: 1
             visible: root.bubbleVisible
             opacity: root.bubbleVisible ? 1 : 0
@@ -123,7 +123,7 @@ Item {
                     width:    parent.width
                     text:     root.bubbleText_
                     font.family: "Share Tech Mono"; font.pixelSize: 9
-                    color:    Qt.rgba(200/255,184/255,154/255,0.65)
+                    color:    Qt.rgba(224/255, 219/255, 202/255,0.65)
                     wrapMode: Text.WordWrap
                     maximumLineCount: 3
                     elide:    Text.ElideRight
@@ -140,10 +140,10 @@ Item {
             // Flèche gauche
             Rectangle {
                 width: 26; height: 38; color: "transparent"
-                border.color: Qt.rgba(200/255,184/255,154/255,0.15); border.width: 1
+                border.color: Qt.rgba(224/255, 219/255, 202/255,0.15); border.width: 1
                 anchors.verticalCenter: parent.verticalCenter
                 Text { anchors.centerIn: parent; text: "‹"; font.pixelSize: 18
-                       color: maL.containsMouse ? "#c8b89a" : Qt.rgba(200/255,184/255,154/255,0.35)
+                       color: maL.containsMouse ? "#E0DBCA" : Qt.rgba(224/255, 219/255, 202/255,0.35)
                        Behavior on color { ColorAnimation { duration: 100 } } }
                 MouseArea { id: maL; anchors.fill: parent; hoverEnabled: true; onClicked: root.navigate(-1) }
             }
@@ -231,10 +231,10 @@ Item {
             // Flèche droite
             Rectangle {
                 width: 26; height: 38; color: "transparent"
-                border.color: Qt.rgba(200/255,184/255,154/255,0.15); border.width: 1
+                border.color: Qt.rgba(224/255, 219/255, 202/255,0.15); border.width: 1
                 anchors.verticalCenter: parent.verticalCenter
                 Text { anchors.centerIn: parent; text: "›"; font.pixelSize: 18
-                       color: maR.containsMouse ? "#c8b89a" : Qt.rgba(200/255,184/255,154/255,0.35)
+                       color: maR.containsMouse ? "#E0DBCA" : Qt.rgba(224/255, 219/255, 202/255,0.35)
                        Behavior on color { ColorAnimation { duration: 100 } } }
                 MouseArea { id: maR; anchors.fill: parent; hoverEnabled: true; onClicked: root.navigate(1) }
             }
@@ -257,7 +257,7 @@ Item {
                 model: root.companions.length
                 Rectangle {
                     width: 5; height: 5
-                    color: index === root.currentIdx ? "#c8b89a" : Qt.rgba(200/255,184/255,154/255,0.15)
+                    color: index === root.currentIdx ? "#E0DBCA" : Qt.rgba(224/255, 219/255, 202/255,0.15)
                     Behavior on color { ColorAnimation { duration: 100 } }
                     MouseArea { anchors.fill: parent
                         onClicked: if (index !== root.currentIdx) root.navigate(index > root.currentIdx ? 1 : -1) }
@@ -279,8 +279,8 @@ Item {
                         return cnt
                     }
                     color: index < recentCount
-                        ? (recentCount >= root.spamCount-1 ? "#c87060" : "#c8a860")
-                        : Qt.rgba(200/255,184/255,154/255,0.1)
+                        ? (recentCount >= root.spamCount-1 ? "#AD2E2A" : "#A89A78")
+                        : Qt.rgba(224/255, 219/255, 202/255,0.1)
                     Behavior on color { ColorAnimation { duration: 80 } }
                 }
             }
