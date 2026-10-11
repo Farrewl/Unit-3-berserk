@@ -61,8 +61,8 @@ hl.config({
         gaps_out = 8,
         border_size = 1,
         col = {
-            active_border = "rgba(E0DBCAee)",
-            inactive_border = "rgba(26211Baa)",
+            active_border = "rgba(EBE3D1ee)",
+            inactive_border = "rgba(1D1913aa)",
         },
         layout = "dwindle",
     },

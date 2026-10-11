@@ -8,26 +8,29 @@ Item {
     id: root
 
     property string label:      ""
-    property color  fgColor:    Qt.rgba(224/255, 219/255, 202/255, 0.5)
-    property color  fgHover:    Qt.rgba(20/255, 16/255, 11/255,  1.0)
-    property color  fillColor:  Qt.rgba(224/255, 219/255, 202/255, 1.0)
-    property color  borderColor: Qt.rgba(224/255, 219/255, 202/255, 0.18)
+    property color  fgColor:    Qt.rgba(235/255, 227/255, 209/255, 0.5)
+    property color  fgHover:    Qt.rgba(13/255, 10/255, 7/255,  1.0)
+    property color  fillColor:  Qt.rgba(235/255, 227/255, 209/255, 1.0)
+    property color  borderColor: Qt.rgba(235/255, 227/255, 209/255, 0.18)
     property int    fontSize:   8
     property real   letterSpacing: 1.5
     property int    padH:       12   // padding horizontal
     property int    padV:       5    // padding vertical
+    property int    radius:     6    // rounded corners
 
     signal clicked
 
     implicitWidth:  label_text.implicitWidth + padH * 2
     implicitHeight: label_text.implicitHeight + padV * 2
 
-    // Bordure
+    // Border
     Rectangle {
         anchors.fill: parent
         color:        "transparent"
         border.color: root.borderColor
         border.width: 1
+        radius:       root.radius
+        clip:         true
     }
 
     // Fill slide (left to right)
@@ -40,6 +43,7 @@ Item {
         }
         width: 0
         color: root.fillColor
+        radius: root.radius
 
         Behavior on width {
             NumberAnimation {
@@ -55,6 +59,7 @@ Item {
         anchors.fill: parent
         color:   Qt.rgba(1, 1, 1, 0)
         opacity: 0
+        radius:  root.radius
 
         NumberAnimation {
             id:       flashAnim

@@ -105,7 +105,7 @@ ShellRoot {
                         var x = offset + index * (barWidth + gap)
                         var y = height - barHeight
 
-                        context.fillStyle = Qt.rgba(200 / 255, 184 / 255, 154 / 255, 0.84)
+                        context.fillStyle = Qt.rgba(235 / 255, 227 / 255, 209 / 255, 0.84)
                         context.fillRect(x, y, barWidth, barHeight)
                     }
                 }

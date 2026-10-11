@@ -189,25 +189,25 @@ ShellRoot {
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
                         Row { spacing:5
-                            Rectangle { width:5;height:5;radius:3;color:"#8B1A1A"
+                            Rectangle { width:5;height:5;radius:3;color:"#8C1A16"
                                 anchors.verticalCenter:parent.verticalCenter
                                 SequentialAnimation on opacity { running:root.frozen; loops:Animation.Infinite
                                     NumberAnimation{to:0.3;duration:900} NumberAnimation{to:1;duration:900} }
                             }
-                            Text{text:"WALLPAPER SELECT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                            Text{text:"WALLPAPER SELECT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#857B66"}
                         }
-                        Text{text:"NODE · "+root.activeMonitor;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                        Text{text:"NODE · "+root.activeMonitor;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#857B66"}
                     }
                 }
                 Item {
                     anchors{top:parent.top;right:parent.right;topMargin:28;rightMargin:30}
                     z:5; opacity:parent.uiOp
-                    Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                    Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#857B66"}
                 }
                 Item {
                     anchors{bottom:parent.bottom;left:parent.left;bottomMargin:28;leftMargin:30}
                     z:5; opacity:parent.uiOp
-                    Text{text:"↑↓ / SCROLL  NAVIGATE  ·  ESC  QUIT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                    Text{text:"↑↓ / SCROLL  NAVIGATE  ·  ESC  QUIT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#857B66"}
                 }
 
                 // ── Apply buttons — always visible ──
@@ -224,10 +224,12 @@ ShellRoot {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: "#EAE4D3"
-                        border.color: "#8B8066"; border.width: 1
+                        color: "#EBE3D1"
+                        border.color: "#857B66"; border.width: 1
+                        radius: 14
+                        clip: true
 
-                        Repeater { model:22; Rectangle{x:index*20;y:0;width:1;height:parent.height;color:Qt.rgba(38/255, 33/255, 27/255,0.06)} }
+                        Repeater { model:22; Rectangle{x:index*20;y:0;width:1;height:parent.height;color:Qt.rgba(43/255, 36/255, 25/255,0.06)} }
 
                         Column {
                             id: applyCol
@@ -238,9 +240,9 @@ ShellRoot {
                             Text {
                                 text: "APPLY WALLPAPER"
                                 font.family:"Share Tech Mono";font.pixelSize:10;font.letterSpacing:3
-                                color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter
+                                color:"#857B66";anchors.horizontalCenter:parent.horizontalCenter
                             }
-                            Rectangle { width:parent.width;height:1;color:Qt.rgba(38/255, 33/255, 27/255,0.22) }
+                            Rectangle { width:parent.width;height:1;color:Qt.rgba(43/255, 36/255, 25/255,0.22) }
 
                             Row {
                                 anchors.horizontalCenter: parent.horizontalCenter
@@ -248,13 +250,13 @@ ShellRoot {
 
                                 // Active screen button
                                 Item { width:162; height:42
-                                    Rectangle { anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1 }
-                                    Rectangle { id:fill1;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
+                                    Rectangle { anchors.fill:parent;color:"transparent";border.color:"#857B66";border.width:1;radius:6;clip:true }
+                                    Rectangle { id:fill1;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#857B66";width:0;radius:6
                                         Behavior on width{NumberAnimation{duration:220}} }
                                     Text { anchors.centerIn:parent
                                         text:"THIS SCREEN"
                                         font.family:"Share Tech Mono";font.pixelSize:10;font.letterSpacing:2
-                                        color:ma1.containsMouse?"#EAE4D3":"#8B8066"
+                                        color:ma1.containsMouse?"#EBE3D1":"#857B66"
                                         Behavior on color{ColorAnimation{duration:200}} }
                                     MouseArea { id:ma1;anchors.fill:parent;hoverEnabled:true
                                         onEntered:fill1.width=parent.width;onExited:fill1.width=0
@@ -263,13 +265,13 @@ ShellRoot {
 
                                 // Both screens button
                                 Item { width:162; height:42
-                                    Rectangle { anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1 }
-                                    Rectangle { id:fill2;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
+                                    Rectangle { anchors.fill:parent;color:"transparent";border.color:"#857B66";border.width:1;radius:6;clip:true }
+                                    Rectangle { id:fill2;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#857B66";width:0;radius:6
                                         Behavior on width{NumberAnimation{duration:220}} }
                                     Text { anchors.centerIn:parent
                                         text:"ALL SCREENS"
                                         font.family:"Share Tech Mono";font.pixelSize:10;font.letterSpacing:2
-                                        color:ma2.containsMouse?"#EAE4D3":"#8B8066"
+                                        color:ma2.containsMouse?"#EBE3D1":"#857B66"
                                         Behavior on color{ColorAnimation{duration:200}} }
                                     MouseArea { id:ma2;anchors.fill:parent;hoverEnabled:true
                                         onEntered:fill2.width=parent.width;onExited:fill2.width=0
@@ -372,8 +374,8 @@ ShellRoot {
 
                             Rectangle {
                                 anchors.fill: parent
-                                color: "#1A1610"
-                                border.color: thumb.absDelta === 0 ? "#E0DBCA" : "#8B8066"
+                                color: "#14100B"
+                                border.color: thumb.absDelta === 0 ? "#EBE3D1" : "#857B66"
                                 border.width: thumb.absDelta === 0 ? 2 : 1
                                 Behavior on border.color { ColorAnimation { duration:260 } }
 
@@ -401,7 +403,7 @@ ShellRoot {
                                         text: root.wallpapers[thumb.wIdx]
                                         font.family: "Share Tech Mono"
                                         font.pixelSize: 8
-                                        color: "#E0DBCA"
+                                        color: "#EBE3D1"
                                     }
                                 }
                             }

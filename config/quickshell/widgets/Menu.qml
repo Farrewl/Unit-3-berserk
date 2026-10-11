@@ -21,13 +21,13 @@ Item {
     implicitHeight: screenH
 
     // Palette
-    readonly property color paper:     "#EAE4D3"
-    readonly property color ink:       "#8B8066"
-    readonly property color inkStrong: "#3A342C"
-    readonly property color inkSoft:   "#A89F8A"
-    readonly property color lineSoft:  Qt.rgba(38/255, 33/255, 27/255,0.25)
-    readonly property color lineVsoft: Qt.rgba(38/255, 33/255, 27/255,0.12)
-    readonly property color accent:    "#8B1A1A"
+    readonly property color paper:     "#EBE3D1"
+    readonly property color ink:       "#857B66"
+    readonly property color inkStrong: "#2B2419"
+    readonly property color inkSoft:   "#B3A88C"
+    readonly property color lineSoft:  Qt.rgba(43/255, 36/255, 25/255,0.25)
+    readonly property color lineVsoft: Qt.rgba(43/255, 36/255, 25/255,0.12)
+    readonly property color accent:    "#8C1A16"
 
     // Apps
     property var  apps: []
@@ -176,7 +176,7 @@ Item {
     // ── Overlay ──
     Rectangle {
         anchors.fill: parent
-        color: root.menuOpen ? Qt.rgba(160/255, 155/255, 138/255,0.55) : "transparent"
+        color: root.menuOpen ? Qt.rgba(13/255, 10/255, 7/255,0.55) : "transparent"
         visible: true
         Behavior on color { ColorAnimation { duration: 260 } }
         MouseArea {
@@ -202,6 +202,8 @@ Item {
             anchors.fill: parent
             color:  root.paper
             border.color: root.ink; border.width: 1
+            radius: 14
+            clip:   true
 
             // Fine grid
             Repeater {
@@ -293,7 +295,7 @@ Item {
 
                                 Rectangle {
                                     anchors.fill:parent
-                                    color: parent.isActive ? root.ink : (catMA.containsMouse ? Qt.rgba(38/255, 33/255, 27/255,0.07) : "transparent")
+                                    color: parent.isActive ? root.ink : (catMA.containsMouse ? Qt.rgba(43/255, 36/255, 25/255,0.07) : "transparent")
                                     Behavior on color { ColorAnimation { duration:150 } }
                                 }
                                 Row {
@@ -318,7 +320,7 @@ Item {
                                     anchors { right:parent.right; rightMargin:12; verticalCenter:parent.verticalCenter }
                                     text: root.apps.filter(function(a){ return modelData==="all"||a.cat===modelData }).length.toString().padStart(2,"0")
                                     font.pixelSize:9; font.letterSpacing:1
-                                    color: parent.isActive ? Qt.rgba(228/255, 223/255, 206/255,0.6) : Qt.rgba(168/255, 159/255, 138/255,0.5)
+                                    color: parent.isActive ? Qt.rgba(235/255, 227/255, 209/255,0.6) : Qt.rgba(168/255, 159/255, 138/255,0.5)
                                 }
                                 MouseArea { id:catMA; anchors.fill:parent; hoverEnabled:true
                                     onClicked: { root.currentCat=modelData; root.focusIdx=0; searchInput.forceActiveFocus() } }
@@ -366,6 +368,12 @@ Item {
                                     id:searchScope; width:parent.width-60; height:30
                                     anchors.verticalCenter:parent.verticalCenter
                                     focus: root.menuOpen
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        color: "transparent"
+                                        border.color: root.lineSoft; border.width: 1
+                                        radius: 8
+                                    }
 
                                     TextInput {
                                         id:           searchInput
@@ -445,18 +453,18 @@ Item {
                                     Text {
                                         anchors.verticalCenter:parent.verticalCenter
                                         text:modelData.id; width:22; font.pixelSize:9; font.letterSpacing:1.5
-                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.5) : root.inkSoft
+                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,0.5) : root.inkSoft
                                         Behavior on color { ColorAnimation { duration:120 } }
                                     }
                                     Rectangle {
                                         anchors.verticalCenter:parent.verticalCenter
                                         width:28; height:28; color:"transparent"
-                                        border.color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.8) : root.ink
+                                        border.color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,0.8) : root.ink
                                         border.width:1
                                         Behavior on border.color { ColorAnimation { duration:120 } }
                                         Text {
                                             anchors.centerIn:parent; text:modelData.icon; font.pixelSize:12
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.9) : root.ink
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,0.9) : root.ink
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                     }
@@ -464,12 +472,12 @@ Item {
                                         anchors.verticalCenter:parent.verticalCenter; spacing:2
                                         Text {
                                             text:modelData.name; font.pixelSize:12; font.letterSpacing:1.2; font.weight:Font.Medium
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,1) : root.ink
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,1) : root.ink
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                         Text {
                                             text:modelData.meta; font.pixelSize:9; font.letterSpacing:1.5
-                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.5) : root.inkSoft
+                                            color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,0.5) : root.inkSoft
                                             Behavior on color { ColorAnimation { duration:120 } }
                                         }
                                     }
@@ -478,7 +486,7 @@ Item {
                                         anchors.verticalCenter:parent.verticalCenter
                                         text:(root.catLabels[modelData.cat]||modelData.cat).toUpperCase()
                                         font.pixelSize:9; font.letterSpacing:2
-                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(228/255, 223/255, 206/255,0.4) : root.inkSoft
+                                        color: appMA.containsMouse||appDelegate.isFocused ? Qt.rgba(235/255, 227/255, 209/255,0.4) : root.inkSoft
                                         Behavior on color { ColorAnimation { duration:120 } }
                                     }
                                     Text {
@@ -513,53 +521,73 @@ Item {
                 Row {
                     anchors { left:parent.left; right:parent.right; verticalCenter:parent.verticalCenter
                               leftMargin:28; rightMargin:28 }
-                    Row {
-                        spacing:0
-                        Repeater {
-                            model:[
-                                {l:"TERMINAL", cmd:"kitty"},
-                                {l:"FILES",    cmd:"kitty -e yazi"},
-                                {l:"LOCK",     cmd:"$HOME/.config/quickshell/lock.sh"},
-                                {l:"SHUTDOWN", cmd:"systemctl poweroff", danger:true}
-                            ]
-                            delegate: Item {
-                                height:44; width:faLbl.implicitWidth+24
-                                Rectangle {
-                                    visible:index>0
-                                    anchors{left:parent.left;top:parent.top;bottom:parent.bottom}
-                                    width:1; color:root.lineSoft
-                                }
-                                Text {
-                                    id:faLbl; anchors.centerIn:parent
-                                    text:modelData.l; font.pixelSize:9; font.letterSpacing:2.5
-                                    color: faMA.containsMouse ? (modelData.danger===true ? root.accent : root.inkStrong) : root.inkSoft
-                                    Behavior on color { ColorAnimation { duration:150 } }
-                                }
-                                Rectangle {
-                                    anchors{bottom:parent.bottom;horizontalCenter:parent.horizontalCenter;bottomMargin:6}
-                                    width:faMA.containsMouse?faLbl.implicitWidth:0; height:1; color:root.accent
-                                    Behavior on width { NumberAnimation { duration:200; easing.type:Easing.OutQuart } }
-                                }
-                                MouseArea { id:faMA; anchors.fill:parent; hoverEnabled:true; onClicked:root.launch(modelData.cmd) }
+                    spacing:0
+                    // ── Standard actions ──
+                    Repeater {
+                        model:[
+                            {l:"TERMINAL", cmd:"kitty"},
+                            {l:"FILES",    cmd:"dolphin"},
+                            {l:"LOCK",     cmd:"$HOME/.config/quickshell/lock.sh"}
+                        ]
+                        delegate: Item {
+                            height:44; width:faLbl.implicitWidth+24
+                            Rectangle {
+                                visible:index>0
+                                anchors{left:parent.left;top:parent.top;bottom:parent.bottom}
+                                width:1; color:root.lineSoft
                             }
+                            Text {
+                                id:faLbl; anchors.centerIn:parent
+                                text:modelData.l; font.pixelSize:9; font.letterSpacing:2.5
+                                color: faMA.containsMouse ? root.inkStrong : root.inkSoft
+                                Behavior on color { ColorAnimation { duration:150 } }
+                            }
+                            Rectangle {
+                                anchors{bottom:parent.bottom;horizontalCenter:parent.horizontalCenter;bottomMargin:6}
+                                width:faMA.containsMouse?faLbl.implicitWidth:0; height:1; color:root.accent
+                                Behavior on width { NumberAnimation { duration:200; easing.type:Easing.OutQuart } }
+                            }
+                            MouseArea { id:faMA; anchors.fill:parent; hoverEnabled:true; onClicked:root.launch(modelData.cmd) }
                         }
                     }
-                    Item { width:parent.width-380; height:1 }
-                    Row {
-                        spacing:14; anchors.verticalCenter:parent.verticalCenter
-                        Repeater {
-                            model:[["↑↓","NAV"],["↵","OPEN"],["ESC","CLOSE"]]
-                            Row {
-                                spacing:5; anchors.verticalCenter:parent.verticalCenter
-                                Rectangle {
-                                    width:kbdT.implicitWidth+8; height:16; color:"transparent"
-                                    border.color:root.lineSoft; border.width:1
-                                    Text { id:kbdT; anchors.centerIn:parent; text:modelData[0]; font.pixelSize:9; font.letterSpacing:1; color:root.ink }
-                                }
-                                Text { text:modelData[1]; anchors.verticalCenter:parent.verticalCenter; font.pixelSize:9; font.letterSpacing:2; color:root.inkSoft }
+                    // ── Power group divider ──
+                    Item { width:22; height:18
+                        Rectangle { width:1; height:18; color:root.lineSoft; anchors.centerIn:parent } }
+                    // ── Power actions ──
+                    Repeater {
+                        model:[
+                            {l:"SLEEP",     cmd:"systemctl suspend"},
+                            {l:"LOGOUT",    cmd:"hyprctl dispatch exit"},
+                            {l:"RESTART",   cmd:"systemctl reboot"},
+                            {l:"POWER OFF", cmd:"systemctl poweroff", danger:true}
+                        ]
+                        delegate: Item {
+                            height:44; width:faLbl.implicitWidth+24
+                            Rectangle {
+                                visible:index>0
+                                anchors{left:parent.left;top:parent.top;bottom:parent.bottom}
+                                width:1; color:root.lineSoft
                             }
+                            Text {
+                                id:faLbl; anchors.centerIn:parent
+                                text:modelData.l; font.pixelSize:9; font.letterSpacing:2.5
+                                color: faMA.containsMouse ? (modelData.danger===true ? root.accent : root.inkStrong) : root.inkSoft
+                                Behavior on color { ColorAnimation { duration:150 } }
+                            }
+                            Rectangle {
+                                anchors{bottom:parent.bottom;horizontalCenter:parent.horizontalCenter;bottomMargin:6}
+                                width:faMA.containsMouse?faLbl.implicitWidth:0; height:1
+                                color:modelData.danger===true ? root.accent : root.ink
+                                Behavior on width { NumberAnimation { duration:200; easing.type:Easing.OutQuart } }
+                            }
+                            MouseArea { id:faMA; anchors.fill:parent; hoverEnabled:true; onClicked:root.launch(modelData.cmd) }
                         }
                     }
+                    Item { width:1; height:1 }
+                }
+                Text {
+                    anchors { right:parent.right; verticalCenter:parent.verticalCenter; rightMargin:28 }
+                    text:"ESC QUIT"; font.pixelSize:9; font.letterSpacing:2; color:root.inkSoft; opacity:0.6
                 }
             }
         }
@@ -568,7 +596,7 @@ Item {
         Rectangle {
             id:wipeCurtain
             anchors{top:parent.top;bottom:parent.bottom}
-            color:"#E0DBCA"; z:50; width:2; x:root.lw-2
+            color:"#EBE3D1"; z:50; width:2; x:root.lw-2
         }
     }
 

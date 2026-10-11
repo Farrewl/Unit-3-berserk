@@ -246,18 +246,20 @@ ShellRoot {
 
                     Rectangle {
                         id: panelRect
-                        width:380; color:"#EAE4D3"
+                        width:380; color:"#EBE3D1"
                         height: panelCol.implicitHeight + 72
-                        border.color:"#8B8066"; border.width:1
+                        border.color:"#857B66"; border.width:1
+                        radius: 16
+                        clip: true
 
-                        Repeater { model:20; Rectangle{x:index*20;y:0;width:1;height:panelRect.height;color:Qt.rgba(38/255, 33/255, 27/255,0.06)} }
-                        Repeater { model:Math.ceil(panelRect.height/20); Rectangle{x:0;y:index*20;width:panelRect.width;height:1;color:Qt.rgba(38/255, 33/255, 27/255,0.06)} }
+                        Repeater { model:20; Rectangle{x:index*20;y:0;width:1;height:panelRect.height;color:Qt.rgba(43/255, 36/255, 25/255,0.06)} }
+                        Repeater { model:Math.ceil(panelRect.height/20); Rectangle{x:0;y:index*20;width:panelRect.width;height:1;color:Qt.rgba(43/255, 36/255, 25/255,0.06)} }
 
                         Rectangle {
                             x:0;width:parent.width;height:1;z:20
                             gradient:Gradient{ orientation:Gradient.Horizontal
                                 GradientStop{position:0;color:"transparent"}
-                                GradientStop{position:0.5;color:"#8B1A1A"}
+                                GradientStop{position:0.5;color:"#8C1A16"}
                                 GradientStop{position:1;color:"transparent"} }
                             SequentialAnimation on y {
                                 running:root.frozen;loops:Animation.Infinite
@@ -267,7 +269,7 @@ ShellRoot {
                         }
 
                         Rectangle {
-                            id:wipeCurtain;anchors.fill:parent;color:"#E0DBCA";z:50
+                            id:wipeCurtain;anchors.fill:parent;color:"#EBE3D1";z:50
                             transform:Scale{id:wipeScale;xScale:1;yScale:1;origin.x:0;origin.y:0}
                         }
 
@@ -278,30 +280,31 @@ ShellRoot {
                             spacing:0
 
                             Item { width:parent.width;height:90
-                                Rectangle{width:76;height:76;border.color:"#8B8066";border.width:1;color:"transparent"
+                                Rectangle{width:76;height:76;border.color:"#857B66";border.width:1;color:"transparent"
                                     anchors.horizontalCenter:parent.horizontalCenter
-                                    Rectangle{width:52;height:52;color:"#8B8066";anchors.centerIn:parent
+                                    Rectangle{width:52;height:52;color:"#857B66";anchors.centerIn:parent
                                         transform:Rotation{angle:45;origin.x:26;origin.y:26}}
-                                    Text{text:"NR";font.family:"Share Tech Mono";font.pixelSize:7;color:"#A89F8A";opacity:0.5;anchors.top:parent.top;anchors.left:parent.left;anchors.margins:3}
-                                    Text{text:"2B";font.family:"Share Tech Mono";font.pixelSize:7;color:"#A89F8A";opacity:0.5;anchors.bottom:parent.bottom;anchors.right:parent.right;anchors.margins:3}
+                                    Text{text:"NR";font.family:"Share Tech Mono";font.pixelSize:7;color:"#B3A88C";opacity:0.5;anchors.top:parent.top;anchors.left:parent.left;anchors.margins:3}
+                                    Text{text:"2B";font.family:"Share Tech Mono";font.pixelSize:7;color:"#B3A88C";opacity:0.5;anchors.bottom:parent.bottom;anchors.right:parent.right;anchors.margins:3}
                                 }
                             }
-                            Text{text:root.currentUser.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:13;font.letterSpacing:3;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.currentUser.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:13;font.letterSpacing:3;color:"#857B66";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:4}
-                            Text{text:"UNIT · ACTIVE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:"UNIT · ACTIVE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#B3A88C";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:20}
-                            Text{text:root.clockStr;font.family:"Share Tech Mono";font.pixelSize:46;font.letterSpacing:2;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.clockStr;font.family:"Share Tech Mono";font.pixelSize:46;font.letterSpacing:2;color:"#857B66";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:6}
-                            Text{text:root.dateStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:3;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:root.dateStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:3;color:"#B3A88C";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:20}
-                            Rectangle{width:parent.width;height:1;color:Qt.rgba(38/255, 33/255, 27/255,0.22)}
+                            Rectangle{width:parent.width;height:1;color:Qt.rgba(43/255, 36/255, 25/255,0.22)}
                             Item{width:1;height:22}
 
                             Item { width:parent.width;height:40
                                 Rectangle{anchors.fill:parent;color:"transparent"
-                                    border.color:inputScope.activeFocus?"#8B8066":Qt.rgba(38/255, 33/255, 27/255,0.22);border.width:1
+                                    border.color:inputScope.activeFocus?"#857B66":Qt.rgba(43/255, 36/255, 25/255,0.22);border.width:1
+                                    radius: 8
                                     Behavior on border.color{ColorAnimation{duration:200}}}
-                                Text{anchors.left:parent.left;anchors.leftMargin:10;anchors.verticalCenter:parent.verticalCenter;text:"▸";font.pixelSize:10;color:"#8B1A1A"}
+                                Text{anchors.left:parent.left;anchors.leftMargin:10;anchors.verticalCenter:parent.verticalCenter;text:"▸";font.pixelSize:10;color:"#8C1A16"}
                                 FocusScope {
                                     id:inputScope
                                     anchors{fill:parent;leftMargin:26;rightMargin:10}
@@ -310,35 +313,35 @@ ShellRoot {
                                         id:pwInput;anchors.fill:parent
                                         verticalAlignment:TextInput.AlignVCenter
                                         font.family:"Share Tech Mono";font.pixelSize:12;font.letterSpacing:2
-                                        color:"#8B8066";echoMode:TextInput.Password;passwordCharacter:"·"
+                                        color:"#857B66";echoMode:TextInput.Password;passwordCharacter:"·"
                                         focus:true;readOnly:false
                                         text:root.lockInput
                                         onTextEdited: { root.lockInput=text }
                                         Keys.onReturnPressed: { root.doAuth() }
                                         Keys.onEscapePressed: { root.lockInput="" }
                                         Text{visible:parent.text==="";anchors.verticalCenter:parent.verticalCenter
-                                            text:"password...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#A89F8A";opacity:0.5}
+                                            text:"password...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#B3A88C";opacity:0.5}
                                     }
                                 }
                             }
                             Item{width:1;height:8}
 
                             Row{anchors.horizontalCenter:parent.horizontalCenter;spacing:6
-                                Repeater{model:6;Rectangle{width:6;height:6;color:"transparent";border.color:"#A89F8A";border.width:1
-                                    Rectangle{visible:index<root.lockInput.length;anchors.fill:parent;color:"#8B8066"}}}}
+                                Repeater{model:6;Rectangle{width:6;height:6;color:"transparent";border.color:"#B3A88C";border.width:1
+                                    Rectangle{visible:index<root.lockInput.length;anchors.fill:parent;color:"#857B66"}}}}
                             Item{width:1;height:6}
 
-                            Text{text:"AUTHENTICATION FAILED";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#8B1A1A"
+                            Text{text:"AUTHENTICATION FAILED";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#8C1A16"
                                 anchors.horizontalCenter:parent.horizontalCenter
                                 opacity:root.lockError?1:0;height:14;Behavior on opacity{NumberAnimation{duration:200}}}
                             Item{width:1;height:10}
 
                             Item{width:parent.width;height:42
-                                Rectangle{anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1}
-                                Rectangle{id:unlockFill;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
+                                Rectangle{anchors.fill:parent;color:"transparent";border.color:"#857B66";border.width:1;radius:8;clip:true}
+                                Rectangle{id:unlockFill;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#857B66";width:0;radius:8
                                     Behavior on width{NumberAnimation{duration:280;easing.type:Easing.InOutQuart}}}
                                 Text{anchors.centerIn:parent;text:"Login";font.family:"Share Tech Mono";font.pixelSize:10;font.letterSpacing:3
-                                    color:unlockMA.containsMouse?"#EAE4D3":"#8B8066";Behavior on color{ColorAnimation{duration:200}}}
+                                    color:unlockMA.containsMouse?"#EBE3D1":"#857B66";Behavior on color{ColorAnimation{duration:200}}}
                                 MouseArea{id:unlockMA;anchors.fill:parent;hoverEnabled:true
                                     onEntered:unlockFill.width=parent.width;onExited:unlockFill.width=0
                                     onClicked:root.doAuth()}

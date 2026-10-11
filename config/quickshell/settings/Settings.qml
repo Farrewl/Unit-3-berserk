@@ -35,7 +35,7 @@ QtObject {
     readonly property bool playerBackground: true
 
     // Background color (used only when playerBackground = true)
-    readonly property color playerBgColor: Qt.rgba(20/255, 16/255, 11/255, 0.92)
+    readonly property color playerBgColor: Qt.rgba(13/255, 10/255, 7/255, 0.92)
 
     // Vertical position of the player (0.0 = top, 1.0 = bottom of screen)
     readonly property real playerPositionY: 0.39
@@ -50,15 +50,25 @@ QtObject {
     // ── GLOBAL COLORS ───────────────────────────────────────────
 
     // Berserk palette (ink/blood/paper). Only change if you switch themes.
-    readonly property color fg:   "#E0DBCA"      // primary text
-    readonly property color bg:   "#14100B"      // primary background
-    readonly property color a1:   "#AD2E2A"      // blood red accent
-    readonly property color a2:   "#7A7568"      // grey accent
-    readonly property color a3:   "#6A6358"      // muted accent
-    readonly property color a4:   "#A89A78"      // gold accent
-    readonly property color ln:   Qt.rgba(224/255, 219/255, 202/255, 0.12)  // thin border
-    readonly property color lnm:  Qt.rgba(224/255, 219/255, 202/255, 0.22)  // medium border
-    readonly property color curtainColor: "#E0DBCA"  // wipe curtain color
+    readonly property color bg:   "#0D0A07"      // deepest background
+    readonly property color bg2:  "#14100B"      // primary surface
+    readonly property color bg3:  "#1D1913"      // raised surface
+    readonly property color fg:   "#EBE3D1"      // parchment, primary text
+    readonly property color fg2:  "#B3A88C"      // secondary text
+    readonly property color fg3:  "#857B66"      // muted text
+    readonly property color a1:   "#8C1A16"      // blood red accent
+    readonly property color a2:   "#B42E28"      // bright red (hover)
+    readonly property color a3:   "#C5A253"      // gold accent
+    readonly property color ln:   Qt.rgba(235/255, 227/255, 209/255, 0.14)  // thin border
+    readonly property color lnm:  Qt.rgba(235/255, 227/255, 209/255, 0.24)  // medium border
+    readonly property color curtainColor: "#EBE3D1"  // wipe curtain color
+
+    // ── ROUNDED SHAPES ──────────────────────────────────────────
+
+    // Corner radius tokens — shared by all panels/buttons/bars.
+    readonly property int radPanel: 14   // main panels (menu, control center, lockscreen, picker)
+    readonly property int radCard:  10   // cards & popups
+    readonly property int radBtn:   6    // buttons, inputs, chips
 
 
     // ── ANIMATIONS ──────────────────────────────────────────────

@@ -21,12 +21,12 @@ ShellRoot {
     property string arrowPng:      "file://" + assetsDir + "/nier-arrow.png"
 
     // ── Palette NieR ──
-    readonly property color colCard:     "#EDE7D7"
-    readonly property color colCardSoft: Qt.rgba(237/255, 231/255, 215/255, 0.4)
-    readonly property color colInk:      "#3A342C"
-    readonly property color colInkSoft:  "#8B867A"
-    readonly property color colHi:       "#26211B"
-    readonly property color colLight:    "#F2ECDA"
+    readonly property color colCard:     "#EBE3D1"
+    readonly property color colCardSoft: Qt.rgba(235/255, 227/255, 209/255, 0.4)
+    readonly property color colInk:      "#2B2419"
+    readonly property color colInkSoft:  "#857B66"
+    readonly property color colHi:       "#1D1913"
+    readonly property color colLight:    "#EBE3D1"
 
     // ── Layout ──
     readonly property int  slotGapV: 150
@@ -1133,6 +1133,7 @@ ShellRoot {
                 color: root.colCard
                 border.color: root.colInk
                 border.width: 1
+                radius: 12
 
                 // Asymmetric tab
                 Rectangle {
@@ -1315,6 +1316,8 @@ ShellRoot {
                 color: root.colCard
                 border.color: root.colInk
                 border.width: 1
+                radius: 12
+                clip: true
             }
             // Offset inner border
             Rectangle {
@@ -1324,6 +1327,7 @@ ShellRoot {
                 border.color: root.colInk
                 border.width: 1
                 opacity: 0.35
+                radius: 8
             }
             // Coins en L
             Repeater {
@@ -1757,7 +1761,7 @@ ShellRoot {
                             text: root.wifiError
                             font.family: "Inter"
                             font.pixelSize: 10
-                            color: "#8B1A1A"
+                            color: "#8C1A16"
                         }
 
                         // Boutons Connect / Cancel

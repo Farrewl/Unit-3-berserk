@@ -26,9 +26,9 @@ ShellRoot {
     readonly property int segActiveW: 5
     readonly property int segActiveH: 22
 
-    readonly property color colFilled: "#C2A25A"
-    readonly property color colEmpty:  "#E0DBCA"
-    readonly property color colBg:     "#1A1610"
+    readonly property color colFilled: "#C5A253"
+    readonly property color colEmpty:  "#EBE3D1"
+    readonly property color colBg:     "#14100B"
 
     property bool popupOpen: false
     property bool userInteracting: false
@@ -175,6 +175,8 @@ ShellRoot {
                 opacity: 0.92
                 border.color: root.colFilled
                 border.width: 1
+                radius: 10
+                clip: true
             }
 
             Text {
