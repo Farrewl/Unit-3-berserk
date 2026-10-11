@@ -27,7 +27,6 @@ ShellRoot {
 
     // ── PLAYERCTL ──
     property bool   playerVisible: false
-    property bool   playerOnTop:   false
     property string mpTitle:    "END OF EVANGELION"
     property string mpArtist:   "NEON GENESIS // ANNO"
     property string mpCoverUrl: ""
@@ -65,25 +64,22 @@ ShellRoot {
         stdout: SplitParser { onRead: data => { var u=data.trim(); if(u!=="") root.currentUser=u } }
     }
 
-    property int _lastToggle: 0; property int _lastFront: 0
+    property int _lastToggle: 0
     property int _lastMenu:   0
 
     Process { id:chkToggle; command:["sh","-c","wc -l < /tmp/qs-toggle 2>/dev/null || echo 0"]; running:false
         stdout:StdioCollector{ onStreamFinished:{ var n=parseInt(this.text.trim())||0; if(n!==root._lastToggle){root._lastToggle=n;root.playerVisible=!root.playerVisible} }}
     }
-    Process { id:chkFront; command:["sh","-c","wc -l < /tmp/qs-front 2>/dev/null || echo 0"]; running:false
-        stdout:StdioCollector{ onStreamFinished:{ var n=parseInt(this.text.trim())||0; if(n!==root._lastFront){root._lastFront=n;root.playerOnTop=!root.playerOnTop} }}
-    }
     Process { id:chkMenu; command:["sh","-c","wc -l < /tmp/qs-menu 2>/dev/null || echo 0"]; running:false
         stdout:StdioCollector{ onStreamFinished:{ var n=parseInt(this.text.trim())||0; if(n!==root._lastMenu){root._lastMenu=n;detectMonitor.running=true} }}
     }
     Timer { interval:200; running:true; repeat:true
-        onTriggered:{ chkToggle.running=true;chkFront.running=true;chkMenu.running=true }
+        onTriggered:{ chkToggle.running=true;chkMenu.running=true }
     }
 
     Component.onCompleted: {
         Qt.createQmlObject(
-            'import Quickshell.Io; Process{command:["sh","-c","rm -f /tmp/qs-menu /tmp/qs-toggle /tmp/qs-front /tmp/qs-volume-popup /tmp/qs-brightness-popup"];running:true}',
+            'import Quickshell.Io; Process{command:["sh","-c","rm -f /tmp/qs-menu /tmp/qs-toggle /tmp/qs-volume-popup /tmp/qs-brightness-popup"];running:true}',
             root, "cleanup")
     }
 
@@ -136,7 +132,7 @@ ShellRoot {
             required property var modelData;screen:modelData
             anchors.top:true;anchors.right:true
             margins.top:Math.round(modelData.height*Settings.playerPositionY);margins.right:20
-            exclusionMode:ExclusionMode.Ignore;aboveWindows:root.playerOnTop;color:"transparent"
+            exclusionMode:ExclusionMode.Ignore;color:"transparent"
             implicitWidth:Settings.playerWidth;implicitHeight:playerItem.implicitHeight
             Player{id:playerItem;anchors.fill:parent
                 mpTitle:root.mpTitle;mpArtist:root.mpArtist;mpCoverUrl:root.mpCoverUrl
