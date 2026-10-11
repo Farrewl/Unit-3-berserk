@@ -1,13 +1,13 @@
 import QtQuick
 
-// Décorations de coins NieR — les 4 coins SVG cassette futurism
+// NieR corner decorations — the 4 cassette futurism SVG corners
 // Usage :
 //   CornerDeco { anchors.fill: parent }
 
 Item {
     id:           root
     anchors.fill: parent
-    enabled:      false   // ne capte pas les événements
+    enabled:      false   // doesn't catch events
 
     property color  lineColor: Qt.rgba(224/255, 219/255, 202/255, 0.4)
     property int    size:      18    // px de chaque coin
@@ -85,7 +85,7 @@ Item {
         ctx.lineWidth   = root.lineWidth
 
         var seg = Math.round(w * 0.33)  // longueur des traits
-        var dot = Math.round(w * 0.10)  // taille du point carré
+        var dot = Math.round(w * 0.10)  // square dot size
 
         // Trait horizontal
         ctx.beginPath()
@@ -99,7 +99,7 @@ Item {
         ctx.lineTo(seg, seg - dot * 0.5)
         ctx.stroke()
 
-        // Point carré à l'intersection
+        // Square dot at the intersection
         ctx.fillRect(seg - dot * 0.5, seg - dot * 0.5, dot, dot)
 
         ctx.restore()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# gen-lockbg.py — Génère un fond sépia avec texture pixel wave
+# gen-lockbg.py — Generates a sepia background with a pixel wave texture
 # Usage: python3 gen-lockbg.py /chemin/output.png
 
 import math
@@ -9,7 +9,7 @@ import sys
 try:
     from PIL import Image, ImageDraw
 except ImportError:
-    # Fallback sans PIL : créer un PNG minimal uni
+    # Fallback without PIL: create a minimal solid PNG
     sys.exit(0)
 
 out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/lockbg.png"
@@ -24,17 +24,17 @@ rows = H // STEP
 img = Image.new("RGB", (W, H), (11, 9, 6))
 draw = ImageDraw.Draw(img)
 
-random.seed(42)  # seed fixe pour cohérence visuelle
+random.seed(42)  # fixed seed for visual consistency
 
-# Simuler l'état final de la vague (tout révélé)
-# depuis le centre, chaque pixel a une luminosité aléatoire uniforme
+# Simulate the final wave state (everything revealed)
+# from the center, each pixel has uniform random brightness
 cx, cy = cols / 2, rows / 2
 
 for r in range(rows):
     for c in range(cols):
-        # Luminosité : uniforme 78%..92% avec jitter
+        # Brightness: uniform 78%..92% with jitter
         lum = 0.78 + random.random() * 0.14
-        # Légère variation selon la distance au centre (pixels centraux légèrement plus clairs)
+        # Slight variation with distance from the center (center pixels slightly brighter)
         dist = math.sqrt((c - cx) ** 2 + (r - cy) ** 2) / math.sqrt(cx**2 + cy**2)
         lum = lum * (1 - dist * 0.08)
 

@@ -30,7 +30,7 @@ Item {
         border.width: 1
     }
 
-    // Fill slide (de gauche à droite)
+    // Fill slide (left to right)
     Rectangle {
         id:     fillRect
         anchors {

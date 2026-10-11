@@ -60,9 +60,7 @@ window#waybar {
 #network,
 #pulseaudio,
 #clock,
-#custom-pomodoro,
 #custom-idle-inhibit,
-#custom-companion,
 #custom-power {
   padding: 0 10px;
   color: rgba(224, 219, 202, 0.5);
@@ -99,11 +97,6 @@ window#waybar {
   color: #A89A78;
 }
 
-#custom-pomodoro {
-  color: rgba(224, 219, 202, 0.6);
-  letter-spacing: 2px;
-}
-
 #custom-idle-inhibit {
   color: rgba(224, 219, 202, 0.45);
 }
@@ -114,20 +107,6 @@ window#waybar {
 }
 
 #custom-idle-inhibit:hover {
-  color: #E0DBCA;
-  background: rgba(224, 219, 202, 0.05);
-}
-
-#custom-companion {
-  color: rgba(224, 219, 202, 0.45);
-}
-
-#custom-companion.active {
-  color: #E0DBCA;
-  background: rgba(224, 219, 202, 0.08);
-}
-
-#custom-companion:hover {
   color: #E0DBCA;
   background: rgba(224, 219, 202, 0.05);
 }

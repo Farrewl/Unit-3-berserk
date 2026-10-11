@@ -1,7 +1,7 @@
 import QtQuick
 
 // WipeCurtain — rideau NieR identique au player HTML v4
-// Le contenu mis DANS ce composant est clipé par l'animation
+// Content placed INSIDE this component is clipped by the animation
 // Usage : WipeCurtain { id: wipe; anchors.fill: parent; Rectangle { ... } }
 
 Item {
@@ -23,25 +23,25 @@ Item {
     Item {
         id:           contentItem
         anchors.fill: parent
-        // Le contenu est toujours là, c'est le clip du parent qui le masque
+        // The content is always there; the parent's clip hides it
     }
 
-    // ── RIDEAU (rectangle sépia qui balaie) ──
+    // ── CURTAIN (sepia sweeping rectangle) ──
     Rectangle {
         id:     curtain
         anchors.top:    parent.top
         anchors.bottom: parent.bottom
         color:  root.curtainColor
         width:  2
-        x:      root.width - 2   // démarre à droite
+        x:      root.width - 2   // starts on the right
         z:      10
     }
 
-    // ── REVEAL : rideau part de droite, couvre tout, se rétracte à gauche ──
+    // ── REVEAL: curtain starts right, covers everything, retracts left ──
     SequentialAnimation {
         id: revealAnim
 
-        // Phase 1 — le rideau s'étend vers la gauche (couvre)
+        // Phase 1 — the curtain extends leftward (covers)
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"
@@ -57,7 +57,7 @@ Item {
             }
         }
 
-        // Phase 2 — le rideau se rétracte vers la gauche (révèle)
+        // Phase 2 — the curtain retracts leftward (reveals)
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"
@@ -79,11 +79,11 @@ Item {
         }
     }
 
-    // ── HIDE : rideau part de gauche, couvre tout, laisse un trait à droite ──
+    // ── HIDE: curtain starts left, covers everything, leaves a strip on the right ──
     SequentialAnimation {
         id: hideAnim
 
-        // Phase 1 — le rideau s'étend depuis la gauche (couvre)
+        // Phase 1 — the curtain extends from the left (covers)
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"
@@ -98,7 +98,7 @@ Item {
             }
         }
 
-        // Phase 2 — le rideau se rétracte vers la droite (cache)
+        // Phase 2 — the curtain retracts rightward (hides)
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"

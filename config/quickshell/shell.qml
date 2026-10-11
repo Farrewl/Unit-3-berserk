@@ -28,7 +28,6 @@ ShellRoot {
     // ── PLAYERCTL ──
     property bool   playerVisible: false
     property bool   playerOnTop:   false
-    property bool   companionVisible: Settings.companionsEnabled
     property string mpTitle:    "END OF EVANGELION"
     property string mpArtist:   "NEON GENESIS // ANNO"
     property string mpCoverUrl: ""
@@ -80,20 +79,6 @@ ShellRoot {
     }
     Timer { interval:200; running:true; repeat:true
         onTriggered:{ chkToggle.running=true;chkFront.running=true;chkMenu.running=true }
-    }
-
-    Process {
-        command: ["sh", "-c", "\"$HOME/.config/waybar/scripts/companion_toggle.sh\" raw"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: root.companionVisible = this.text.trim() !== "off"
-        }
-    }
-
-    IpcHandler {
-        target: "companion"
-        function setVisible(visible: bool): void { root.companionVisible = visible }
-        function toggle(): void { root.companionVisible = !root.companionVisible }
     }
 
     Component.onCompleted: {
@@ -158,18 +143,6 @@ ShellRoot {
                 mpPlaying:root.mpPlaying;mpPosition:root.mpPosition;mpLength:root.mpLength
                 onPlayPause:pcPlay.running=true;onNextTrack:pcNext.running=true;onPrevTrack:pcPrev.running=true}
             Connections{target:root;function onPlayerVisibleChanged(){playerItem.toggleVisible()}}
-        }
-    }
-
-    // ── COMPANIONS ──
-    Variants {
-        model:root.companionVisible ? Quickshell.screens : []
-        PanelWindow {
-            required property var modelData;screen:modelData
-            anchors.bottom:true;anchors.right:true;margins.right:Settings.companionsMarginRight
-            exclusionMode:ExclusionMode.Ignore;color:"transparent"
-            implicitWidth:Settings.companionsSpriteSize+58;implicitHeight:compItem.implicitHeight
-            Companions{id:compItem;anchors.fill:parent}
         }
     }
 }

@@ -63,29 +63,29 @@ send_battery_notification() {
             urgency="normal"
             timeout="8000"
             icon="battery-caution"
-            title="BATERAI ${capacity}%"
-            body="Baterai mulai lemah. Cari charger dulu sebelum dramanya dimulai."
+            title="BATTERY ${capacity}%"
+            body="Battery is getting low. Find a charger before the drama starts."
             ;;
         15)
             urgency="critical"
             timeout="10000"
             icon="battery-low"
-            title="BATERAI ${capacity}% - WARNING"
-            body="Serius, colokin charger sekarang. Ini bukan hiasan di top bar."
+            title="BATTERY ${capacity}% - WARNING"
+            body="Seriously, plug in the charger now. This isn't decoration in the top bar."
             ;;
         10)
             urgency="critical"
             timeout="12000"
             icon="battery-empty"
-            title="BATERAI ${capacity}% - KRITIS"
-            body="Aku sudah bilang dari tadi. Save kerjaan, ambil charger, sekarang."
+            title="BATTERY ${capacity}% - CRITICAL"
+            body="I told you earlier. Save your work, grab the charger, now."
             ;;
         5)
             urgency="critical"
             timeout="15000"
             icon="battery-empty"
-            title="BATERAI ${capacity}% - FINAL WARNING"
-            body="INI SUDAH GAWAT. COLOKIN CHARGER ATAU LAPTOP MATI DI TANGANMU."
+            title="BATTERY ${capacity}% - FINAL WARNING"
+            body="THIS IS AN EMERGENCY. PLUG IN THE CHARGER OR THE LAPTOP DIES IN YOUR HANDS."
             ;;
         *)
             return 0

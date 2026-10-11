@@ -1,14 +1,14 @@
 // notifications.qml
-// Daemon de notifications style NieR / YoRHa
+// NieR / YoRHa style notification daemon
 //
 // Installation :
-//   1. Tuer tout autre daemon : pkill dunst; pkill mako; pkill swaync
+//   1. Kill any other daemon : pkill dunst; pkill mako; pkill swaync
 //   2. qs -p notifications.qml
 //
 // Tests :
-//   notify-send "Test" "Ceci est une notification"
-//   notify-send -u critical "ATTENTION" "Niveau critique"
-//   notify-send -u low "Info" "Niveau bas"
+//   notify-send "Test" "This is a notification"
+//   notify-send -u critical "ATTENTION" "Critical level"
+//   notify-send -u low "Info" "Low level"
 
 import QtQuick
 import QtQuick.Layouts
@@ -40,7 +40,7 @@ Scope {
         onNotification: (n) => {
             n.tracked = true;
 
-            // Récupérer les actions sous forme de noms (pour l'affichage)
+            // Get the actions as names (for display)
             var actionNames = []
             try {
                 if (n.actions) {
@@ -54,12 +54,12 @@ Scope {
                 }
             } catch(e) {}
 
-            // Hints / catégorie / urgency level
+            // Hints / category / urgency level
             var urgencyLabel = "normal"
             if (n.urgency === 0) urgencyLabel = "low"
             else if (n.urgency === 2) urgencyLabel = "critical"
 
-            // Ajouter à l'historique (FIFO 50)
+            // Add to history (FIFO 50)
             var entry = {
                 id: n.id,
                 summary: n.summary || "",
@@ -88,7 +88,7 @@ Scope {
 
     readonly property var tracked: notifServer.trackedNotifications
 
-    // ─── Historique persistant en mémoire (max 50, FIFO) ───
+    // ─── Persistent in-memory history (max 50, FIFO) ───
     property var history: []
     property bool dndEnabled: false
 
@@ -127,7 +127,7 @@ Scope {
             var h = root.history[idx]
             if (h.ref) {
                 try {
-                    // Si la notif a des actions, invoke la première (default)
+                    // If the notif has actions, invoke the first one (default)
                     if (h.ref.actions && h.ref.actions.length > 0) {
                         h.ref.actions[0].invoke()
                     }
@@ -183,16 +183,16 @@ Scope {
             color: "transparent"
 
             // ═══════════════════════════════════════════════════════════
-            // MASQUE D'INPUT : ne capture les clics QUE dans la zone
-            // qui entoure la pile de notifs. Quand il n'y en a aucune,
-            // la région fait 0x0 → tout passe à travers.
+            // INPUT MASK: only captures clicks in the area
+            // around the notification stack. When there are none,
+            // the region is 0x0 → everything passes through.
             // ═══════════════════════════════════════════════════════════
             mask: Region {
                 x: column.x
                 y: column.y
                 width: notifRepeater.count > 0 ? root.notifWidth : 0
                 height: {
-                    // Dépendance explicite pour forcer le recalcul
+                    // Explicit dependency to force recompute
                     column.layoutTrigger;
                     let h = 0;
                     for (let i = 0; i < column.children.length; i++) {
@@ -214,7 +214,7 @@ Scope {
                 width: root.notifWidth
                 height: parent.height - anchors.topMargin
 
-                // Trigger pour forcer la re-évaluation du mask de la fenêtre
+                // Trigger to force re-evaluation of the window mask
                 property int layoutTrigger: 0
 
                 Repeater {
@@ -262,13 +262,7 @@ Scope {
             return "NOTICE";
         }
 
-        readonly property string urgencyJp: {
-            if (urgency === 2) return "緊急";
-            if (urgency === 0) return "情報";
-            return "通知";
-        }
-
-        // Calcul de la position Y en sommant les hauteurs des frères précédents
+        // Compute the Y position by summing the heights of previous siblings
         y: {
             let acc = 0;
             const parentItem = parent;
@@ -397,7 +391,7 @@ Scope {
             border.color: "#8B8066"
             border.width: 1
 
-            // Bordure gauche colorée
+            // Colored left border
             Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -406,7 +400,7 @@ Scope {
                 color: notif.accentColor
             }
 
-            // Scan-line d'entrée
+            // Entry scan-line
             Rectangle {
                 id: scanLine
                 property real scanProgress: 0
@@ -427,7 +421,7 @@ Scope {
                 z: 2
             }
 
-            // Grille interne décorative
+            // Decorative inner grid
             Canvas {
                 anchors.fill: parent
                 anchors.leftMargin: 3
@@ -480,13 +474,6 @@ Scope {
                             font.weight: Font.Medium
                             font.letterSpacing: 2
                         }
-                    }
-
-                    Text {
-                        text: notif.urgencyJp
-                        color: "#A89F8A"
-                        font.family: "Noto Sans JP"
-                        font.pixelSize: 9
                     }
 
                     Text {
@@ -548,12 +535,12 @@ Scope {
                     opacity: 0.2
                 }
 
-                // Zone contenu : image à gauche + texte à droite
+                // Content zone: image on the left + text on the right
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 12
 
-                    // ═══ THUMBNAIL (image ou icône) ═══
+                    // ═══ THUMBNAIL (image or icon) ═══
                     Item {
                         id: imageWrap
                         Layout.preferredWidth: 64
@@ -562,7 +549,7 @@ Scope {
 
                         readonly property string imageSource: {
                             if (!notif.notification) return "";
-                            // priorité à l'image embarquée, puis à l'appIcon
+                            // priority to the embedded image, then appIcon
                             const img = notif.notification.image || "";
                             if (img.length > 0) return img;
                             const appIcon = notif.notification.appIcon || "";
@@ -571,7 +558,7 @@ Scope {
                                 if (appIcon.startsWith("/") || appIcon.startsWith("file://")) {
                                     return appIcon;
                                 }
-                                // sinon c'est un nom d'icône de thème
+                                // otherwise it's a theme icon name
                                 return Quickshell.iconPath(appIcon, true);
                             }
                             return "";
@@ -587,7 +574,7 @@ Scope {
                             border.width: 1
                         }
 
-                        // Badge ID coin supérieur gauche
+                        // ID badge in the top-left corner
                         Rectangle {
                             anchors.top: parent.top
                             anchors.left: parent.left
@@ -620,7 +607,7 @@ Scope {
                             visible: status === Image.Ready
                         }
 
-                        // Petits repères décoratifs dans les coins
+                        // Small decorative marks in the corners
                         Repeater {
                             model: 4
                             delegate: Item {

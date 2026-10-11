@@ -33,24 +33,24 @@ Item {
     implicitHeight: wipeHost.height
 
     // ──────────────────────────────────────────────────────────────
-    // WIPE HOST — Item clipé contenant rideau + contenu comme frères
+    // WIPE HOST — clipped Item containing curtain + content as siblings
     // ──────────────────────────────────────────────────────────────
     Item {
         id:      wipeHost
         width:   pw
         height:  content.implicitHeight
         clip:    true
-        x:       pw+2          // commence hors-écran à droite (caché)
+        x:       pw+2          // starts off-screen to the right (hidden)
         opacity: 1
-        visible: false          // invisible au démarrage
+        visible: false          // invisible at startup
 
-        // ── CONTENU (player réel) ──
+        // ── CONTENT (actual player) ──
         Item {
             id:      content
             width:   pw
             implicitHeight: playerCol.implicitHeight
 
-            // Fond conditionnel — contrôlé par Settings.playerBackground
+            // Conditional background — controlled by Settings.playerBackground
             Rectangle {
                 anchors.fill: parent
                 color:        Settings.playerBackground ? Settings.playerBgColor : "transparent"
@@ -61,7 +61,7 @@ Item {
                 id:    playerCol
                 width: pw
 
-                // Ligne du haut — dégradé sépia
+                // Top line — sepia gradient
                 Rectangle {
                     width: pw;  height: 1
                     gradient: Gradient {
@@ -73,7 +73,7 @@ Item {
                     }
                 }
 
-                // Ticker défilant
+                // Scrolling ticker
                 Item {
                     width: pw;  height: s(14); clip: true
                     Text {
@@ -113,7 +113,7 @@ Item {
                         id:     coverArea
                         width:  coverSz; height: coverSz; clip: true
 
-                        // État brush — déclaré avant les Canvas qui les référencent
+                        // Brush state — declared before the Canvases that reference them
                         property var hoverIntensity: new Array(32*32).fill(0)
                         property var hoverR:         new Array(32*32).fill(200)
                         property var hoverG:         new Array(32*32).fill(184)
@@ -127,7 +127,7 @@ Item {
 
                             property var  imgPixels:     null
                             property var  nextImgPixels: null  // pixels en attente pendant transition
-                            property int  blockStep:     0     // étape transition 0=normal
+                            property int  blockStep:     0     // transition step 0=normal
                             
 
                             onPaint: {
@@ -137,7 +137,7 @@ Item {
                                 ctx.clearRect(0, 0, SZ, SZ)
 
                                 if (!imgPixels) {
-                                    // placeholder gris procédural
+                                    // procedural grey placeholder
                                     var seed = root.mpTitle.length * 1234567 + root.mpArtist.length * 89 + 42
                                     function rand() { seed=(seed*16807+0)%2147483647; return(seed-1)/2147483646 }
                                     for (var r=0; r<GRID; r++) for (var cc=0; cc<GRID; cc++) {
@@ -150,7 +150,7 @@ Item {
                                     return
                                 }
 
-                                // Taille de bloc selon l'étape de transition
+                                // Block size depending on the transition step
                                 var bs
                                 if (blockStep === 0) {
                                     // Normal : grille 32×32
@@ -184,9 +184,9 @@ Item {
                             }
                         }
 
-                        // Timer transition blocky — 12 étapes à 30ms chacune
-                        // Identique à transitionCover() dans le JS HTML source
-                        // CELL=3.125 → steps 0-5 grossissent, step 6 swap, 7-12 rétrécissent
+                        // Blocky transition timer — 12 steps at 30ms each
+                        // Same as transitionCover() in the HTML JS source
+                        // CELL=3.125 → steps 0-5 grow, step 6 swaps, 7-12 shrink
                         Timer {
                             id:       blockTimer
                             interval: 30
@@ -199,7 +199,7 @@ Item {
                                 var CELL = 100.0 / 32.0
                                 step++
                                 if (step < steps/2) {
-                                    // Phase 1 : grossir les blocs (dézoom)
+                                    // Phase 1: grow the blocks (zoom out)
                                     coverMain.blockStep = Math.floor(step * 3)
                                     coverMain.requestPaint()
                                 } else if (step === Math.floor(steps/2)) {
@@ -209,7 +209,7 @@ Item {
                                         coverMain.nextImgPixels = null
                                     }
                                 } else {
-                                    // Phase 2 : réduire les blocs (rezoom)
+                                    // Phase 2: shrink the blocks (zoom in)
                                     coverMain.blockStep = Math.max(0, Math.floor((steps - step) * 3))
                                     coverMain.requestPaint()
                                 }
@@ -255,7 +255,7 @@ Item {
                                 ctx.drawImage(grabResult.url, 0, 0, 100, 100)
                                 var raw = ctx.getImageData(0, 0, 100, 100).data
                                 if (coverMain.imgPixels === null) {
-                                    // Première cover : affichage direct sans transition
+                                    // First cover: direct display without transition
                                     coverMain.imgPixels = raw
                                     coverMain.requestPaint()
                                 } else {
@@ -462,7 +462,7 @@ Item {
 
                             Item { width: 1; height: 1 }
 
-                            // Contrôles
+                            // Controls
                             Row {
                                 spacing: 4; topPadding: 5
 
@@ -553,7 +553,7 @@ Item {
                                     ? seekBar.width * root.mpPosition / root.mpLength
                                     : 0
                         }
-                        // Tête
+                        // Header
                         Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             x:     root.mpLength > 0
@@ -649,26 +649,26 @@ Item {
             }
         }
 
-        // ── RIDEAU — frère du contenu dans wipeHost clipé ──
+        // ── CURTAIN — sibling of the content inside the clipped wipeHost ──
         Rectangle {
             id:    curtain
             anchors { top: parent.top; bottom: parent.bottom }
             color: "#E0DBCA"
             z:     10
 
-            // État initial : caché (width=2, à droite)
+            // Initial state: hidden (width=2, on the right)
             width: 2
             x:     318
         }
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // TOGGLE : slide depuis hors-écran (droite → intérieur)
+    // TOGGLE: slide in from off-screen (right → inside)
     // Le player glisse sur son axe X — la PanelWindow garde sa taille
     // Le wipe curtain s'anime EN MÊME TEMPS que le slide
     // ─────────────────────────────────────────────────────────────────
 
-    // Courbe personnalisée : lente au début, agressive vers la fin
+    // Custom curve: slow at first, aggressive toward the end
     // Reproduit une cubic-bezier(.4,0,.2,1) mais avec snap final
     NumberAnimation {
         id:       slideInAnim
@@ -676,7 +676,7 @@ Item {
         property: "x"
         from:     340; to: 0
         duration: 480
-        // InOutQuart = accélère + freine — on veut OutExpo (lente puis snap)
+        // InOutQuart = accelerates + brakes — we want OutExpo (slow then snap)
         easing.type:     Easing.OutExpo
     }
 
@@ -694,17 +694,17 @@ Item {
     }
 
     // ── REVEAL ──
-    // Le player slide depuis la droite, opaque dès le début.
-    // La barre sépia est le bord gauche du player — elle avance avec lui.
-    // Lecture : wipeHost.x va de 320 → 0. Le rideau est à x=0 dans wipeHost,
+    // The player slides in from the right, opaque from the start.
+    // The sepia bar is the player's left edge — it moves with it.
+    // Play: wipeHost.x goes from 320 → 0. The curtain is at x=0 in wipeHost,
     // donc il est toujours sur le bord gauche du player visible.
-    // Une fois en place, le rideau se rétracte (révèle le contenu).
+    // Once in place, the curtain retracts (reveals the content).
     SequentialAnimation {
         id: revealAnim
 
         // Phase 1 : player + rideau (trait de 2px) entrent ensemble depuis la droite
-        // Le rideau est collé au bord gauche du player (x=0 dans wipeHost)
-        // On anime wipeHost.x : le tout glisse depuis hors-écran
+        // The curtain is glued to the player's left edge (x=0 in wipeHost)
+        // Animate wipeHost.x: the whole thing slides in from off-screen
         ParallelAnimation {
             NumberAnimation {
                 target: wipeHost; property: "x"
@@ -712,7 +712,7 @@ Item {
                 duration: 460
                 easing.type: Easing.OutExpo
             }
-            // Le contenu est masqué pendant la phase d'entrée
+            // The content is hidden during the entrance phase
             // (le rideau pleine largeur le couvre)
             NumberAnimation {
                 target: curtain; property: "width"
@@ -721,8 +721,8 @@ Item {
             }
         }
 
-        // Phase 2 : player est en place — rideau se rétracte vers la gauche
-        // Révèle le contenu avec un snap expo
+        // Phase 2: player in place — curtain retracts to the left
+        // Reveals the content with an expo snap
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"
@@ -758,7 +758,7 @@ Item {
     SequentialAnimation {
         id: hideAnim
 
-        // Phase 1 : rideau couvre le contenu (s'étend de gauche à droite)
+        // Phase 1: curtain covers the content (spreads left to right)
         ParallelAnimation {
             NumberAnimation {
                 target: curtain; property: "x"
@@ -773,7 +773,7 @@ Item {
             }
         }
 
-        // Phase 2 : tout glisse hors-écran vers la droite avec snap expo
+        // Phase 2: everything slides off-screen to the right with an expo snap
         NumberAnimation {
             target: wipeHost; property: "x"
             from: 0; to: pw+2
@@ -793,7 +793,7 @@ Item {
         }
     }
 
-    // Animations texte à l'entrée du player
+    // Text animations on player entrance
     SequentialAnimation {
         id: titleSlideIn
         PropertyAction  { target: ciTitle;  property: "x";       value: -12 }
@@ -863,7 +863,7 @@ Item {
         clockStr = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0")
     }
 
-    // ── COMPOSANT BOUTON CONTRÔLE (fill-slide) ──
+    // ── CONTROL BUTTON COMPONENT (fill-slide) ──
     component CBtn: Item {
         id:            btnRoot
         property bool svgIcon: false
@@ -890,7 +890,7 @@ Item {
             }
         }
 
-        // Texte ou icône (mis via children)
+        // Text or icon (set via children)
         // La couleur change via MouseArea hover
         property color textColor: cbMa.containsMouse
             ? "#14100B"

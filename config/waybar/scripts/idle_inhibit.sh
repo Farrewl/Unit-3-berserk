@@ -33,9 +33,9 @@ refresh_waybar() {
 
 status_json() {
     if is_active; then
-        printf '{"text":"AON ON","class":"active","tooltip":"Always on aktif: idle lock 3 menit ditahan"}\n'
+        printf '{"text":"AON ON","class":"active","tooltip":"Always on active: idle lock (3 min) held"}\n'
     else
-        printf '{"text":"AON --","class":"inactive","tooltip":"Always on mati: lock otomatis aktif setelah 3 menit"}\n'
+        printf '{"text":"AON OFF","class":"inactive","tooltip":"Always on off: auto-lock active after 3 minutes"}\n'
     fi
 }
 

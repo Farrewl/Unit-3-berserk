@@ -9,7 +9,7 @@ ShellRoot {
 
     property bool fastMode: Quickshell.env("UNIT3_WALLPAPER_FAST") === "1"
 
-    // ── État partagé ──
+    // ── Shared state ──
     property bool   revealing: false
     property bool   frozen:    false
     property bool   hiding:    false
@@ -18,14 +18,14 @@ ShellRoot {
     // ── Wallpapers ──
     property var    wallpapers:    []
     property int    currentIndex:  0
-    // Chemin générique : $HOME/Pictures/wallpapers (ou XDG_PICTURES_DIR si défini)
+    // Generic path: $HOME/Pictures/wallpapers (or XDG_PICTURES_DIR if set)
     property string home:          Quickshell.env("HOME")
     property string xdgConfigHome: Quickshell.env("XDG_CONFIG_HOME") || (home + "/.config")
     property string xdgPictures:   Quickshell.env("XDG_PICTURES_DIR") || (home + "/Pictures")
     property string wallpaperDir:  xdgPictures + "/wallpapers"
-    property string activeMonitor: ""   // nom du monitor actif (où est la souris)
+    property string activeMonitor: ""   // active monitor name (where the mouse is)
 
-    // ── Détecter le monitor actif ──
+    // ── Detect the active monitor ──
     Process {
         id: getMonitorProc
         command: ["sh","-c","hyprctl cursorpos -j | python3 -c \"\nimport sys,json,subprocess\npos=json.load(sys.stdin)\nmons=json.loads(subprocess.check_output(['hyprctl','monitors','-j']))\nfor m in mons:\n    x,y=m['x'],m['y']\n    w,h=m['width'],m['height']\n    if x<=pos['x']<x+w and y<=pos['y']<y+h:\n        print(m['name'])\n        break\n\""]
@@ -69,7 +69,7 @@ ShellRoot {
 
     // ── Gestion du curseur Hyprland ──
     // Le curseur natif Hyprland reste visible en permanence : on ne touche
-    // ni à cursor:invisible avant ni à la fermeture.
+    // nor to cursor:invisible before, nor on close.
 
     // Horloge
     property string clockFull: "--:--:--"
@@ -109,7 +109,7 @@ ShellRoot {
                 cache: true
             }
 
-            // ── Vidéo reveal ──
+            // ── Reveal video ──
             MediaPlayer {
                 id: reveal
                 source: root.fastMode ? "" : ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_reveal.mp4")
@@ -132,7 +132,7 @@ ShellRoot {
                 visible: !root.fastMode && !root.done
             }
 
-            // ── Vidéo hide ──
+            // ── Hide video ──
             MediaPlayer {
                 id: hide
                 source: root.fastMode ? "" : ("file://" + root.xdgConfigHome + "/quickshell/videos/wave_hide.mp4")
@@ -163,7 +163,7 @@ ShellRoot {
             }
             Rectangle { anchors.fill:parent; color:"black"; z:10; visible:root.done }
 
-            // ── UI — seulement sur l'écran actif ──
+            // ── UI — only on the active screen ──
             Item {
                 anchors.fill: parent
                 visible: !root.done && isActive
@@ -183,7 +183,7 @@ ShellRoot {
                     }
                 }
 
-                // Coins déco
+                // Deco corners
                 Item {
                     anchors{top:parent.top;left:parent.left;topMargin:28;leftMargin:30}
                     z:5; opacity:parent.uiOp
@@ -246,7 +246,7 @@ ShellRoot {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 spacing: 12
 
-                                // Bouton écran actif
+                                // Active screen button
                                 Item { width:162; height:42
                                     Rectangle { anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1 }
                                     Rectangle { id:fill1;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
@@ -261,7 +261,7 @@ ShellRoot {
                                         onClicked:{ root.applyWallpaper(root.currentIndex, root.activeMonitor); root.doClose() } }
                                 }
 
-                                // Bouton les deux écrans
+                                // Both screens button
                                 Item { width:162; height:42
                                     Rectangle { anchors.fill:parent;color:"transparent";border.color:"#8B8066";border.width:1 }
                                     Rectangle { id:fill2;anchors.left:parent.left;anchors.top:parent.top;anchors.bottom:parent.bottom;color:"#8B8066";width:0
@@ -303,13 +303,13 @@ ShellRoot {
                     Keys.onSpacePressed:  { root.applyWallpaper(root.currentIndex, "both"); root.doClose() }
                     readonly property int n: root.wallpapers.length
 
-                    // Dimensions de base (taille de la vignette centrale à pleine échelle)
+                    // Base dimensions (central thumbnail at full scale)
                     readonly property int baseW: 800
                     readonly property int baseH: 500
-                    // Ligne de base commune : toutes les vignettes ont leur bas aligné ici
+                    // Common baseline: all thumbnails align their bottoms here
                     readonly property int baselineY: height / 2 + baseH / 2
 
-                    // Échelles par distance (slot) au centre
+                    // Scales by distance (slot) from the center
                     readonly property real scaleCenter: 1.0
                     readonly property real scaleNear:   0.54   // ~280/520
                     readonly property real scaleFar:    0.35   // ~180/520
@@ -319,8 +319,8 @@ ShellRoot {
                     readonly property int offsetFar:  576
 
                     // Une vignette par wallpaper. Chaque vignette choisit sa place
-                    // en fonction de l'offset signé vers currentIndex (chemin le plus
-                    // court sur la boucle). Position, scale et opacity sont animées
+                    // based on the signed offset to currentIndex (shortest
+                    // path on the loop). Position, scale and opacity are animated
                     // -> le zoom est smooth et part du bas (transformOrigin: Bottom).
                     Repeater {
                         model: root.wallpapers
@@ -328,7 +328,7 @@ ShellRoot {
                         Item {
                             id: thumb
                             property int wIdx: index
-                            // Offset signé (-n/2 .. n/2) = chemin le plus court vers currentIndex
+                            // Signed offset (-n/2 .. n/2) = shortest path toward currentIndex
                             property int rawDelta: carousel.n > 0 ? (wIdx - root.currentIndex) : 0
                             property int delta: {
                                 if (carousel.n === 0) return 0
@@ -340,7 +340,7 @@ ShellRoot {
                             }
                             property int absDelta: Math.abs(delta)
 
-                            // Position X et échelle dérivées du slot
+                            // X position and scale derived from the slot
                             property real targetScale:
                                   absDelta === 0 ? carousel.scaleCenter
                                 : absDelta === 1 ? carousel.scaleNear
@@ -365,7 +365,7 @@ ShellRoot {
                             visible: absDelta <= 2
                             transformOrigin: Item.Bottom
 
-                            // Animations fluides — le scale part du bas grâce au transformOrigin
+                            // Smooth animations — scale grows from the bottom via transformOrigin
                             Behavior on x       { NumberAnimation { duration:320; easing.type:Easing.OutCubic } }
                             Behavior on scale   { NumberAnimation { duration:320; easing.type:Easing.OutCubic } }
                             Behavior on opacity { NumberAnimation { duration:320; easing.type:Easing.OutCubic } }
@@ -417,7 +417,7 @@ ShellRoot {
                 }
             }
 
-            // ── Connexions état ──
+            // ── State connections ──
             Connections {
                 target: root
                 function onRevealingChanged() {

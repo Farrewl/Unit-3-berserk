@@ -41,7 +41,7 @@ if not shutil.which("ffmpeg"):
 
 
 # ═══════════════════════════════════════════════════════════════
-# PARAMÈTRES (identiques au lockscreen HTML)
+# PARAMETERS (same as the lockscreen HTML)
 # ═══════════════════════════════════════════════════════════════
 CELL = 7
 STEP = 8
@@ -56,7 +56,7 @@ SEPIA_R, SEPIA_G, SEPIA_B = 230, 215, 180
 
 
 # ═══════════════════════════════════════════════════════════════
-# DOSSIER DE SORTIE PAR DÉFAUT
+# DEFAULT OUTPUT DIRECTORY
 # ═══════════════════════════════════════════════════════════════
 def default_output() -> Path:
     """~/.config/quickshell/videos/wave_close.mp4 (respecte XDG_CONFIG_HOME)."""
@@ -75,7 +75,7 @@ def build_grid(width: int, height: int):
     off_y = (height - rows * STEP) // 2
     n = cols * rows
 
-    rng = random.Random(42)  # même seed que pour reveal → cohérence visuelle
+    rng = random.Random(42)  # same seed as reveal → visual consistency
 
     target_color = np.array(
         [0.78 + rng.random() * 0.14 for _ in range(n)], dtype=np.float32
@@ -84,7 +84,7 @@ def build_grid(width: int, height: int):
         [(rng.random() - 0.5) * 4.0 for _ in range(n)], dtype=np.float32
     )
 
-    # IMPORTANT : démarrage plein (tous les pixels visibles)
+    # IMPORTANT: full start (all pixels visible)
     progress = np.ones(n, dtype=np.float32)
     lift = np.zeros(n, dtype=np.float32)
     lift_vel = np.zeros(n, dtype=np.float32)
@@ -124,7 +124,7 @@ def step_simulation(state, waves, speed_scale: float):
     lift[mask] = 0
     lift_vel[mask] = 0
 
-    # Coordonnées cellulaires
+    # Cell coordinates
     c_idx = np.arange(n) % cols
     r_idx = np.arange(n) // cols
 
@@ -154,7 +154,7 @@ def step_simulation(state, waves, speed_scale: float):
             inv = 1.0 - ease
             np.minimum(progress, np.where(active, inv, progress), out=progress)
 
-        # Soulèvement (lift) au passage précis du front
+        # Lift at the exact wave front pass
         in_front = (df >= -FRONT_W) & (df < FRONT_W)
         can_lift = lift < 0.1
         if w["dir"] == 1:
@@ -183,7 +183,7 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
 
     v = np.minimum(1.0, progress * target_color)
 
-    # Deux passes : pixels posés puis pixels soulevés (ordre z-index)
+    # Two passes: settled pixels then lifted pixels (z-index order)
     for pass_idx in range(2):
         for r in range(rows):
             for c in range(cols):
@@ -219,7 +219,7 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
 
 
 # ═══════════════════════════════════════════════════════════════
-# PIPELINE VIDÉO
+# VIDEO PIPELINE
 # ═══════════════════════════════════════════════════════════════
 def generate_video(
     width: int,
@@ -230,7 +230,7 @@ def generate_video(
     quality: str = "high",
     hold_frames: int = 0,
 ):
-    # Crée le dossier de sortie s'il n'existe pas
+    # Create the output directory if it doesn't exist
     output.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"▸ Mode       : FERMETURE (hide)")
@@ -295,7 +295,7 @@ def generate_video(
     try:
         last_pct = -1
 
-        # Optionnel : quelques frames "plein" avant de déclencher la vague
+        # Optional: a few full frames before triggering the wave
         for _ in range(hold_frames):
             frame = render_frame(state, width, height)
             proc.stdin.write(frame.tobytes())
@@ -341,10 +341,10 @@ def main():
         epilog="""
 Exemples :
   %(prog)s                            # 1920x1080 60fps 1.8s → ~/.config/quickshell/videos/wave_close.mp4
-  %(prog)s -w 2560 -H 1440            # résolution 1440p
-  %(prog)s -d 2.2 --fps 60            # durée 2.2s
-  %(prog)s --hold 20                  # 20 frames de plein écran avant la vague
-  %(prog)s -q medium -o logout.mp4    # qualité medium
+  %(prog)s -w 2560 -H 1440            # 1440p resolution
+  %(prog)s -d 2.2 --fps 60            # 2.2s duration
+  %(prog)s --hold 20                  # 20 full-screen frames before the wave
+  %(prog)s -q medium -o logout.mp4    # medium quality
         """,
     )
     p.add_argument("-w", "--width", type=int, default=1920, help="largeur (px)")

@@ -6,8 +6,8 @@ import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
 //   NieR Control Center — Quickshell module
-//   Portage 1:1 du mockup HTML v4
-//   Asset requis : ~/.config/quickshell/assets/nier-arrow.png
+//   Port 1:1 of the HTML v4 mockup
+//   Required asset : ~/.config/quickshell/assets/nier-arrow.png
 //   IPC : qs ipc call ctrl toggle
 // ═════════════════════════════════════════════════════════════════════
 
@@ -32,25 +32,23 @@ ShellRoot {
     readonly property int  slotGapV: 150
     readonly property int  slotGapH: 350
     readonly property int  panShiftV: 320   // vertical (top/bottom) : centre l'ensemble sub+settings
-    readonly property int  panShiftH: 700   // horizontal (left/right) : sub-menu traverse l'écran
+    readonly property int  panShiftH: 700   // horizontal (left/right): sub-menu crosses the screen
 
-    // ── État ──
+    // ── State ──
     property bool   open:    false
-    property bool   closing: false   // état intermédiaire : slots reviennent au centre, puis fade
+    property bool   closing: false   // intermediate state: slots return to center, then fade
     property int    level:   1
     property string slot:    "center"
     property string sub:     ""
     property string action:  ""
 
-    // ── Données ──
+    // ── Data ──
     readonly property var subs: ({
         top:    [ {key:"wifi",      label:"Wi-Fi"},
                   {key:"bluetooth", label:"Bluetooth"} ],
         bottom: [ {key:"output",    label:"Output"},
                   {key:"volume",    label:"Volume"} ],
         display:[ {key:"mode",      label:"Mode"} ],
-        left:   [ {key:"send",      label:"Send"},
-                  {key:"receive",   label:"Receive"} ],
         right:  [ {key:"history",   label:"History"},
                   {key:"dnd",       label:"Do Not Disturb"} ]
     })
@@ -67,10 +65,6 @@ ShellRoot {
         "display.mode":     {h3:"Display Mode",        status:"—",    on:false,
                               actions:[{key:"extend",label:"Extend"},
                                        {key:"mirror",label:"Mirror"}]},
-        "left.send":        {h3:"Send Files",          status:"Ready", on:false,
-                              actions:[{key:"placeholder",label:"Sub-menu coming"}]},
-        "left.receive":     {h3:"Receive Files",       status:"—",    on:false,
-                              actions:[{key:"placeholder",label:"Sub-menu coming"}]},
         "right.history":    {h3:"Notification History",status:"—",    on:false,
                               actions:[{key:"placeholder",label:"Sub-menu coming"}]},
         "right.dnd":        {h3:"Do Not Disturb",      status:"—",    on:false,
@@ -83,7 +77,7 @@ ShellRoot {
     // ── Construit la liste d'actions dynamique selon le sub focus ──
     function actList() {
         var key = detailKey()
-        // Wi-Fi : toggle + un bouton par réseau scanné
+        // Wi-Fi: toggle + one button per scanned network
         if (key === "top.wifi") {
             var acts = [{key:"toggle", label: wifiEnabled ? "Disable Wi-Fi" : "Enable Wi-Fi"}]
             if (wifiEnabled) {
@@ -132,11 +126,11 @@ ShellRoot {
             if (acts3.length === 0) acts3.push({key:"none", label:"No outputs found"})
             return acts3
         }
-        // Audio Volume : pas de liste, juste le slider (rendu séparément)
+        // Audio Volume: no list, just the slider (rendered separately)
         if (key === "bottom.volume") {
             return [{key:"mute-toggle", label: audioMuted ? "Unmute" : "Mute"}]
         }
-        // Display : choix du mode pour tous les écrans externes
+        // Display: mode choice for all external screens
         if (key === "display.mode") {
             if (displayMode === "single") {
                 return [{key:"none", label:"No external display"}]
@@ -145,36 +139,6 @@ ShellRoot {
                 {key:"extend", label:(displayMode === "extend" ? "✓ " : "  ") + "Extend"},
                 {key:"mirror", label:(displayMode === "mirror" ? "✓ " : "  ") + "Mirror"}
             ]
-        }
-        // Quickshare Send (qshare.py)
-        if (key === "left.send") {
-            var acts4 = []
-            acts4.push({key:"pick-file", label: pendingFilePath
-                ? "✓ " + pendingFilePath.split("/").pop()
-                : "⌕ Pick file with Yazi"})
-            if (pendingFilePath !== "") {
-                acts4.push({key:"clear-file", label: "× Cancel selection"})
-            }
-            acts4.push({key:"toggle-tunnel",
-                label: qshareTunnel ? "[✓] Tunnel (Internet)" : "[ ] Tunnel (Internet)"})
-            acts4.push({key:"toggle-keepalive",
-                label: qshareKeepAlive ? "[✓] Keep alive" : "[ ] Keep alive"})
-            if (pendingFilePath !== "") {
-                acts4.push({key:"start-send", label: "→ Generate QR"})
-            }
-            return acts4
-        }
-        // Quickshare Receive (qshare.py)
-        if (key === "left.receive") {
-            var acts5 = []
-            var dirShort = qshareOutputDir.replace(home, "~")
-            acts5.push({key:"cycle-output", label: "Output: " + dirShort + " ▸"})
-            acts5.push({key:"toggle-tunnel",
-                label: qshareTunnel ? "[✓] Tunnel (Internet)" : "[ ] Tunnel (Internet)"})
-            acts5.push({key:"toggle-keepalive",
-                label: qshareKeepAlive ? "[✓] Keep alive" : "[ ] Keep alive"})
-            acts5.push({key:"start-recv", label: "→ Open receiver"})
-            return acts5
         }
         // Notifications History
         if (key === "right.history") {
@@ -213,8 +177,6 @@ ShellRoot {
         if (key === "bottom.output")     return "Audio Output"
         if (key === "bottom.volume")     return "Volume"
         if (key === "display.mode")      return "Display Mode"
-        if (key === "left.send")         return "Send Files"
-        if (key === "left.receive")      return "Receive Files"
         if (key === "right.history")     return "Notifications"
         if (key === "right.dnd")         return "Do Not Disturb"
         var d = root.details[key]
@@ -249,14 +211,6 @@ ShellRoot {
             var name = displayExternal !== "" ? " · " + displayExternal : ""
             return (displayMode === "mirror" ? "Mirror" : "Extend") + name
         }
-        if (key === "left.send") {
-            if (pendingFilePath === "") return "Ready · pick a file"
-            return qshareTunnel ? "Tunnel mode" : "LAN mode"
-        }
-        if (key === "left.receive") {
-            return qshareTunnel ? "Tunnel · " + qshareOutputDir.replace(home, "~")
-                                : "LAN · " + qshareOutputDir.replace(home, "~")
-        }
         if (key === "right.history") {
             return notifications.length + " notification" + (notifications.length !== 1 ? "s" : "")
         }
@@ -273,19 +227,17 @@ ShellRoot {
         if (key === "bottom.output")     return true
         if (key === "bottom.volume")     return !audioMuted
         if (key === "display.mode")      return displayMode !== "single"
-        if (key === "left.send")         return pendingFilePath !== ""
-        if (key === "left.receive")      return qshareUrl !== ""
         if (key === "right.history")     return notifications.length > 0
         if (key === "right.dnd")         return dndEnabled
         var d3 = root.details[key]
         return d3 ? d3.on : false
     }
-    // ── Données système : Wi-Fi ──
+    // ── System data: Wi-Fi ──
     property bool   wifiEnabled: false
     property string wifiCurrentSSID: ""
     property var    wifiNetworks: []   // [{ssid, signal, security, active}]
     property string wifiPromptSSID: ""   // SSID en cours de saisie de mot de passe (vide = pas de prompt)
-    property string wifiError: ""        // message d'erreur après échec connexion
+    property string wifiError: ""        // error message after failed connection
 
     Timer {
         interval: 3000; running: root.open && root.slot === "top"; repeat: true; triggeredOnStart: true
@@ -293,7 +245,7 @@ ShellRoot {
     }
     Process {
         id: pollWifi
-        // Récupère état radio + liste des réseaux scannés
+        // Fetch radio state + list of scanned networks
         command: ["sh","-c",
             "echo \"$(nmcli radio wifi 2>/dev/null)\"; " +
             "nmcli -t -f IN-USE,SSID,SIGNAL,SECURITY dev wifi 2>/dev/null | head -40"
@@ -313,14 +265,14 @@ ShellRoot {
                     var security = parts[3] || "Open"
                     if (!ssid) continue
                     if (inUse) current = ssid
-                    // Garde l'entrée existante si elle a un meilleur signal ou est active
+                    // Keep the existing entry if it has a better signal or is active
                     if (seen[ssid]) {
                         if (seen[ssid].active) continue
                         if (seen[ssid].signal >= signal && !inUse) continue
                     }
                     seen[ssid] = {ssid: ssid, signal: signal, security: security, active: inUse}
                 }
-                // Reconstruit en array, triée par signal décroissant (active en premier)
+                // Rebuild the array, sorted by descending signal (active first)
                 var nets = []
                 for (var k in seen) nets.push(seen[k])
                 nets.sort(function(a,b){
@@ -334,13 +286,13 @@ ShellRoot {
         }
     }
 
-    // ── Données système : Bluetooth ──
+    // ── System data: Bluetooth ──
     property bool   btEnabled: false
     property var    btDevices: []   // [{name, mac, connected, paired}]
     property bool   btScanning: false
     property string wifiPasswordInput: ""
 
-    // ── Données système : Audio ──
+    // ── System data: Audio ──
     property var    audioSinks: []        // [{name, description, default}]
     property string audioDefaultSink: ""
     property real   audioVolume: 0.5      // 0.0 - 1.0
@@ -385,7 +337,7 @@ ShellRoot {
                         })
                     }
                 }
-                // Marquer le default sink en re-passant (au cas où il a été lu après les sinks)
+                // Mark the default sink by re-passing (in case it was read after the sinks)
                 for (var j = 0; j < sinks.length; j++) {
                     sinks[j].isDefault = sinks[j].name === root.audioDefaultSink
                 }
@@ -394,7 +346,7 @@ ShellRoot {
         }
     }
 
-    // ── Données système : Display ──
+    // ── System data: Display ──
     property string displayMode: "single"
     property string displayExternal: ""
     readonly property string displayModeScript: xdgConfigHome + "/quickshell/scripts/display_mode.sh"
@@ -424,7 +376,7 @@ ShellRoot {
         }
     }
 
-    // ── Notifications via IPC vers Notifications.qml (qui possède le bus DBus) ──
+    // ── Notifications via IPC to Notifications.qml (which owns the DBus bus) ──
     property bool dndEnabled: false
     property var notifications: []     // [{id, summary, body, app, ts}]
     property int expandedNotifIdx: -1  // index de la notif expanded (-1 = aucune)
@@ -476,7 +428,7 @@ ShellRoot {
     function dismissNotif(idx) {
         notifActProc.command = ["sh","-c","qs ipc call notifs dismissAt " + idx]
         notifActProc.running = true
-        // Refresh local immédiat (optimiste)
+        // Immediate local refresh (optimistic)
         var list = root.notifications.slice()
         list.splice(idx, 1)
         root.notifications = list
@@ -487,7 +439,7 @@ ShellRoot {
         root.notifications = []
     }
     function invokeNotif(idx) {
-        // Le daemon fait invoke + dismiss en un appel
+        // The daemon does invoke + dismiss in one call
         dismissNotif(idx)
     }
     function setDnd(state) {
@@ -496,199 +448,14 @@ ShellRoot {
         dndEnabled = state
     }
 
-    // ── Données système : Quickshare (qshare.py) ──
-    property string pendingFilePath: ""   // chemin de fichier sélectionné, en attente d'envoi
-
-    // ── État qshare ──
-    property bool   qshareTunnel:    false
-    property bool   qshareKeepAlive: false
-    property string qshareOutputDir: home + "/Downloads"
-    property string qshareUrl:       ""     // URL active (modal visible si non vide)
-    property string qshareQrPath:    ""     // chemin du PNG QR
-    property string qshareLabel:     ""     // ex. "envoi : photo.jpg" ou "réception → ~/Downloads"
-    property string qshareLastTick:  ""     // dernier fichier transféré (pour feedback)
-    property bool   qshareCancelled: false
-    readonly property string qshareScriptPath: xdgConfigHome + "/quickshell/scripts/qshare.py"
-    readonly property string qshareEventFile:  "/tmp/qshare-events"
-    readonly property string qshareQrFile:     "/tmp/qshare-qr.png"
-
-    readonly property var qshareOutputDirs: [
-        home + "/Downloads",
-        home + "/Pictures",
-        home + "/Documents",
-        "/tmp"
-    ]
-
-    Timer {
-        interval: 3000; running: root.open && root.slot === "left"; repeat: true; triggeredOnStart: true
-        onTriggered: qshareEventReader.running = qshareProc.running
-    }
-
-    // Process qui lance Yazi pour picker un fichier
-    Process {
-        id: yaziProc
-        running: false
-        command: ["sh","-c","true"]
-        // Le résultat est écrit par yazi dans /tmp/yzi-out, on le lira après
-    }
-    // Timer qui vérifie l'existence du fichier choisi par yazi
-    Timer {
-        id: yaziCheckTimer
-        interval: 500
-        repeat: true
-        property int count: 0
-        onTriggered: {
-            count += 1
-            yaziReadProc.running = true
-            if (count >= 60) { running = false; count = 0 }   // 30s max
-        }
-    }
-    Process {
-        id: yaziReadProc
-        command: ["sh","-c","cat /tmp/yzi-out 2>/dev/null"]
-        running: false
-        stdout: StdioCollector {
-            onStreamFinished: {
-                var path = this.text.trim()
-                if (path && path !== root.pendingFilePath) {
-                    root.pendingFilePath = path
-                    yaziCheckTimer.running = false
-                    yaziCheckTimer.count = 0
-                    // Rouvre le ControlCenter sur left.send avec le fichier sélectionné
-                    if (!root.open) {
-                        root.open = true
-                        root.closing = false
-                        root.level = 3
-                        root.slot = "left"
-                        root.sub = "send"
-                        root.action = root.firstAction()
-                    }
-                }
-            }
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════════
-    //   qshare.py — process + event polling + lancement/arrêt
-    // ═══════════════════════════════════════════════════════════════════
-
-    function startQshare(mode, filePath) {
-        // Reset state
-        root.qshareUrl = ""
-        root.qshareQrPath = ""
-        root.qshareLastTick = ""
-        root.qshareCancelled = false
-
-        // Cleanup ancien event/QR file (sync via touch)
-        cleanupQshareProc.command = ["sh","-c",
-            "rm -f " + qshareEventFile + " " + qshareQrFile + "; " +
-            "touch " + qshareEventFile]
-        cleanupQshareProc.running = true
-
-        // Construit la commande
-        var args = [qshareScriptPath, mode]
-        if (mode === "send") {
-            args.push(filePath)
-            qshareLabel = "envoi : " + filePath.split("/").pop()
-        } else {
-            args.push("-o"); args.push(qshareOutputDir)
-            qshareLabel = "réception → " + qshareOutputDir.replace(home, "~")
-        }
-        if (qshareTunnel)    args.push("--tunnel")
-        if (qshareKeepAlive) args.push("--keep-alive")
-        args.push("--qr-out");     args.push(qshareQrFile)
-        args.push("--event-file"); args.push(qshareEventFile)
-
-        qshareProc.command = args
-        qshareProc.running = true
-        qshareEventPoll.running = true
-    }
-
-    function stopQshare() {
-        qshareCancelled = true
-        qshareProc.running = false   // SIGTERM
-        qshareEventPoll.running = false
-        qshareUrl = ""
-        qshareQrPath = ""
-        // Reset pendingFilePath après un envoi
-        pendingFilePath = ""
-    }
-
-    Process { id: cleanupQshareProc; command: ["sh","-c","true"]; running: false }
-
-    Process {
-        id: qshareProc
-        running: false
-        command: ["sh","-c","true"]
-        // stdout/stderr ignorés — on s'en remet à l'event-file
-        onRunningChanged: {
-            if (!running) {
-                // Process terminé → ferme le modal après un petit délai pour
-                // laisser le temps de voir le tick final
-                qshareEventPoll.running = false
-                qshareCloseTimer.restart()
-            }
-        }
-    }
-
-    Timer {
-        id: qshareCloseTimer
-        interval: qshareCancelled ? 0 : 600
-        repeat: false
-        onTriggered: {
-            qshareUrl = ""
-            qshareQrPath = ""
-            qshareLastTick = ""
-            // Reset pendingFilePath après un transfert send réussi
-            if (!qshareCancelled && root.sub === "send") {
-                pendingFilePath = ""
-            }
-        }
-    }
-
-    // Poll l'event-file pour récupérer URL/QR/TICK/DONE
-    Timer {
-        id: qshareEventPoll
-        interval: 250
-        repeat: true
-        running: false
-        onTriggered: qshareEventReader.running = true
-    }
-
-    Process {
-        id: qshareEventReader
-        running: false
-        command: ["sh","-c","cat " + root.qshareEventFile + " 2>/dev/null"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                var lines = this.text.split("\n")
-                for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i].trim()
-                    if (!line) continue
-                    if (line.indexOf("URL ") === 0) {
-                        root.qshareUrl = line.substring(4)
-                    } else if (line.indexOf("QR ") === 0) {
-                        root.qshareQrPath = line.substring(3)
-                    } else if (line.indexOf("TICK ") === 0) {
-                        root.qshareLastTick = line.substring(5)
-                    } else if (line === "DONE") {
-                        // Le process va s'arrêter tout seul, le onRunningChanged gère
-                    } else if (line === "CANCELLED") {
-                        root.qshareCancelled = true
-                    }
-                }
-            }
-        }
-    }
-
     Timer {
         interval: 3000; running: root.open && root.slot === "top"; repeat: true; triggeredOnStart: true
         onTriggered: pollBt.running = true
     }
     Process {
         id: pollBt
-        // Récupère powered + liste de TOUS les devices (paired et découverts)
-        // avec leur état connected et paired pour différencier
+        // Fetch powered + list of ALL devices (paired and discovered)
+        // with their connected/paired state to differentiate
         command: ["sh","-c",
             "echo \"$(bluetoothctl show 2>/dev/null | grep -i 'powered:' | awk '{print $2}')\"; " +
             "bluetoothctl devices 2>/dev/null | while read line; do " +
@@ -721,7 +488,7 @@ ShellRoot {
                 }
                 var devices = []
                 for (var k in seen) devices.push(seen[k])
-                // Trier : connectés > paired > non-paired (découverts), puis nom
+                // Sort: connected > paired > non-paired (discovered), then by name
                 devices.sort(function(a,b){
                     if (a.connected !== b.connected) return a.connected ? -1 : 1
                     if (a.paired    !== b.paired)    return a.paired ? -1 : 1
@@ -738,14 +505,14 @@ ShellRoot {
         command: ["sh","-c","bluetoothctl --timeout 30 scan on"]
         running: false
     }
-    // Stop scan automatique après 30s
+    // Auto-stop scan after 30s
     Timer {
         id: btScanStopTimer
         interval: 30000
         repeat: false
         onTriggered: { root.btScanning = false }
     }
-    // Re-poll plus fréquent quand on scan
+    // Re-poll more frequently while scanning
     Timer {
         interval: 1500
         running: root.btScanning && root.open
@@ -753,7 +520,7 @@ ShellRoot {
         onTriggered: pollBt.running = true
     }
 
-    // Process pour submission du password Wi-Fi (sépare actProc pour capture stderr)
+    // Process for Wi-Fi password submission (separate from actProc to capture stderr)
     Process {
         id: wifiSubmitProc
         command: ["sh","-c","true"]
@@ -774,7 +541,7 @@ ShellRoot {
         }
     }
 
-    // ── Process pour exécuter les actions ──
+    // ── Process for running actions ──
     Process { id: actProc; command: ["sh","-c","true"]; running: false }
 
     // Refresh state quand on change de slot
@@ -814,20 +581,20 @@ ShellRoot {
                 cmd = "nmcli radio wifi " + (wifiEnabled ? "off" : "on")
             } else if (actionKey.indexOf("connect:") === 0) {
                 var ssid = actionKey.substring(8)
-                // Trouver le réseau dans la liste pour vérifier la sécurité
+                // Find the network in the list to check security
                 var net = null
                 for (var i = 0; i < wifiNetworks.length; i++) {
                     if (wifiNetworks[i].ssid === ssid) { net = wifiNetworks[i]; break }
                 }
-                // Si déjà actif, déconnexion
+                // If already active, disconnect
                 if (net && net.active) {
                     cmd = "nmcli con down id '" + ssid + "' 2>/dev/null || nmcli dev disconnect $(nmcli -t -f DEVICE,TYPE dev | grep wifi | head -1 | cut -d: -f1)"
                 }
-                // Si réseau ouvert, connexion directe
+                // If open network, connect directly
                 else if (net && (net.security === "" || net.security === "--")) {
                     cmd = "nmcli dev wifi connect '" + ssid.replace(/'/g, "'\\''") + "'"
                 }
-                // Si réseau sécurisé : ouvrir le prompt
+                // If secured network: open the prompt
                 else {
                     wifiPromptSSID = ssid
                     wifiError = ""
@@ -897,73 +664,6 @@ ShellRoot {
                 cmd = "'" + displayModeScript + "' " + actionKey
             }
         }
-        // ── Quickshare Send (qshare.py) ──
-        else if (slotKey === "left" && subKey === "send") {
-            if (actionKey === "pick-file") {
-                // Lance le terminal flottant avec yazi.
-                // 1) On attend ~350ms le temps que le ControlCenter relâche
-                //    son focus exclusif (l'animation de close dure 290ms)
-                // 2) On lance yazi en background
-                // 3) On force le focus via hyprctl au cas où Hyprland ne l'a
-                //    pas donné automatiquement (race condition possible)
-                cmd =
-                    "rm -f /tmp/yzi-out; " +
-                    "( sleep 0.35; " +
-                    "  if command -v foot >/dev/null 2>&1; then " +
-                    "    foot --app-id qs-yazi-picker yazi --chooser-file=/tmp/yzi-out & " +
-                    "  elif command -v alacritty >/dev/null 2>&1; then " +
-                    "    alacritty --class qs-yazi-picker -e yazi --chooser-file=/tmp/yzi-out & " +
-                    "  elif command -v kitty >/dev/null 2>&1; then " +
-                    "    kitty --class qs-yazi-picker yazi --chooser-file=/tmp/yzi-out & " +
-                    "  elif command -v wezterm >/dev/null 2>&1; then " +
-                    "    wezterm start --class qs-yazi-picker -- yazi --chooser-file=/tmp/yzi-out & " +
-                    "  else " +
-                    "    notify-send 'qshare' 'No supported terminal found (foot/alacritty/kitty/wezterm)'; " +
-                    "    exit; " +
-                    "  fi; " +
-                    "  sleep 0.45; " +   // laisser le terminal apparaître
-                    "  hyprctl dispatch focuswindow '^(qs-yazi-picker)$' >/dev/null 2>&1; " +
-                    ") &"
-                actProc.command = ["sh","-c", cmd]
-                actProc.running = true
-                yaziCheckTimer.count = 0
-                yaziCheckTimer.running = true
-                // Ferme le ControlCenter pour libérer le focus à la fenêtre yazi
-                close()
-                return
-            } else if (actionKey === "clear-file") {
-                pendingFilePath = ""
-                return
-            } else if (actionKey === "toggle-tunnel") {
-                qshareTunnel = !qshareTunnel
-                return
-            } else if (actionKey === "toggle-keepalive") {
-                qshareKeepAlive = !qshareKeepAlive
-                return
-            } else if (actionKey === "start-send") {
-                if (pendingFilePath === "") return
-                root.startQshare("send", pendingFilePath)
-                return
-            }
-        }
-        // ── Quickshare Receive (qshare.py) ──
-        else if (slotKey === "left" && subKey === "receive") {
-            if (actionKey === "toggle-tunnel") {
-                qshareTunnel = !qshareTunnel
-                return
-            } else if (actionKey === "toggle-keepalive") {
-                qshareKeepAlive = !qshareKeepAlive
-                return
-            } else if (actionKey === "cycle-output") {
-                var dirs = qshareOutputDirs
-                var idx = dirs.indexOf(qshareOutputDir)
-                qshareOutputDir = dirs[(idx + 1) % dirs.length]
-                return
-            } else if (actionKey === "start-recv") {
-                root.startQshare("recv", "")
-                return
-            }
-        }
         // ── Notifications History ──
         else if (slotKey === "right" && subKey === "history") {
             if (actionKey === "clear-all") {
@@ -988,9 +688,9 @@ ShellRoot {
         if (cmd) {
             actProc.command = ["sh","-c", cmd]
             actProc.running = true
-            // refresh state après une seconde
+            // refresh state after one second
             refreshTimer.restart()
-            // Pour les actions BT pair/connect/disconnect/remove, refresh répété
+            // For BT pair/connect/disconnect/remove actions, repeated refresh
             if (slotKey === "top" && subKey === "bluetooth" && actionKey !== "toggle" && actionKey !== "scan") {
                 btRepeatRefresh.count = 0
                 btRepeatRefresh.running = true
@@ -1007,7 +707,7 @@ ShellRoot {
             pollDisplay.running = true
         }
     }
-    // Refresh BT répété après une action pair/connect (peut prendre 5-10s)
+    // Repeated BT refresh after a pair/connect action (can take 5-10s)
     Timer {
         id: btRepeatRefresh
         interval: 1500
@@ -1022,7 +722,7 @@ ShellRoot {
 
     function activateCurrent() {
         if (level === 3 && action) {
-            // Cas spécial notifs : 1er Enter = expand, 2e Enter = invoke
+            // Special notif case: 1st Enter = expand, 2nd Enter = invoke
             if (slot === "right" && sub === "history" && action.indexOf("notif:") === 0) {
                 var idx = parseInt(action.substring(6))
                 if (expandedNotifIdx === idx) {
@@ -1046,7 +746,7 @@ ShellRoot {
     }
     function close() {
         if (!open) return
-        // Phase 1 : on remet level à 1 (slot=center) et on déclenche closing.
+        // Phase 1: reset level to 1 (slot=center) and trigger closing.
         // Les slots reviennent au centre, le centre reste visible.
         level = 1; slot = "center"; sub = ""; action = ""
         closing = true
@@ -1057,7 +757,7 @@ ShellRoot {
         else close()
     }
 
-    // Timer qui finalise la fermeture après que les slots soient revenus au centre
+    // Timer that finalizes the close after slots return to center
     Timer {
         id: closeTimer
         interval: 290  // attendre la fin de l'animation des slots (250ms + marge)
@@ -1080,21 +780,19 @@ ShellRoot {
     function navigate(dir) {
         if (level === 1) {
             if (slot === "center") {
-                var t = ({up:"top",down:"bottom",left:"left",right:"right"})[dir]
+                var t = ({up:"top",down:"bottom",right:"right"})[dir]
                 if (t) { slot = t; level = 3; sub = firstSub(slot); action = firstAction() }
                 return
             }
             var same = ((dir === "up"    && slot === "top")    ||
                         (dir === "down"  && slot === "bottom") ||
-                        (dir === "left"  && slot === "left")   ||
                         (dir === "right" && slot === "right"))
             if (same) { level = 3; sub = firstSub(slot); action = firstAction(); return }
             var opp = ((dir === "down"  && slot === "top")    ||
                        (dir === "up"    && slot === "bottom") ||
-                       (dir === "right" && slot === "left")   ||
                        (dir === "left"  && slot === "right"))
             if (opp) { slot = "center"; return }
-            var t2 = ({up:"top",down:"bottom",left:"left",right:"right"})[dir]
+            var t2 = ({up:"top",down:"bottom",right:"right"})[dir]
             if (t2 && t2 !== slot) slot = t2
         }
         else if (level === 3) {
@@ -1134,7 +832,7 @@ ShellRoot {
         }
     }
 
-    // ── Détection écran actif ──
+    // ── Active screen detection ──
     property string activeMonitor: ""
     Process {
         id: getMonitorProc
@@ -1183,7 +881,7 @@ ShellRoot {
                 visible: isActive
                 opacity: (root.open && !root.closing) ? 1 : 0
                 Behavior on opacity { NumberAnimation { duration: 220 } }
-                // Cède le focus au TextInput Wi-Fi quand le prompt est ouvert
+                // Give focus to the Wi-Fi TextInput when the prompt is open
                 focus: root.open && !root.closing && isActive && root.wifiPromptSSID === ""
 
                 // Reprendre le focus clavier quand le prompt Wi-Fi se ferme
@@ -1214,7 +912,7 @@ ShellRoot {
                     anchors.centerIn: parent
                     width: 1; height: 1
 
-                    // Pan global : le cross glisse pour amener le slot focusé vers le centre
+                    // Global pan: the cross slides to bring the focused slot to the center
                     anchors.horizontalCenterOffset: {
                         if (root.level !== 3) return 0
                         if (root.slot === "left")  return  root.panShiftH
@@ -1249,7 +947,7 @@ ShellRoot {
                     }
                     Slot {
                         slotKey: "top"
-                        title: "Connexion"
+                        title: "Connection"
                         subtitle: "Wi-Fi · Bluetooth"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
@@ -1281,17 +979,6 @@ ShellRoot {
                         }
                     }
                     Slot {
-                        slotKey: "left"
-                        title: "Quickshare"
-                        subtitle: "File transfer"
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.horizontalCenterOffset: (root.open && !root.closing) ? -root.slotGapH : 0
-                        Behavior on anchors.horizontalCenterOffset {
-                            NumberAnimation { duration: 250; easing.type: Easing.InCirc; }
-                        }
-                    }
-                    Slot {
                         slotKey: "right"
                         title: "Notifications"
                         subtitle: "History · DND"
@@ -1304,184 +991,6 @@ ShellRoot {
                     }
                 }
 
-                // ═══════════════════════════════════════════════════════
-                //   QR Modal qshare (visible quand qshareUrl !== "")
-                // ═══════════════════════════════════════════════════════
-                Rectangle {
-                    id: qrBackdrop
-                    anchors.fill: parent
-                    color: "#000000"
-                    opacity: (root.qshareUrl !== "" && isActive) ? 0.55 : 0
-                    visible: opacity > 0
-                    z: 100
-                    Behavior on opacity { NumberAnimation { duration: 280 } }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: root.stopQshare()
-                        enabled: root.qshareUrl !== ""
-                    }
-                }
-
-                Item {
-                    id: qrModal
-                    anchors.centerIn: parent
-                    width: 380; height: 500
-                    z: 101
-                    opacity: (root.qshareUrl !== "" && isActive) ? 1 : 0
-                    visible: opacity > 0
-                    scale: (root.qshareUrl !== "" && isActive) ? 1.0 : 0.92
-                    Behavior on opacity { NumberAnimation { duration: 280; easing.type: Easing.OutCubic } }
-                    Behavior on scale   { NumberAnimation { duration: 280; easing.type: Easing.OutCubic } }
-
-                    // Fond carte
-                    Rectangle {
-                        anchors.fill: parent
-                        color: root.colCard
-                        border.color: root.colInk
-                        border.width: 1
-                    }
-                    // Bordure interne décalée
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 4
-                        color: "transparent"
-                        border.color: root.colInk
-                        border.width: 1
-                        opacity: 0.35
-                    }
-                    // Coins en L
-                    Repeater {
-                        model: 4
-                        Item {
-                            width: 8; height: 8
-                            x: (index === 0 || index === 2) ? 6 : (qrModal.width - 8)
-                            y: (index < 2) ? -2 : (qrModal.height - 8 + 2)
-                            z: 3
-                            Rectangle { width: 8; height: 2; color: root.colInk; y: (index < 2) ? 0 : 6 }
-                            Rectangle { width: 2; height: 8; color: root.colInk; x: (index === 0 || index === 2) ? 0 : 6 }
-                        }
-                    }
-
-                    Column {
-                        anchors.fill: parent
-                        anchors.margins: 24
-                        spacing: 12
-
-                        // Header
-                        Text {
-                            text: "QSHARE"
-                            font.family: "Inter"
-                            font.pixelSize: 11
-                            font.letterSpacing: 5
-                            font.weight: Font.Medium
-                            color: root.colInk
-                            opacity: 0.6
-                        }
-                        Rectangle { width: 36; height: 1; color: root.colInk; opacity: 0.5 }
-
-                        Item { width: 1; height: 4 }
-
-                        // Label (envoi/réception)
-                        Text {
-                            width: parent.width
-                            text: root.qshareLabel
-                            font.family: "Inter"
-                            font.pixelSize: 12
-                            font.weight: Font.Medium
-                            color: root.colInk
-                            elide: Text.ElideMiddle
-                        }
-
-                        // QR area
-                        Item {
-                            width: parent.width
-                            height: 280
-                            Rectangle {
-                                anchors.centerIn: parent
-                                width: 280; height: 280
-                                color: root.colHi
-                                Image {
-                                    anchors.fill: parent
-                                    anchors.margins: 8
-                                    source: root.qshareQrPath !== ""
-                                            ? "file://" + root.qshareQrPath + "?t=" + Date.now()
-                                            : ""
-                                    fillMode: Image.PreserveAspectFit
-                                    smooth: false
-                                    cache: false
-                                    asynchronous: true
-                                }
-                                // Loading state
-                                Text {
-                                    anchors.centerIn: parent
-                                    visible: root.qshareQrPath === ""
-                                    text: "GENERATING…"
-                                    font.family: "Inter"
-                                    font.pixelSize: 10
-                                    font.letterSpacing: 3
-                                    color: root.colCard
-                                    opacity: 0.6
-                                }
-                            }
-                        }
-
-                        // URL en petit
-                        Text {
-                            width: parent.width
-                            text: root.qshareUrl
-                            font.family: "Iosevka, monospace"
-                            font.pixelSize: 9
-                            color: root.colInk
-                            opacity: 0.55
-                            elide: Text.ElideMiddle
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-
-                        // Tick / Status
-                        Text {
-                            width: parent.width
-                            text: root.qshareLastTick !== ""
-                                  ? "✓ " + root.qshareLastTick
-                                  : "Scan with phone…"
-                            font.family: "Inter"
-                            font.pixelSize: 10
-                            font.letterSpacing: 1.5
-                            color: root.colInk
-                            opacity: 0.7
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                    }
-
-                    // Bouton Cancel/Stop en bas-droite
-                    Rectangle {
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 14
-                        width: 90; height: 26
-                        color: cancelMA.containsMouse ? root.colInk : "transparent"
-                        border.color: root.colInk
-                        border.width: 1
-                        Behavior on color { ColorAnimation { duration: 180 } }
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: root.qshareKeepAlive ? "× STOP" : "× CANCEL"
-                            font.family: "Inter"
-                            font.pixelSize: 10
-                            font.letterSpacing: 2.5
-                            font.weight: Font.Medium
-                            color: cancelMA.containsMouse ? root.colCard : root.colInk
-                            Behavior on color { ColorAnimation { duration: 180 } }
-                        }
-                        MouseArea {
-                            id: cancelMA
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: root.stopQshare()
-                        }
-                    }
-                }
             }
         }
     }
@@ -1490,7 +999,7 @@ ShellRoot {
     //   COMPOSANTS
     // ═══════════════════════════════════════════════════════════════════
 
-    // ── Flèche NieR ──
+    // ── NieR arrow ──
     component NierArrow: Item {
         id: ar
         property string axis: "top"
@@ -1573,7 +1082,7 @@ ShellRoot {
         }
         Behavior on opacity { NumberAnimation { duration: 320 } }
 
-        // Marqueur focus à gauche
+        // Focus marker on the left
         Item {
             id: focusMark
             width: 18; height: 18
@@ -1625,7 +1134,7 @@ ShellRoot {
                 border.color: root.colInk
                 border.width: 1
 
-                // Onglet asymétrique
+                // Asymmetric tab
                 Rectangle {
                     visible: !sl.isCenter
                     anchors.left: parent.left
@@ -1687,7 +1196,7 @@ ShellRoot {
                     visible: !sl.isCenter
                 }
 
-                // Indicateur (carré sombre à gauche)
+                // Indicator (dark square on the left)
                 Rectangle {
                     visible: !sl.isCenter
                     width: 14; height: 14
@@ -1779,7 +1288,7 @@ ShellRoot {
             }
         }
 
-        // Détails
+        // Details
         Item {
             id: detailsItem
             visible: sl.isInL3 && (root.detailKey() in root.details)
@@ -1800,14 +1309,14 @@ ShellRoot {
             width: 300
             height: detailsCol.implicitHeight + 36
 
-            // Box stylisée style NieR (fond opaque + bordure + onglet)
+            // Stylized NieR box (opaque background + border + tab)
             Rectangle {
                 anchors.fill: parent
                 color: root.colCard
                 border.color: root.colInk
                 border.width: 1
             }
-            // Bordure interne décalée
+            // Offset inner border
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 4
@@ -1939,7 +1448,7 @@ ShellRoot {
                         clip: true
                         boundsBehavior: Flickable.StopAtBounds
 
-                        // Auto-scroll vers la notif focusée
+                        // Auto-scroll to the focused notif
                         function scrollToFocus() {
                             var acts = root.actList()
                             for (var i = 0; i < acts.length; i++) {
@@ -2130,10 +1639,10 @@ ShellRoot {
                                     if (dragging) setVol(e.x)
                                 }
                                 onClicked: function(e) {
-                                    // Click simple sans drag : mute/unmute si sur la cellule à droite (au-delà de la ligne actuelle)
+                                    // Simple click without drag: mute/unmute if on the cell to the right (beyond the current line)
                                     // Sinon set vol
                                     if (Math.abs(e.x - lastX) < 3) {
-                                        // C'était juste un click : on a déjà appelé setVol, c'est ok
+                                        // It was just a click: setVol was already called, that's ok
                                     }
                                 }
                                 onWheel: function(e) {
@@ -2212,8 +1721,8 @@ ShellRoot {
                                 onAccepted: root.dispatchAction("top","wifi","submit-password")
                                 Keys.onEscapePressed: root.dispatchAction("top","wifi","cancel-prompt")
 
-                                // Timer pour forcer le focus après que le widget soit rendu
-                                // (le focus immédiat est volé par le keyHandler parent)
+                                // Timer to force focus after the widget is rendered
+                                // (the immediate focus is stolen by the parent keyHandler)
                                 Timer {
                                     id: pwFocusTimer
                                     interval: 50
@@ -2233,7 +1742,7 @@ ShellRoot {
                                         }
                                     }
                                 }
-                                // Au cas où le widget devient visible avant que la propriété change
+                                // In case the widget becomes visible before the property changes
                                 onVisibleChanged: {
                                     if (visible && root.wifiPromptSSID !== "") {
                                         pwFocusTimer.restart()
@@ -2346,7 +1855,7 @@ ShellRoot {
             z: 0
         }
 
-        // Bordure : fine en repos, épaisse au focus
+        // Border: thin at rest, thick on focus
         Rectangle {
             anchors.fill: parent
             color: "transparent"
@@ -2457,7 +1966,7 @@ ShellRoot {
             z: 1
         }
 
-        // Marqueur losange à gauche au focus
+        // Diamond marker on the left when focused
         Rectangle {
             width: 6; height: 6; rotation: 45
             color: root.colCard
@@ -2693,10 +2202,10 @@ ShellRoot {
             onEntered: root.action = nbtn.notifData.key
             onClicked: {
                 if (nbtn.expanded) {
-                    // déjà expandu → invoke source
+                    // already expanded → invoke source
                     root.invokeNotif(nbtn.notifData.notifIdx)
                 } else {
-                    // pas encore expanded → expand
+                    // not yet expanded → expand
                     root.expandedNotifIdx = nbtn.notifData.notifIdx
                 }
             }

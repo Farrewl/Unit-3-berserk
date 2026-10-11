@@ -11,7 +11,7 @@ Item {
     property real screenH: 1080
 
     property bool   menuOpen:        false
-    property bool   wipeHideRunning: false  // reste true pendant l'animation de fermeture
+    property bool   wipeHideRunning: false  // stays true during the close animation
     property string currentCat: "all"
     property string searchQuery: ""
     property int    focusIdx:   0
@@ -75,7 +75,7 @@ Item {
                     var cats      = parts[2] || ""
                     var rawExec   = (parts[3] || "").replace(/%[A-Za-z]/g,"").trim()
                     if (!name || !desktopId) continue
-                    // Utiliser l'exec brut si dispo, sinon le desktop ID
+                    // Use raw exec if available, otherwise desktop ID
                     var launchCmd = rawExec || desktopId
 
                     var cat = "other"
@@ -131,13 +131,13 @@ Item {
 
     function launchApp(cmd) {
         if (!cmd) return
-        // nohup + redirection évite EPIPE pour les apps Electron (Discord, etc.)
+        // nohup + redirection avoids EPIPE for Electron apps (Discord, etc.)
         launchProc.pending = "nohup " + cmd + " > /dev/null 2>&1 &"
         launchProc.running = true
         root.closeMenu()
     }
 
-    // Lancer une commande directe (footer)
+    // Launch a direct command (footer)
     function launch(cmd) {
         if (!cmd || cmd === "") return
         launchProc.pending = "nohup " + cmd + " > /dev/null 2>&1 &"
@@ -213,7 +213,7 @@ Item {
                 Rectangle { x:0; y:index*20; width:root.lw; height:1; color:root.lineVsoft }
             }
 
-            // Clic n'importe où → focus sur search
+            // Click anywhere → focus search
             MouseArea {
                 anchors.fill: parent; z: -1
                 onClicked: searchInput.forceActiveFocus()
@@ -248,7 +248,7 @@ Item {
                         spacing:14; anchors.verticalCenter:parent.verticalCenter
                         Text { text:"SYSTEM"; font.pixelSize:11; font.letterSpacing:3.5; font.weight:Font.Medium; color:root.inkStrong }
                         Rectangle { width:24; height:1; color:root.inkSoft; anchors.verticalCenter:parent.verticalCenter }
-                        Text { text:"システム"; font.pixelSize:10; font.letterSpacing:2; color:root.inkSoft }
+                        Text { text:"UNIT-3"; font.pixelSize:10; font.letterSpacing:2; color:root.inkSoft }
                     }
                     Item { width:parent.width - 340; height:1 }
                     Row {
@@ -564,7 +564,7 @@ Item {
             }
         }
 
-        // Wipe curtain — frère du contenu
+        // Wipe curtain — sibling of the content
         Rectangle {
             id:wipeCurtain
             anchors{top:parent.top;bottom:parent.bottom}

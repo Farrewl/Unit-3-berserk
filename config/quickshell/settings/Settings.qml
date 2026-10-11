@@ -3,96 +3,86 @@ import QtQuick
 import Quickshell
 
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  SETTINGS — options de configuration du rice NieR           ║
-// ║  Modifie les valeurs ici pour personnaliser le comportement  ║
+// ║  SETTINGS — Unit-3 rice configuration options                ║
+// ║  Edit the values below to customize the behaviour.           ║
 // ╚══════════════════════════════════════════════════════════════╝
 
 QtObject {
 
-    // ── SCALE GLOBAL ────────────────────────────────────────────
+    // ── GLOBAL SCALE ────────────────────────────────────────────
 
-    // Multiplicateur global appliqué à toutes les tailles
-    // 1.0 = taille normale, 1.25 = 25% plus grand, 0.8 = 20% plus petit
+    // Global multiplier applied to all sizes.
+    // 1.0 = normal size, 1.25 = 25% larger, 0.8 = 20% smaller
     readonly property real scale: 1
 
-    // Dimensions de l'écran principal (équivalent 100vw / 100vh)
+    // Dimensions of the primary screen (equivalent to 100vw / 100vh)
     readonly property real screenW: Quickshell.screens.length > 0
                                     ? Quickshell.screens[0].width  : 1920
     readonly property real screenH: Quickshell.screens.length > 0
                                     ? Quickshell.screens[0].height : 1080
 
-    // Unités relatives — usage : Settings.vw(5) = 5% de la largeur écran
-    // Équivalent CSS : 5vw
+    // Relative units — usage: Settings.vw(5) = 5% of screen width
     function vw(pct) { return Math.round(screenW * pct / 100) }
     function vh(pct) { return Math.round(screenH * pct / 100) }
 
-    // Unité scalée — applique scale en plus de la taille de base
-    // Usage : Settings.s(320) = 320 * scale
+    // Scaled unit — applies scale on top of the base size.
+    // Usage: Settings.s(320) = 320 * scale
     function s(px)   { return Math.round(px * scale) }
 
     // ── PLAYER ──────────────────────────────────────────────────
 
-    // Fond du player : true = fond sombre opaque / false = transparent
+    // Player background: true = dark opaque background / false = transparent
     readonly property bool playerBackground: true
 
-    // Couleur du fond (utilisée seulement si playerBackground = true)
+    // Background color (used only when playerBackground = true)
     readonly property color playerBgColor: Qt.rgba(20/255, 16/255, 11/255, 0.92)
 
-    // Position verticale du player (0.0 = haut, 1.0 = bas de l'écran)
+    // Vertical position of the player (0.0 = top, 1.0 = bottom of screen)
     readonly property real playerPositionY: 0.39
 
-    // Distance du bord droit en pixels
+    // Distance from the right edge in pixels
     readonly property int playerMarginRight: s(20)
 
-    // Largeur du player en pixels (scalée automatiquement)
+    // Player width in pixels (scaled automatically)
     readonly property int playerWidth: s(320)
 
 
-    // ── COMPANIONS ──────────────────────────────────────────────
+    // ── GLOBAL COLORS ───────────────────────────────────────────
 
-    readonly property bool companionsEnabled: true  // Etat par defaut avant le state persistant charge
-
-    // Distance du bord droit en pixels
-    readonly property int companionsMarginRight: s(20)
-
-    // Taille des sprites
-    readonly property int companionsSpriteSize: s(128)
-
-
-    // ── COULEURS GLOBALES ────────────────────────────────────────
-
-    // Palette sépia NieR (ne pas modifier sauf si tu changes de thème)
-    readonly property color fg:   "#E0DBCA"      // texte principal
-    readonly property color bg:   "#14100B"      // fond principal
-    readonly property color a1:   "#AD2E2A"      // accent rouge
-    readonly property color a2:   "#7A7568"      // accent vert
-    readonly property color a3:   "#6A6358"      // accent bleu
-    readonly property color a4:   "#A89A78"      // accent or
-    readonly property color ln:   Qt.rgba(224/255, 219/255, 202/255, 0.12)  // bordure fine
-    readonly property color lnm:  Qt.rgba(224/255, 219/255, 202/255, 0.22) // bordure medium
-    readonly property color curtainColor: "#E0DBCA"  // couleur du rideau wipe
+    // Berserk palette (ink/blood/paper). Only change if you switch themes.
+    readonly property color fg:   "#E0DBCA"      // primary text
+    readonly property color bg:   "#14100B"      // primary background
+    readonly property color a1:   "#AD2E2A"      // blood red accent
+    readonly property color a2:   "#7A7568"      // grey accent
+    readonly property color a3:   "#6A6358"      // muted accent
+    readonly property color a4:   "#A89A78"      // gold accent
+    readonly property color ln:   Qt.rgba(224/255, 219/255, 202/255, 0.12)  // thin border
+    readonly property color lnm:  Qt.rgba(224/255, 219/255, 202/255, 0.22)  // medium border
+    readonly property color curtainColor: "#E0DBCA"  // wipe curtain color
 
 
     // ── ANIMATIONS ──────────────────────────────────────────────
 
-    // Durée du reveal (ms)
+    // Reveal duration (ms)
     readonly property int revealDuration: 460
 
-    // Durée du hide (ms)
+    // Hide duration (ms)
     readonly property int hideDuration: 380
 
-    // Durée de la transition cover blocky (ms par étape)
+    // Blocky cover transition duration (ms per step)
     readonly property int coverTransitionStep: 30
 
 
     // ── WAYBAR ──────────────────────────────────────────────────
 
-    // Hauteur de la barre Waybar en pixels
+    // Waybar height in pixels
     readonly property int waybarHeight: 28
 
 
-    // ── RACCOURCIS (à déclarer aussi dans hyprland.lua) ─────────
-    //   SUPER+SHIFT+M  →  echo t >> /tmp/qs-toggle    (afficher/cacher player)
-    //   SUPER+SHIFT+F  →  echo t >> /tmp/qs-front     (premier plan / arrière)
-
+    // ── KEYBINDS (must also be declared in hyprland.lua) ────────
+    //   SUPER + Tab           → toggle Control Center (qs ctrl.sh)
+    //   SUPER + Return        → show/hide player       (/tmp/qs-toggle)
+    //   SUPER + SHIFT + Return→ player front/back      (/tmp/qs-front)
+    //   SUPER + SHIFT + V     → toggle audio visualizer
+    //   SUPER + P             → wallpaper picker
 }

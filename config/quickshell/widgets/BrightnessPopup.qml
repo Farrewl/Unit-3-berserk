@@ -4,10 +4,10 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
-//   Brightness popup horizontal — déclenché par le bouton BRT Waybar
-//   - Positionné sous le curseur au moment du clic
+//   Horizontal brightness popup — triggered by the BRT Waybar button
+//   - Positioned under the cursor at click time
 //   - Scroll / clic / drag
-//   - Contrôle du backlight via brightnessctl
+//   - Backlight control via brightnessctl
 // ═════════════════════════════════════════════════════════════════════
 
 ShellRoot {

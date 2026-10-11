@@ -20,9 +20,7 @@
     "custom/ticker"
   ],
   "modules-right": [
-    "custom/pomodoro",
     "custom/idle-inhibit",
-    "custom/companion",
     "cpu",
     "battery",
     "backlight",
@@ -174,16 +172,9 @@
   },
 
   "custom/ticker": {
-    "exec": "echo '接続中 // SCANNING // データ処理 // SYS:ACTIVE // NR-2B@ARCH // 全システム正常 // 起動完了 //'",
+    "exec": "echo 'CONNECTING // SCANNING // PROCESSING // SYS:ACTIVE // UNIT ONLINE // ALL SYSTEMS NORMAL // BOOT COMPLETE //'",
     "interval": 60,
     "format": "{}"
-  },
-
-  "custom/pomodoro": {
-    "exec": "~/.config/waybar/scripts/pomodoro.sh",
-    "interval": 1,
-    "format": "{}",
-    "on-click": "~/.config/waybar/scripts/pomodoro_toggle.sh"
   },
 
   "custom/idle-inhibit": {
@@ -192,14 +183,6 @@
     "interval": 5,
     "signal": 8,
     "on-click": "~/.config/waybar/scripts/idle_inhibit.sh toggle"
-  },
-
-  "custom/companion": {
-    "exec": "~/.config/waybar/scripts/companion_toggle.sh status",
-    "return-type": "json",
-    "interval": 5,
-    "signal": 10,
-    "on-click": "~/.config/waybar/scripts/companion_toggle.sh toggle"
   },
 
   "custom/power": {

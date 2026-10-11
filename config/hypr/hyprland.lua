@@ -9,7 +9,7 @@ hl.monitor({
 
 -- Autostart
 hl.on("hyprland.start", function()
-    hl.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe QT_MEDIA_BACKEND=ffmpeg QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 /usr/bin/qs")
+    hl.exec_cmd("env QT_MEDIA_BACKEND=ffmpeg QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 /usr/bin/qs")
     hl.exec_cmd("pkill dunst")
     hl.exec_cmd("pkill mako")
     hl.exec_cmd("pkill swaync")
@@ -117,12 +117,12 @@ hl.bind("SUPER + SHIFT + Return", hl.dsp.exec_cmd("echo t >> /tmp/qs-front"))
 hl.bind("SUPER + SHIFT + V", hl.dsp.exec_cmd("~/.config/quickshell/scripts/visualizer_toggle.sh toggle"))
 
 -- Applications
-hl.bind("SUPER + T", hl.dsp.exec_cmd("env LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe KITTY_GPU_DISABLED=1 /usr/bin/kitty"))
+hl.bind("SUPER + T", hl.dsp.exec_cmd("/usr/bin/kitty"))
 hl.bind("SUPER + M", hl.dsp.exec_cmd([[pgrep -x spotify >/dev/null && hyprctl dispatch 'hl.dsp.workspace.toggle_special("spotify")' || spotify]]))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("pkill qs"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("~/.config/quickshell/wallpaper.sh"))
-hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
-hl.bind("SUPER + E", hl.dsp.exec_cmd("thunar"))
+hl.bind("SUPER + W", hl.dsp.exec_cmd("brave"))
+hl.bind("SUPER + E", hl.dsp.exec_cmd("kitty -e yazi"))
 
 -- Window management
 hl.bind("SUPER + Q", hl.dsp.window.close())
@@ -130,10 +130,10 @@ hl.bind("SUPER + F", hl.dsp.window.fullscreen())
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + Escape", hl.dsp.exit())
 hl.bind("SUPER + D", hl.dsp.window.fullscreen({ mode = "maximized" }))
-hl.bind("SUPER + W", function()
+hl.bind("SUPER + B", function()
     hl.config({ general = { layout = "master" } })
 end)
-hl.bind("SUPER + SHIFT + W", function()
+hl.bind("SUPER + SHIFT + B", function()
     hl.config({ general = { layout = "dwindle" } })
 end)
 

@@ -10,17 +10,17 @@ ShellRoot {
     // ── Fast mode (skip reveal animation, used for lid-switch lock) ──
     property bool fastMode: Quickshell.env("UNIT3_LOCK_FAST") === "1"
 
-    // ── État partagé ──
-    property bool   revealing: false   // vidéo reveal en cours
-    property bool   frozen:    false   // reveal freezée sur dernière frame
-    property bool   hiding:    false   // vidéo hide en cours
-    property bool   done:      false   // tout terminé
+    // ── Shared state ──
+    property bool   revealing: false   // reveal video is playing
+    property bool   frozen:    false   // reveal frozen on last frame
+    property bool   hiding:    false   // hide video is playing
+    property bool   done:      false   // everything finished
 
-    // ── Paths génériques (portables) ──
+    // ── Generic paths (portable) ──
     property string home:          Quickshell.env("HOME")
     property string xdgConfigHome: Quickshell.env("XDG_CONFIG_HOME") || (home + "/.config")
 
-    // ── Auth partagée ──
+    // ── Shared auth ──
     property string lockInput:   ""
     property bool   lockError:   false
     property bool   lockPending: false
@@ -29,6 +29,23 @@ ShellRoot {
     Process {
         id: getUserProc; command:["sh","-c","echo $USER"]; running:true
         stdout: SplitParser { onRead: data => { var u=data.trim(); if(u!=="") root.currentUser=u } }
+    }
+
+    // ── Live system info (hostname, kernel, GPU) ──
+    property string currentHost: "host"
+    Process {
+        id: getHostProc; command:["sh","-c","hostname"]; running:true
+        stdout: SplitParser { onRead: data => { var h=data.trim(); if(h!=="") root.currentHost=h } }
+    }
+    property string kernelStr: "6.x"
+    Process {
+        id: getKernelProc; command:["sh","-c","uname -r | cut -d- -f1 2>/dev/null"]; running:true
+        stdout: SplitParser { onRead: data => { var k=data.trim(); if(k!=="") root.kernelStr=k } }
+    }
+    property string gpuStr: ""
+    Process {
+        id: getGpuProc; command:["sh","-c","lspci | grep -i 'vga\\|3d' | head -1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | cut -c1-16"]; running:true
+        stdout: SplitParser { onRead: data => { var g=data.trim(); if(g!=="") root.gpuStr=g } }
     }
 
     Process {
@@ -43,7 +60,7 @@ ShellRoot {
             if (this.text.trim() === "OK") {
                 root.lockInput = ""
                 root.lockError = false
-                root.doHide()   // auth OK → lancer hide
+                root.doHide()   // auth OK → start hide
             } else {
                 root.lockError = true
                 root.lockInput = ""
@@ -65,8 +82,8 @@ ShellRoot {
         root.hiding = true
     }
 
-    // ── Gestion du curseur Hyprland ──
-    // Le curseur natif Hyprland est conservé, rien à faire côté lockscreen.
+    // ── Hyprland cursor handling ──
+    // The native Hyprland cursor stays; nothing to do on the lockscreen side.
 
     Component.onCompleted: {
         if (root.fastMode) {
@@ -94,8 +111,8 @@ ShellRoot {
             property bool isPrimary: modelData.name === Quickshell.screens[0].name
 
             // ── Fast mode background ──
-            // Affiche la dernière frame de wave_reveal.mp4 comme image statique.
-            // Chargement instantané (pas de FFmpeg, pas de codec vidéo).
+            // Shows the last frame of wave_reveal.mp4 as a static image.
+            // Instant loading (no FFmpeg, no video codec).
             Image {
                 id: fastBg
                 anchors.fill: parent
@@ -140,7 +157,7 @@ ShellRoot {
                 loops: 1
                 autoPlay: false
                 onMediaStatusChanged: function() {
-                    // Fermeture gérée par hideFadeAnim.onFinished
+                    // Close handled by hideFadeAnim.onFinished
                 }
             }
             VideoOutput {
@@ -151,7 +168,7 @@ ShellRoot {
                 opacity: 1.0
             }
 
-            // Fade + fermeture 1s avant la fin de hide
+            // Fade + close 1s before hide ends
             Timer {
                 id: hideFadeTimer
                 interval: 800
@@ -182,7 +199,7 @@ ShellRoot {
                     NumberAnimation { duration: 400 }
                 }
 
-                // Coins
+                // Corners
                 Item {
                     anchors { top:parent.top; left:parent.left; topMargin:28; leftMargin:30 }
                     z:5; opacity:parent.uiOp
@@ -195,8 +212,7 @@ ShellRoot {
                             }
                             Text{text:"SESSION LOCKED";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                         }
-                        Text{text:"NODE · "+root.currentUser+"@arch";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
-                        Text{text:"セッションロック中";font.family:"Noto Sans JP";font.pixelSize:8;color:"#8B8066";opacity:0.7}
+                        Text{text:"NODE · "+root.currentUser+"@"+root.currentHost.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                     }
                 }
                 Item {
@@ -204,14 +220,14 @@ ShellRoot {
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
                         Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
-                        Text{text:"LONGVIC · FR";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
+                        Text{text:root.currentHost.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
                     }
                 }
                 Item {
                     anchors { bottom:parent.bottom; left:parent.left; bottomMargin:28; leftMargin:30 }
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
-                        Text{text:"KERNEL 6.13.2";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
+                        Text{text:"KERNEL "+root.kernelStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                         Text{text:"WM · hyprland";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                     }
                 }
@@ -219,7 +235,7 @@ ShellRoot {
                     anchors { bottom:parent.bottom; right:parent.right; bottomMargin:28; rightMargin:30 }
                     z:5; opacity:parent.uiOp
                     Column { spacing:2
-                        Text{text:"ARCH LINUX · RX 6700 XT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:220;horizontalAlignment:Text.AlignRight}
+                        Text{text:"ARCH LINUX"+(root.gpuStr!==""?" · "+root.gpuStr:"");font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:220;horizontalAlignment:Text.AlignRight}
                     }
                 }
 
@@ -235,7 +251,7 @@ ShellRoot {
                     }
                 }
 
-                // Panel central — slide depuis le haut (sauf en fast mode)
+                // Central panel — slides from the top (except in fast mode)
                 Item {
                     id: panelHost
                     width: 380
@@ -324,7 +340,7 @@ ShellRoot {
                             }
                             Text{text:root.currentUser.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:13;font.letterSpacing:3;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:4}
-                            Text{text:"ユニット · アクティブ";font.family:"Noto Sans JP";font.pixelSize:8;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
+                            Text{text:"UNIT · ACTIVE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#A89F8A";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:20}
                             Text{text:root.clockStr;font.family:"Share Tech Mono";font.pixelSize:46;font.letterSpacing:2;color:"#8B8066";anchors.horizontalCenter:parent.horizontalCenter}
                             Item{width:1;height:6}
@@ -353,7 +369,7 @@ ShellRoot {
                                         Keys.onReturnPressed: { root.doAuth() }
                                         Keys.onEscapePressed: { root.lockInput="" }
                                         Text{visible:parent.text==="";anchors.verticalCenter:parent.verticalCenter
-                                            text:"mot de passe...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#A89F8A";opacity:0.5}
+                                            text:"password...";font.family:"Share Tech Mono";font.pixelSize:11;font.italic:true;color:"#A89F8A";opacity:0.5}
                                     }
                                 }
                             }
@@ -364,7 +380,7 @@ ShellRoot {
                                     Rectangle{visible:index<root.lockInput.length;anchors.fill:parent;color:"#8B8066"}}}}
                             Item{width:1;height:6}
 
-                            Text{text:"AUTHENTIFICATION ÉCHOUÉE";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#8B1A1A"
+                            Text{text:"AUTHENTICATION FAILED";font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:2;color:"#8B1A1A"
                                 anchors.horizontalCenter:parent.horizontalCenter
                                 opacity:root.lockError?1:0;height:14;Behavior on opacity{NumberAnimation{duration:200}}}
                             Item{width:1;height:10}
@@ -464,7 +480,7 @@ ShellRoot {
         }
     }
 
-    // Horloge
+    // Clock
     property string clockStr:  "--:--"
     property string dateStr:   "---- / -- / --"
     property string clockFull: "--:--:--"

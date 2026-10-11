@@ -10,8 +10,8 @@ Pixels sépia qui apparaissent en vague depuis le centre, avec
 soulèvement par ressort au passage du front.
 
 Usage :
-    python pixel_wave.py                        # défaut : 1920x1080 @60fps
-    python pixel_wave.py -w 2560 -H 1440        # résolution custom
+    python pixel_wave.py                        # default: 1920x1080 @60fps
+    python pixel_wave.py -w 2560 -H 1440        # custom resolution
     python pixel_wave.py --fps 60 -o wave.mp4   # fps + fichier
 
 Dépendances (Arch Linux) :
@@ -45,25 +45,25 @@ if not shutil.which("ffmpeg"):
 
 
 # ═══════════════════════════════════════════════════════════════
-# PARAMÈTRES (reproduits fidèlement du HTML original)
+# PARAMETERS (faithfully reproduced from the original HTML)
 # ═══════════════════════════════════════════════════════════════
 CELL = 7            # taille du pixel visible
 STEP = 8            # pas de la grille (CELL + GAP 1px)
 FRONT_W = 1.2       # largeur du front de vague
-LIFT_MAX = 7.0      # soulèvement max au passage du front
+LIFT_MAX = 7.0      # max lift at the wave front
 SPRING_K = 0.28     # constante du ressort
 SPRING_D = 0.62     # amortissement
-WAVE_SPEED = 7.2    # vitesse de propagation (cellules/frame à 60fps de réf)
+WAVE_SPEED = 7.2    # propagation speed (cells/frame at 60fps reference)
 
 # Couleur de fond (bg sombre du lockscreen)
 BG_R, BG_G, BG_B = 20, 16, 11  # #14100B
 
-# Palette sépia : le pixel atteint (R, G, B) × (luminosité × progress)
+# Sepia palette: lit pixel = (R, G, B) × (brightness × progress)
 SEPIA_R, SEPIA_G, SEPIA_B = 230, 215, 180
 
 
 # ═══════════════════════════════════════════════════════════════
-# DOSSIER DE SORTIE PAR DÉFAUT
+# DEFAULT OUTPUT DIRECTORY
 # ═══════════════════════════════════════════════════════════════
 def default_output() -> Path:
     """~/.config/quickshell/videos/wave.mp4 (respecte XDG_CONFIG_HOME)."""
@@ -83,9 +83,9 @@ def build_grid(width: int, height: int):
     off_y = (height - rows * STEP) // 2
     n = cols * rows
 
-    rng = random.Random(42)  # seed fixe pour reproductibilité
+    rng = random.Random(42)  # fixed seed for reproducibility
 
-    # Luminosité de base par cellule (78% → 92%)
+    # Base brightness per cell (78% → 92%)
     target_color = np.array(
         [0.78 + rng.random() * 0.14 for _ in range(n)], dtype=np.float32
     )
@@ -94,7 +94,7 @@ def build_grid(width: int, height: int):
         [(rng.random() - 0.5) * 4.0 for _ in range(n)], dtype=np.float32
     )
 
-    # État
+    # State
     progress = np.zeros(n, dtype=np.float32)
     lift = np.zeros(n, dtype=np.float32)
     lift_vel = np.zeros(n, dtype=np.float32)
@@ -131,7 +131,7 @@ def step_simulation(state, waves, speed_scale: float):
     lift_vel = state["lift_vel"]
     jitter = state["jitter"]
 
-    # 1. Spring lift (intégration)
+    # 1. Spring lift (integration)
     lift_vel *= SPRING_D
     lift_vel -= SPRING_K * lift * SPRING_D
     lift += lift_vel
@@ -139,7 +139,7 @@ def step_simulation(state, waves, speed_scale: float):
     lift[mask] = 0
     lift_vel[mask] = 0
 
-    # Pré-calcul des coordonnées cellulaires
+    # Pre-compute cell coordinates
     # (optimisation vectorielle)
     c_idx = np.arange(n) % cols
     r_idx = np.arange(n) // cols
@@ -173,7 +173,7 @@ def step_simulation(state, waves, speed_scale: float):
             inv = 1.0 - ease
             np.minimum(progress, np.where(active, inv, progress), out=progress)
 
-        # Soulèvement au passage précis du front
+        # Lift at the exact wave front pass
         in_front = (df >= -FRONT_W) & (df < FRONT_W)
         can_lift = lift < 0.1
         if w["dir"] == 1:
@@ -183,7 +183,7 @@ def step_simulation(state, waves, speed_scale: float):
         lift_mask = in_front & can_lift & ok
         lift_vel[lift_mask] = LIFT_MAX * 0.55
 
-    # Retire les vagues terminées
+    # Remove finished waves
     return [w for w in waves if not w["done"]]
 
 
@@ -206,8 +206,8 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
     # Couleur de chaque cellule : v = min(1, p * target)
     v = np.minimum(1.0, progress * target_color)
 
-    # Deux passes : pixels posés (lift ≤ 0.3) puis soulevés (lift > 0.3)
-    # comme dans le JS original (les soulevés passent au-dessus)
+    # Two passes: settled pixels (lift ≤ 0.3) then lifted pixels (lift > 0.3)
+    # as in the original JS (lifted pixels go on top)
     for pass_idx in range(2):
         for r in range(rows):
             for c in range(cols):
@@ -245,7 +245,7 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
 
 
 # ═══════════════════════════════════════════════════════════════
-# PIPELINE VIDÉO
+# VIDEO PIPELINE
 # ═══════════════════════════════════════════════════════════════
 def generate_video(
     width: int,
@@ -256,7 +256,7 @@ def generate_video(
     quality: str = "high",
 ):
     """Génère la vidéo en pipant les frames vers ffmpeg."""
-    # Crée le dossier de sortie s'il n'existe pas
+    # Create the output directory if it doesn't exist
     output.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"▸ Résolution : {width}×{height} @ {fps}fps")
@@ -264,9 +264,9 @@ def generate_video(
     print(f"▸ Sortie     : {output}")
     print()
 
-    # Le JS tourne à ~60fps, donc si on rend à 60fps on garde la vitesse.
-    # Si on rend à un autre fps, on adapte la vitesse pour que la durée
-    # perçue de la vague reste la même.
+    # The JS runs at ~60fps, so rendering at 60fps keeps the speed.
+    # If rendering at another fps, adapt the speed so the perceived
+    # wave duration stays the same.
     speed_scale = 60.0 / fps
 
     state = build_grid(width, height)
@@ -289,7 +289,7 @@ def generate_video(
 
     total_frames = int(duration * fps)
 
-    # Profils de qualité ffmpeg
+    # ffmpeg quality profiles
     profiles = {
         "high":   ["-crf", "16", "-preset", "slow"],
         "medium": ["-crf", "20", "-preset", "medium"],
@@ -363,9 +363,9 @@ def main():
         epilog="""
 Exemples :
   %(prog)s                            # 1920x1080 60fps 2.5s → ~/.config/quickshell/videos/wave.mp4
-  %(prog)s -w 2560 -H 1440            # résolution 1440p
-  %(prog)s -d 3.5 --fps 30            # durée 3.5s à 30fps
-  %(prog)s -q medium -o boot.mp4      # qualité medium, fichier boot.mp4
+  %(prog)s -w 2560 -H 1440            # 1440p resolution
+  %(prog)s -d 3.5 --fps 30            # 3.5s duration at 30fps
+  %(prog)s -q medium -o boot.mp4      # medium quality, boot.mp4 output
         """,
     )
     p.add_argument("-w", "--width", type=int, default=1920, help="largeur (px)")

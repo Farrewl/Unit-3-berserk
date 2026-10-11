@@ -63,12 +63,6 @@ python-cairo
 python-numpy
 python-pillow
 python-opencv
-python-qrcode
-python-pillow
-
-#   Quickshare
-qrencode
-cloudflared
 
 # ─── XDG ───────────────────────────────────────────────
 xdg-user-dirs

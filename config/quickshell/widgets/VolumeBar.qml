@@ -5,18 +5,18 @@ import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
 //   Volume bar verticale — bord gauche
-//   - 30 segments qui morphent carré (vide) ↔ barre fine (rempli)
+//   - 30 segments morphing between square (empty) ↔ thin bar (filled)
 //   - Scroll / clic / drag
-//   - Contrôle PulseAudio via pactl (compatible pavucontrol)
-//   - Écran actif uniquement
-//   - Click-through hors de la zone active : le panel lui-même change
+//   - PulseAudio control via pactl (pavucontrol-compatible)
+//   - Active screen only
+//   - Click-through outside the active zone: the panel itself changes
 //     de largeur et de hauteur pour ne couvrir que ce qui est utile.
 // ═════════════════════════════════════════════════════════════════════
 
 ShellRoot {
     id: root
 
-    // ── Paramètres ──
+    // ── Parameters ──
     readonly property int segments: 30
     readonly property int hoverWidth: 65
     readonly property int barWidth: 40
@@ -35,12 +35,12 @@ ShellRoot {
     readonly property color colEmpty:  "#E0DBCA"
     readonly property color colBg:     "#1A1610"
 
-    // ── État volume ──
+    // ── Volume state ──
     property real volume: 0.5
     property bool muted: false
     property bool userInteracting: false
 
-    // ── Écran actif ──
+    // ── Active screen ──
     property string activeMonitor: ""
     Timer {
         interval: 200; running: true; repeat: true
@@ -89,9 +89,9 @@ ShellRoot {
     Process { id: setVolProc; command: ["sh","-c","true"]; running: false }
 
     // ═══════════════════════════════════
-    //   Un seul PanelWindow par écran
-    //   - Hauteur FIXE : barHeight (plus zone label), centré verticalement
-    //   - Largeur dynamique : hoverWidth quand caché, large quand révélé
+    //   One PanelWindow per screen
+    //   - FIXED height: barHeight (plus label zone), centered vertically
+    //   - Dynamic width: hoverWidth when hidden, wide when revealed
     //   Tout ce qui est en dehors de cette zone est click-through natif
     //   (pas de panel = pas de capture d'events).
     // ═══════════════════════════════════
@@ -109,20 +109,20 @@ ShellRoot {
 
             readonly property bool isActive: modelData.name === root.activeMonitor
 
-            // État révélé : hover sur une des zones ou interaction
+            // Revealed state: hovering a zone or interacting
             property bool revealed: hoverArea.containsMouse
                                   || barMouseArea.containsMouse
                                   || barMouseArea.pressed
                                   || hideTimer.running
 
-            // Largeur : juste la zone de hover quand caché, étendue quand révélé
+            // Width: just the hover zone when hidden, extended when revealed
             // Hauteur : toujours celle de la barre (+ marge pour label)
             implicitWidth: revealed
                 ? (root.leftOffset + root.barWidth + 10)
                 : root.hoverWidth
             implicitHeight: root.barHeight + 40
 
-            // Centré verticalement
+            // Centered vertically
             margins.top: (modelData.height - implicitHeight) / 2
 
             visible: isActive
@@ -146,7 +146,7 @@ ShellRoot {
                 onExited:  hideTimer.restart()
             }
 
-            // ── La barre (apparaît à droite de la zone de hover) ──
+            // ── The bar (appears to the right of the hover zone) ──
             Item {
                 id: barContainer
                 width: root.barWidth
