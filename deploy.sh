@@ -176,11 +176,22 @@ OVR
 
 # ─── 5. Wallpaper & Screenshots ────────────────────────────────────
 setup_dirs() {
-    mkdir -p "$HOME/Pictures/wallpapers" "$HOME/Screenshots"
+    mkdir -p "$HOME/Pictures/wallpapers" "$HOME/Pictures/Screenshots"
     if [[ -d "$ROOT/assets/wallpapers" ]]; then
         cp -n "$ROOT/assets/wallpapers/"* "$HOME/Pictures/wallpapers/" 2>/dev/null || true
         ok "Wallpaper default (4) → ~/Pictures/wallpapers"
     fi
+}
+
+# ─── 5b. Helper scripts → ~/.local/bin ─────────────────────────────
+deploy_bin() {
+    [[ -d "$CONFIG_SRC/bin" ]] || return
+    mkdir -p "$HOME/.local/bin"
+    for f in "$CONFIG_SRC/bin"/*; do
+        [[ -f "$f" ]] || continue
+        install -m 755 "$f" "$HOME/.local/bin/$(basename "$f")"
+        ok "Helper → ~/.local/bin/$(basename "$f")"
+    done
 }
 
 # ─── 6. qshare symlink ─────────────────────────────────────────────
@@ -233,6 +244,7 @@ main() {
     deploy_greetd
     deploy_bashrc
     setup_dirs
+    deploy_bin
     deploy_qshare
     enable_services
     summary

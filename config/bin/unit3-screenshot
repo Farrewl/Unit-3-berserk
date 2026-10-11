@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# ═══════════════════════════════════════════════════════════════════
+#   unit3-screenshot — tangkap layar lalu buka panel edit (satty)
+#
+#   Hasil selalu disiapkan di ~/Pictures/Screenshots/<timestamp>.png
+#   Panel satty bisa dipakai untuk: annotate (edit), copy ke clipboard,
+#   dan save ke file.
+#
+#   Pemakaian: unit3-screenshot [region|output|window]
+#     region (default) : pilih area dengan mouse (slurp)
+#     output           : seluruh monitor yang sedang aktif
+#     window           : jendela yang sedang aktif
+# ═══════════════════════════════════════════════════════════════════
+set -euo pipefail
+
+MODE="${1:-region}"
+PICTURES="${XDG_PICTURES_DIR:-$HOME/Pictures}"
+DIR="$PICTURES/Screenshots"
+mkdir -p "$DIR"
+FILE="$DIR/$(date +%Y%m%d_%H%M%S).png"
+
+TMP="$(mktemp -t unit3-shot-XXXXXX.png)"
+trap 'rm -f "$TMP"' EXIT
+
+case "$MODE" in
+    region)
+        geom="$(slurp -d)" || exit 0
+        [[ -n "$geom" ]] || exit 0
+        grim -g "$geom" "$TMP"
+        ;;
+    output)
+        mon="$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')"
+        [[ -n "$mon" ]] || exit 1
+        grim -o "$mon" "$TMP"
+        ;;
+    window)
+        geom="$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')"
+        [[ -n "$geom" ]] || exit 1
+        grim -g "$geom" "$TMP"
+        ;;
+    *)
+        echo "Mode tidak dikenal: $MODE" >&2
+        exit 1
+        ;;
+esac
+
+if command -v satty >/dev/null 2>&1; then
+    # Enter  = copy ke clipboard lalu keluar
+    # Klik-kanan / tombol Save = simpan ke ~/Pictures/Screenshots
+    # Esc    = batal (tidak ada file tersimpan)
+    satty \
+        --filename "$TMP" \
+        --output-filename "$FILE" \
+        --copy-command "wl-copy" \
+        --actions-on-enter "save-to-clipboard" \
+        --actions-on-escape "exit" \
+        --actions-on-right-click "save-to-file" \
+        --early-exit "copy" \
+        --initial-tool "pointer"
+else
+    mv "$TMP" "$FILE"
+    command -v notify-send >/dev/null 2>&1 && \
+        notify-send -i "$FILE" "Screenshot" "Disimpan ke $FILE"
+fi

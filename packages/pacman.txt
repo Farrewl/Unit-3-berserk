@@ -39,6 +39,7 @@ slurp
 satty
 hyprshot
 wl-clipboard
+jq
 
 # ─── Auto-mount removable media ────────────────────────
 udiskie

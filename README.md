@@ -114,8 +114,9 @@ hl.bind("SUPER + G", hl.dsp.exec_cmd("firefox"))
 | `SUPER + ALT + 1/2/3/...` | Move window to workspace |
 | `SUPER + Page Up/Down` | Cycle workspaces |
 | `SUPER + ALT + Page Up/Down` | Move window to adjacent workspace |
-| `Print` | Screenshot |
-| `ALT SHIFT + S` | Region screenshot |
+| `Print` | Screenshot region → panel edit (satty) |
+| `SUPER + Print` | Screenshot monitor → panel edit (satty) |
+| `SUPER + SHIFT + Print` | Screenshot jendela → panel edit (satty) |
 
 ## Credits
 

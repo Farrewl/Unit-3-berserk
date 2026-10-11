@@ -42,7 +42,7 @@ hl.on("workspace.removed", refresh_waybar_workspaces)
 hl.on("workspace.move_to_monitor", refresh_waybar_workspaces)
 
 -- Environment
-hl.env("PATH", "/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin")
+hl.env("PATH", (os.getenv("HOME") or "") .. "/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
@@ -170,9 +170,11 @@ hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ to
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 5%+"))
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"))
 
--- Screenshots
-hl.bind("Print", hl.dsp.exec_cmd([[grim -g "$(slurp)" ~/Screenshots/$(date +%Y%m%d_%H%M%S).png]]))
-hl.bind("SUPER + Print", hl.dsp.exec_cmd([[mkdir -p ~/Screenshots && grim -o "$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')" ~/Screenshots/$(date +%Y%m%d_%H%M%S).png]]))
+-- Screenshots (hasil → ~/Pictures/Screenshots, langsung buka panel edit satty)
+-- Pakai path absolut: PATH sesi tidak selalu memuat ~/.local/bin.
+hl.bind("Print", hl.dsp.exec_cmd("~/.local/bin/unit3-screenshot region"))
+hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.local/bin/unit3-screenshot output"))
+hl.bind("SUPER + SHIFT + Print", hl.dsp.exec_cmd("~/.local/bin/unit3-screenshot window"))
 
 -- Personal overrides are kept in a separate file and preserved by the installer.
 require("user")
