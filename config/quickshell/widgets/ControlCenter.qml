@@ -771,9 +771,9 @@ ShellRoot {
 
     IpcHandler {
         target: "ctrl"
-        function toggle(): void { root.toggle() }
-        function show(): void   { if (!root.open) root.toggle() }
-        function hide(): void   { root.close() }
+        function toggle(): void    { root.toggle() }
+        function forceOpen(): void { if (!root.open) root.toggle() }
+        function hide(): void      { root.close() }
     }
 
     // ── Navigation ──
