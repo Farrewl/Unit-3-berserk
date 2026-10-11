@@ -102,11 +102,6 @@ hl.window_rule({ match = { class = "^(quickshell)$" }, float = true })
 hl.window_rule({ match = { class = "^(quickshell)$" }, pin = true })
 hl.window_rule({ match = { class = "^(quickshell)$" }, no_blur = true })
 hl.window_rule({ match = { class = "^(quickshell)$" }, no_shadow = true })
-hl.window_rule({ match = { class = "^(Spotify)$" }, workspace = "special:spotify" })
-hl.window_rule({ match = { class = "^(Spotify)$" }, fullscreen = true })
-hl.window_rule({ match = { class = "^(qs-yazi-picker)$" }, float = true })
-hl.window_rule({ match = { class = "^(qs-yazi-picker)$" }, size = { 900, 600 } })
-hl.window_rule({ match = { class = "^(qs-yazi-picker)$" }, center = true })
 
 -- Launcher and Quickshell
 hl.bind("SUPER + Super_L", hl.dsp.exec_cmd("echo t >> /tmp/qs-menu"), { release = true })
@@ -118,11 +113,11 @@ hl.bind("SUPER + SHIFT + V", hl.dsp.exec_cmd("~/.config/quickshell/scripts/visua
 
 -- Applications
 hl.bind("SUPER + T", hl.dsp.exec_cmd("/usr/bin/kitty"))
-hl.bind("SUPER + M", hl.dsp.exec_cmd([[pgrep -x spotify >/dev/null && hyprctl dispatch 'hl.dsp.workspace.toggle_special("spotify")' || spotify]]))
+hl.bind("SUPER + M", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("pkill qs"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("~/.config/quickshell/wallpaper.sh"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("brave"))
-hl.bind("SUPER + E", hl.dsp.exec_cmd("kitty -e yazi"))
+hl.bind("SUPER + E", hl.dsp.exec_cmd("dolphin"))
 
 -- Window management
 hl.bind("SUPER + Q", hl.dsp.window.close())
@@ -177,8 +172,8 @@ hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 5%+"))
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"))
 
 -- Screenshots
-hl.bind("ALT + SHIFT + S", hl.dsp.exec_cmd("hyprshot -m region"))
 hl.bind("Print", hl.dsp.exec_cmd([[grim -g "$(slurp)" ~/Screenshots/$(date +%Y%m%d_%H%M%S).png]]))
+hl.bind("SUPER + Print", hl.dsp.exec_cmd([[mkdir -p ~/Screenshots && grim -o "$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')" ~/Screenshots/$(date +%Y%m%d_%H%M%S).png]]))
 
 -- Personal overrides are kept in a separate file and preserved by the installer.
 require("user")

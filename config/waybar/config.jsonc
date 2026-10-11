@@ -16,9 +16,6 @@
     "custom/workspace#10",
     "hyprland/window"
   ],
-  "modules-center": [
-    "custom/ticker"
-  ],
   "modules-right": [
     "custom/idle-inhibit",
     "cpu",
@@ -171,13 +168,7 @@
     "tooltip-format": "{:%A %d %B %Y}"
   },
 
-  "custom/ticker": {
-    "exec": "echo 'CONNECTING // SCANNING // PROCESSING // SYS:ACTIVE // UNIT ONLINE // ALL SYSTEMS NORMAL // BOOT COMPLETE //'",
-    "interval": 60,
-    "format": "{}"
-  },
-
-  "custom/idle-inhibit": {
+    "custom/idle-inhibit": {
     "exec": "~/.config/waybar/scripts/idle_inhibit.sh status",
     "return-type": "json",
     "interval": 5,

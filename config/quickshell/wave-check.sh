@@ -37,7 +37,7 @@ mkdir -p "$VIDEOS_DIR" "$LOG_DIR"
 exec > >(while IFS= read -r line; do printf '[%s] %s\n' "$(date +%H:%M:%S)" "$line"; done >> "$LOG_FILE") 2>&1
 
 echo "═══════════════════════════════════════════════════════════"
-echo "wave-check.sh — démarrage"
+echo "wave-check.sh — starting"
 echo "  videos dir : $VIDEOS_DIR"
 echo "═══════════════════════════════════════════════════════════"
 
@@ -49,13 +49,13 @@ missing_scripts=()
 if (( ${#missing_scripts[@]} > 0 )); then
     echo "❌ Generator script(s) missing:"
     printf '   - %s\n' "${missing_scripts[@]}"
-    echo "Abandon."
+    echo "Aborting."
     exit 1
 fi
 
 # ── Reveal check & generation ──
 if [[ -f "$REVEAL_VIDEO" ]]; then
-    echo "✓ wave_reveal.mp4 présent"
+    echo "✓ wave_reveal.mp4 present"
 else
     echo "⚠ wave_reveal.mp4 missing — generating…"
     python "$REVEAL_SCRIPT" -o "$REVEAL_VIDEO"
@@ -69,7 +69,7 @@ fi
 
 # ── Hide check & generation ──
 if [[ -f "$HIDE_VIDEO" ]]; then
-    echo "✓ wave_hide.mp4 présent"
+    echo "✓ wave_hide.mp4 present"
 else
     echo "⚠ wave_hide.mp4 missing — generating…"
     python "$HIDE_SCRIPT" -o "$HIDE_VIDEO"
@@ -82,7 +82,7 @@ else
 fi
 
 if [[ -f "$LAST_FRAME" ]]; then
-    echo "✓ wave_last_frame.png présent"
+    echo "✓ wave_last_frame.png present"
 else
     echo "⚠ wave_last_frame.png missing — generating…"
     python "$LAST_FRAME_SCRIPT" "$REVEAL_VIDEO"
@@ -95,5 +95,5 @@ else
 fi
 
 echo "═══════════════════════════════════════════════════════════"
-echo "wave-check.sh — terminé"
+echo "wave-check.sh — done"
 echo "═══════════════════════════════════════════════════════════"

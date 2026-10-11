@@ -78,7 +78,7 @@ Item {
                     width: pw;  height: s(14); clip: true
                     Text {
                         id:   ticker
-                        text: "NR-2B // " + root.mpArtist + " // " + root.mpTitle
+                        text: root.mpArtist + " // " + root.mpTitle
                               + " // LOSSLESS 48kHz/24bit // NOW PLAYING //\u00a0"
                         font.family: "Share Tech Mono"
                         font.pixelSize: s(8)

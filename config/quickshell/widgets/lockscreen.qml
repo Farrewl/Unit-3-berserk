@@ -171,7 +171,7 @@ ShellRoot {
             // Fade + close 1s before hide ends
             Timer {
                 id: hideFadeTimer
-                interval: 800
+                interval: 1200
                 repeat: false
                 onTriggered: hideFadeAnim.start()
             }
@@ -197,58 +197,6 @@ ShellRoot {
                 Behavior on uiOp {
                     enabled: !root.fastMode
                     NumberAnimation { duration: 400 }
-                }
-
-                // Corners
-                Item {
-                    anchors { top:parent.top; left:parent.left; topMargin:28; leftMargin:30 }
-                    z:5; opacity:parent.uiOp
-                    Column { spacing:2
-                        Row { spacing:5
-                            Rectangle { width:5;height:5;radius:3;color:"#8B1A1A"
-                                anchors.verticalCenter:parent.verticalCenter
-                                SequentialAnimation on opacity { running:root.frozen; loops:Animation.Infinite
-                                    NumberAnimation{to:0.3;duration:900} NumberAnimation{to:1;duration:900} }
-                            }
-                            Text{text:"SESSION LOCKED";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
-                        }
-                        Text{text:"NODE · "+root.currentUser+"@"+root.currentHost.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
-                    }
-                }
-                Item {
-                    anchors { top:parent.top; right:parent.right; topMargin:28; rightMargin:30 }
-                    z:5; opacity:parent.uiOp
-                    Column { spacing:2
-                        Text{text:root.clockFull;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
-                        Text{text:root.currentHost.toUpperCase();font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:200;horizontalAlignment:Text.AlignRight}
-                    }
-                }
-                Item {
-                    anchors { bottom:parent.bottom; left:parent.left; bottomMargin:28; leftMargin:30 }
-                    z:5; opacity:parent.uiOp
-                    Column { spacing:2
-                        Text{text:"KERNEL "+root.kernelStr;font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
-                        Text{text:"WM · hyprland";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
-                    }
-                }
-                Item {
-                    anchors { bottom:parent.bottom; right:parent.right; bottomMargin:28; rightMargin:30 }
-                    z:5; opacity:parent.uiOp
-                    Column { spacing:2
-                        Text{text:"ARCH LINUX"+(root.gpuStr!==""?" · "+root.gpuStr:"");font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066";width:220;horizontalAlignment:Text.AlignRight}
-                    }
-                }
-
-                // Ticker
-                Item {
-                    anchors{bottom:parent.bottom;bottomMargin:65;left:parent.left;right:parent.right}
-                    height:18;z:5;opacity:parent.uiOp;clip:true
-                    Text {
-                        id:tickTxt
-                        text:"SYSTEM SCAN · OK ▸ MEMORY INTEGRITY · VERIFIED ▸ SESSION LOCKED · SECURE ▸ NETWORK UPLINK · STABLE ▸ THERMAL · NOMINAL ▸ AUTH DAEMON · LISTENING ▸ "
-                        font.family:"Share Tech Mono";font.pixelSize:8;font.letterSpacing:3;color:"#8B8066";y:2
-                        NumberAnimation on x { from:modelData.width; to:-tickTxt.implicitWidth; duration:55000; loops:Animation.Infinite; running:root.frozen }
-                    }
                 }
 
                 // Central panel — slides from the top (except in fast mode)

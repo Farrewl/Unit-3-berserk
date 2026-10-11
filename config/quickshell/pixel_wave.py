@@ -56,7 +56,7 @@ SPRING_D = 0.62     # damping
 WAVE_SPEED = 7.2    # propagation speed (cells/frame at 60fps reference)
 
 # Background color (lockscreen dark bg)
-BG_R, BG_G, BG_B = 20, 16, 11  # #14100B
+BG_R, BG_G, BG_B = 58, 46, 34  # #3A2E22 warm visible base
 
 # Sepia palette: lit pixel = (R, G, B) × (brightness × progress)
 SEPIA_R, SEPIA_G, SEPIA_B = 230, 215, 180
