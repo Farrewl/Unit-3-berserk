@@ -18,9 +18,9 @@ warn() { printf "%s[!]%s %s\n" "$C_YELLOW" "$C_RESET" "$*"; }
 fatal(){ printf "%s[✗]%s %s\n" "$C_RED" "$C_RESET" "$*" >&2; exit 1; }
 
 # Mirror yang terbukti menyimpan .sig (GET 200) untuk vtk & kstatusnotifieritem.
-GOOD_V4="https://mirror.bali0531.hu/repo/\$arch_v4/\$repo"
-GOOD_V3="https://mirror.bali0531.hu/repo/\$arch_v3/\$repo"
-GOOD_V="https://mirror.bali0531.hu/repo/\$arch/\$repo"
+GOOD_V4="Server = https://mirror.bali0531.hu/repo/\$arch_v4/\$repo"
+GOOD_V3="Server = https://mirror.bali0531.hu/repo/\$arch_v3/\$repo"
+GOOD_V="Server = https://mirror.bali0531.hu/repo/\$arch/\$repo"
 
 FILES=(
     /etc/pacman.d/cachyos-mirrorlist
@@ -47,7 +47,7 @@ for f in "${FILES[@]}"; do
     { echo "$line"; cat "$f"; } > "$tmp"
     sudo cp -a "$tmp" "$f"
     rm -f "$tmp"
-    ok "Prepended '$line' → $f"
+    ok "Prepended 'Server = ...' → $f"
 done
 
 echo
