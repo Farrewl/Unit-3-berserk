@@ -557,7 +557,6 @@ Item {
                     Repeater {
                         model:[
                             {l:"SLEEP",     cmd:"systemctl suspend"},
-                            {l:"LOGOUT",    cmd:"hyprctl dispatch exit"},
                             {l:"RESTART",   cmd:"systemctl reboot"},
                             {l:"POWER OFF", cmd:"systemctl poweroff", danger:true}
                         ]
