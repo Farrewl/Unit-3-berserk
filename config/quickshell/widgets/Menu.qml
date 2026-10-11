@@ -526,8 +526,7 @@ Item {
                     Repeater {
                         model:[
                             {l:"TERMINAL", cmd:"kitty"},
-                            {l:"FILES",    cmd:"dolphin"},
-                            {l:"LOCK",     cmd:"$HOME/.config/quickshell/lock.sh"}
+                            {l:"FILES",    cmd:"dolphin"}
                         ]
                         delegate: Item {
                             height:44; width:faLbl.implicitWidth+24
