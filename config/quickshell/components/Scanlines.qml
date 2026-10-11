@@ -8,7 +8,7 @@ Item {
     id:              root
     anchors.fill:    parent
     property real   lineOpacity: 0.06
-    property int    lineSpacing: 3    // px entre chaque ligne
+    property int    lineSpacing: 3    // px between each line
     property bool   grain:       true // grain de texture en plus
 
     // Catches no events
@@ -29,7 +29,7 @@ Item {
             }
         }
 
-        // Redessine si la taille change
+        // Redraw when the size changes
         onWidthChanged:  requestPaint()
         onHeightChanged: requestPaint()
 

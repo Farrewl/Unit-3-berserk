@@ -40,7 +40,7 @@ ShellRoot {
         }
     }
 
-    // ── Lister les wallpapers ──
+    // ── List the wallpapers ──
     Process {
         id: listWallpapers
         command: ["sh","-c","ls " + root.wallpaperDir + " | grep -iE '\\.(jpg|jpeg|png|webp)$'"]
@@ -53,7 +53,7 @@ ShellRoot {
         }
     }
 
-    // ── Appliquer le wallpaper ──
+    // ── Apply the wallpaper ──
     function applyWallpaper(idx, monitor) {
         if (root.wallpapers.length === 0) return
         var file = root.wallpaperDir + "/" + root.wallpapers[idx]
@@ -67,8 +67,8 @@ ShellRoot {
         running: false
     }
 
-    // ── Gestion du curseur Hyprland ──
-    // Le curseur natif Hyprland reste visible en permanence : on ne touche
+    // ── Hyprland cursor handling ──
+    // The native Hyprland cursor stays permanently visible: we never touch
     // nor to cursor:invisible before, nor on close.
 
     // Horloge
@@ -175,7 +175,7 @@ ShellRoot {
                     NumberAnimation { duration:400 }
                 }
 
-                // Scroll souris sur toute la surface
+                // Mouse scroll on the whole surface
                 MouseArea {
                     anchors.fill: parent
                     onWheel: function(e) {
@@ -210,7 +210,7 @@ ShellRoot {
                     Text{text:"↑↓ / SCROLL  NAVIGATE  ·  ESC  QUIT";font.family:"Share Tech Mono";font.pixelSize:9;font.letterSpacing:2;color:"#8B8066"}
                 }
 
-                // ── Boutons apply — toujours visibles ──
+                // ── Apply buttons — always visible ──
                 Item {
                     id: applyPanel
                     anchors.bottom: parent.bottom
@@ -314,14 +314,14 @@ ShellRoot {
                     readonly property real scaleNear:   0.54   // ~280/520
                     readonly property real scaleFar:    0.35   // ~180/520
 
-                    // Espacements X (demi-axes entre centres de vignettes) par slot
+                    // X spacings (half-axes between thumbnail centers) per slot
                     readonly property int offsetNear: 280
                     readonly property int offsetFar:  576
 
-                    // Une vignette par wallpaper. Chaque vignette choisit sa place
+                    // One thumbnail per wallpaper. Each thumbnail picks its spot
                     // based on the signed offset to currentIndex (shortest
                     // path on the loop). Position, scale and opacity are animated
-                    // -> le zoom est smooth et part du bas (transformOrigin: Bottom).
+                    // -> the zoom is smooth and grows from the bottom (transformOrigin: Bottom).
                     Repeater {
                         model: root.wallpapers
 
@@ -388,7 +388,7 @@ ShellRoot {
                                     smooth: true
                                 }
 
-                                // Bandeau avec le nom, visible seulement sur la vignette centrale
+                                // Name banner, only visible on the central thumbnail
                                 Rectangle {
                                     anchors.bottom: parent.bottom
                                     width: parent.width
@@ -408,7 +408,7 @@ ShellRoot {
 
                             MouseArea {
                                 anchors.fill: parent
-                                // Clic sur une voisine -> on navigue vers elle
+                                // Click a neighbor -> navigate to it
                                 onClicked: if (thumb.delta !== 0) root.navigate(thumb.delta)
                                 onWheel: function(e) { root.navigate(e.angleDelta.y < 0 ? 1 : -1) }
                             }

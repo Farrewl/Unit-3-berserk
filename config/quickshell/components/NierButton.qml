@@ -1,6 +1,6 @@
 import QtQuick
 
-// Bouton NieR : fill-slide hover + flash au clic
+// NieR button: fill-slide hover + flash on click
 // Usage :
 //   NierButton { label: "PLAY"; onClicked: doSomething() }
 
@@ -49,7 +49,7 @@ Item {
         }
     }
 
-    // Flash au clic
+    // Flash on click
     Rectangle {
         id:      clickFlash
         anchors.fill: parent
@@ -81,7 +81,7 @@ Item {
             ColorAnimation { duration: 150 }
         }
 
-        // Positionnement z-order au-dessus du fill
+        // Z-order positioning above the fill
         z: 1
     }
 

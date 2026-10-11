@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-Pixel Wave Video Generator — PHASE DE FERMETURE (hide)
+Pixel Wave Video Generator — CLOSE PHASE (hide)
 ═══════════════════════════════════════════════════════════════
 
-Génère une vidéo MP4 de la phase de disparition de la vague :
-au départ tous les pixels sépia sont visibles (écran rempli),
-puis ils s'effacent progressivement en vague depuis le centre.
+Generates an MP4 video of the wave disappearance phase:
+at the start all sepia pixels are visible (full screen),
+then they gradually fade away in a wave from the center.
 
 Usage :
     python pixel_wave_close.py
     python pixel_wave_close.py -w 2560 -H 1440
     python pixel_wave_close.py -d 1.8 -o wave_out.mp4
 
-Dépendances (Arch) :
+Dependencies (Arch):
     sudo pacman -S python-pillow python-numpy ffmpeg
 ═══════════════════════════════════════════════════════════════
 """
@@ -29,15 +29,15 @@ from pathlib import Path
 try:
     import numpy as np
 except ImportError:
-    sys.exit("❌ numpy manquant : sudo pacman -S python-numpy")
+    sys.exit("❌ numpy missing: sudo pacman -S python-numpy")
 
 try:
     from PIL import Image  # noqa: F401
 except ImportError:
-    sys.exit("❌ Pillow manquant : sudo pacman -S python-pillow")
+    sys.exit("❌ Pillow missing: sudo pacman -S python-pillow")
 
 if not shutil.which("ffmpeg"):
-    sys.exit("❌ ffmpeg manquant : sudo pacman -S ffmpeg")
+    sys.exit("❌ ffmpeg missing: sudo pacman -S ffmpeg")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -116,7 +116,7 @@ def step_simulation(state, waves, speed_scale: float):
     lift_vel = state["lift_vel"]
     jitter = state["jitter"]
 
-    # 1. Ressort d'amortissement pour le lift
+    # 1. Damping spring for the lift
     lift_vel *= SPRING_D
     lift_vel -= SPRING_K * lift * SPRING_D
     lift += lift_vel
@@ -147,10 +147,10 @@ def step_simulation(state, waves, speed_scale: float):
         ease = t * t * (3.0 - 2.0 * t)
 
         if w["dir"] == 1:
-            # REVEAL : progress prend la valeur max atteinte
+            # REVEAL: progress takes the max reached value
             np.maximum(progress, ease * active, out=progress)
         else:
-            # HIDE : progress prend la valeur min (1 - ease)
+            # HIDE: progress takes the min value (1 - ease)
             inv = 1.0 - ease
             np.minimum(progress, np.where(active, inv, progress), out=progress)
 
@@ -233,9 +233,9 @@ def generate_video(
     # Create the output directory if it doesn't exist
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    print(f"▸ Mode       : FERMETURE (hide)")
-    print(f"▸ Résolution : {width}×{height} @ {fps}fps")
-    print(f"▸ Durée      : {duration:.2f}s")
+    print(f"▸ Mode       : CLOSING (hide)")
+    print(f"▸ Resolution : {width}×{height} @ {fps}fps")
+    print(f"▸ Duration   : {duration:.2f}s")
     if hold_frames:
         print(f"▸ Hold init  : {hold_frames} frames")
     print(f"▸ Sortie     : {output}")
@@ -284,7 +284,7 @@ def generate_video(
         str(output),
     ]
 
-    print("▸ Lancement ffmpeg...")
+    print("▸ Launching ffmpeg...")
     proc = subprocess.Popen(
         ffmpeg_cmd,
         stdin=subprocess.PIPE,
@@ -318,17 +318,17 @@ def generate_video(
         proc.stdin.close()
         rc = proc.wait()
         if rc != 0:
-            sys.exit(f"\n❌ ffmpeg a échoué (code {rc})")
+            sys.exit(f"\n❌ ffmpeg failed (code {rc})")
     except BrokenPipeError:
-        sys.exit("\n❌ ffmpeg a fermé le pipe prématurément")
+        sys.exit("\n❌ ffmpeg closed the pipe prematurely")
     except KeyboardInterrupt:
         proc.terminate()
-        sys.exit("\n⚠ Interrompu par l'utilisateur")
+        sys.exit("\n⚠ Interrupted by the user")
 
     print()
-    print(f"✓ Vidéo générée : {output.resolve()}")
+    print(f"✓ Video generated : {output.resolve()}")
     size_mb = output.stat().st_size / (1024 * 1024)
-    print(f"✓ Taille        : {size_mb:.2f} MB")
+    print(f"✓ Size        : {size_mb:.2f} MB")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -336,7 +336,7 @@ def generate_video(
 # ═══════════════════════════════════════════════════════════════
 def main():
     p = argparse.ArgumentParser(
-        description="Génère une vidéo de la vague de pixels NieR (phase HIDE).",
+        description="Generates a NieR pixel-wave video (HIDE phase).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemples :
@@ -352,26 +352,26 @@ Exemples :
     p.add_argument("--fps", type=int, default=60, help="images par seconde")
     p.add_argument(
         "-d", "--duration", type=float, default=1.8,
-        help="durée de la disparition en secondes (défaut 1.8)",
+        help="disappearance duration in seconds (default 1.8)",
     )
     p.add_argument(
         "--hold", type=int, default=0,
-        help="frames à tenir pleins avant de déclencher la vague (défaut 0)",
+        help="full frames to hold before triggering the wave (default 0)",
     )
     p.add_argument(
         "-o", "--output", type=Path, default=default_output(),
-        help="fichier de sortie (.mp4) — défaut : ~/.config/quickshell/videos/wave_close.mp4",
+        help="output file (.mp4) — default: ~/.config/quickshell/videos/wave_close.mp4",
     )
     p.add_argument(
         "-q", "--quality", choices=["low", "medium", "high"], default="high",
-        help="qualité d'encodage",
+        help="encoding quality",
     )
     args = p.parse_args()
 
     if args.width % STEP != 0 or args.height % STEP != 0:
         print(
-            f"⚠ Dimensions {args.width}×{args.height} non multiples de {STEP} — "
-            "décentrage mineur sans conséquence."
+            f"⚠ Dimensions {args.width}×{args.height} not multiples of {STEP} — "
+            "minor off-centering without consequence."
         )
 
     generate_video(

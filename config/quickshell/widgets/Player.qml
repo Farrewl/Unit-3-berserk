@@ -108,7 +108,7 @@ Item {
                         color: Qt.rgba(224/255, 219/255, 202/255,0.07)
                     }
 
-                    // Cover 100×100 — grille 32×32 niveaux de gris
+                    // Cover 100×100 — 32×32 grayscale grid
                     Item {
                         id:     coverArea
                         width:  coverSz; height: coverSz; clip: true
@@ -119,7 +119,7 @@ Item {
                         property var hoverG:         new Array(32*32).fill(184)
                         property var hoverB:         new Array(32*32).fill(154)
 
-                        // Canvas cover gris — drawGray + drawBlocky pour transition
+                        // Grey cover canvas — drawGray + drawBlocky for the transition
                         Canvas {
                             id:     coverMain
                             width:  coverSz; height: coverSz
@@ -153,7 +153,7 @@ Item {
                                 // Block size depending on the transition step
                                 var bs
                                 if (blockStep === 0) {
-                                    // Normal : grille 32×32
+                                    // Normal: 32×32 grid
                                     bs = Math.floor(CELL)
                                 } else {
                                     bs = Math.floor(CELL) + blockStep
@@ -203,7 +203,7 @@ Item {
                                     coverMain.blockStep = Math.floor(step * 3)
                                     coverMain.requestPaint()
                                 } else if (step === Math.floor(steps/2)) {
-                                    // Milieu : swap vers nouvelle image
+                                    // Middle: swap to the new image
                                     if (coverMain.nextImgPixels) {
                                         coverMain.imgPixels = coverMain.nextImgPixels
                                         coverMain.nextImgPixels = null
@@ -223,7 +223,7 @@ Item {
                             }
                         }
 
-                        // Image visible pour grabToImage
+                        // Visible image for grabToImage
                         Image {
                             id:       coverSrc
                             width:    coverSz; height: coverSz
@@ -234,7 +234,7 @@ Item {
 
                             onStatusChanged: {
                                 if (status !== Image.Ready) return
-                                // grabToImage extrait les pixels vers un canvas
+                                // grabToImage extracts the pixels into a canvas
                                 grabToImage(function(result) {
                                     extractCanvas.grabResult = result
                                     extractCanvas.requestPaint()
@@ -259,7 +259,7 @@ Item {
                                     coverMain.imgPixels = raw
                                     coverMain.requestPaint()
                                 } else {
-                                    // Changement de cover : transition blocky
+                                    // Cover change: blocky transition
                                     coverMain.nextImgPixels = raw
                                     blockTimer.step = 0
                                     blockTimer.running = true
@@ -366,7 +366,7 @@ Item {
                             onExited: decayTimer.running = true
                         }
 
-                        // Scanlines sur la cover
+                        // Scanlines over the cover
                         Item {
                             anchors.fill: parent; z: 3
                             Repeater {
@@ -639,7 +639,7 @@ Item {
                 }
             }
 
-            // CornerDeco par-dessus tout le contenu
+            // CornerDeco on top of all the content
             CornerDeco {
                 width:  pw
                 height: playerCol.implicitHeight
@@ -664,12 +664,12 @@ Item {
 
     // ─────────────────────────────────────────────────────────────────
     // TOGGLE: slide in from off-screen (right → inside)
-    // Le player glisse sur son axe X — la PanelWindow garde sa taille
-    // Le wipe curtain s'anime EN MÊME TEMPS que le slide
+    // The player slides on its X axis — the PanelWindow keeps its size
+    // The wipe curtain animates AT THE SAME TIME as the slide
     // ─────────────────────────────────────────────────────────────────
 
     // Custom curve: slow at first, aggressive toward the end
-    // Reproduit une cubic-bezier(.4,0,.2,1) mais avec snap final
+    // Mimics a cubic-bezier(.4,0,.2,1) but with a final snap
     NumberAnimation {
         id:       slideInAnim
         target:   wipeHost
@@ -697,12 +697,12 @@ Item {
     // The player slides in from the right, opaque from the start.
     // The sepia bar is the player's left edge — it moves with it.
     // Play: wipeHost.x goes from 320 → 0. The curtain is at x=0 in wipeHost,
-    // donc il est toujours sur le bord gauche du player visible.
+    // so it's always on the player's visible left edge.
     // Once in place, the curtain retracts (reveals the content).
     SequentialAnimation {
         id: revealAnim
 
-        // Phase 1 : player + rideau (trait de 2px) entrent ensemble depuis la droite
+        // Phase 1: player + curtain (2px strip) enter together from the right
         // The curtain is glued to the player's left edge (x=0 in wipeHost)
         // Animate wipeHost.x: the whole thing slides in from off-screen
         ParallelAnimation {
@@ -713,7 +713,7 @@ Item {
                 easing.type: Easing.OutExpo
             }
             // The content is hidden during the entrance phase
-            // (le rideau pleine largeur le couvre)
+            // (the full-width curtain covers it)
             NumberAnimation {
                 target: curtain; property: "width"
                 from: 320; to: 320
@@ -754,7 +754,7 @@ Item {
     }
 
     // ── HIDE ──
-    // Rideau couvre le contenu, puis le tout sort vers la droite d'un coup
+    // Curtain covers the content, then everything exits right at once
     SequentialAnimation {
         id: hideAnim
 
@@ -831,7 +831,7 @@ Item {
         }
     }
 
-    // ── API PUBLIQUE ──
+    // ── PUBLIC API ──
     function toggleVisible() {
         if (root.shown) {
             root.shown = false
@@ -844,8 +844,8 @@ Item {
         }
     }
 
-    // ── Expose toggle via IPC Quickshell ──
-    // Appelable en CLI avec :   qs ipc call player toggle
+    // ── Expose toggle via Quickshell IPC ──
+    // Callable from the CLI with:   qs ipc call player toggle
     IpcHandler {
         target: "player"
         function toggle(): void { root.toggleVisible() }
@@ -891,7 +891,7 @@ Item {
         }
 
         // Text or icon (set via children)
-        // La couleur change via MouseArea hover
+        // The color changes via MouseArea hover
         property color textColor: cbMa.containsMouse
             ? "#14100B"
             : (isPlay

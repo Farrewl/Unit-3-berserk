@@ -121,7 +121,7 @@ Item {
         }
     }
 
-    // Un seul Process — sh -c pour tout
+    // Single Process — sh -c for everything
     Process {
         id: launchProc
         property string pending: ""
@@ -203,7 +203,7 @@ Item {
             color:  root.paper
             border.color: root.ink; border.width: 1
 
-            // Grille fine
+            // Fine grid
             Repeater {
                 model: Math.floor(root.lw/20)+1
                 Rectangle { x:index*20; y:0; width:1; height:root.lh; color:root.lineVsoft }
@@ -619,7 +619,7 @@ Item {
         searchQuery = ""
         focusIdx    = 0
         currentCat  = "all"
-        // Sync TextInput text avec la property vide
+        // Sync the TextInput text with the empty property
         searchInput.text = ""
         if (!desktopReader.running) desktopReader.running = true
         wipeHide.stop()

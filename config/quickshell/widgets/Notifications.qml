@@ -371,7 +371,7 @@ Scope {
             onTriggered: notif.state = "closing"
         }
 
-        // Transition entering → visible au montage
+        // entering → visible transition on mount
         Component.onCompleted: {
             Qt.callLater(() => { if (notif.state === "entering") notif.state = "visible"; });
         }
@@ -566,7 +566,7 @@ Scope {
 
                         visible: imageSource.length > 0
 
-                        // Cadre style NieR
+                        // NieR-style frame
                         Rectangle {
                             anchors.fill: parent
                             color: "transparent"
@@ -669,7 +669,7 @@ Scope {
                     }
                 }
 
-                // Actions (le Repeater accepte directement l'ObjectModel)
+                // Actions (the Repeater accepts the ObjectModel directly)
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.topMargin: 4
@@ -719,7 +719,7 @@ Scope {
                 Item { Layout.preferredHeight: 4 }
             }
 
-            // Barre de progression du timeout
+            // Timeout progress bar
             Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -747,7 +747,7 @@ Scope {
                 }
             }
 
-            // Hover sur la carte → pause du timer
+            // Hover on the card → pause the timer
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true

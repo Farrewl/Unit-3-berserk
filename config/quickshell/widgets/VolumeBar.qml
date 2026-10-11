@@ -4,13 +4,13 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
-//   Volume bar verticale — bord gauche
+//   Vertical volume bar — left edge
 //   - 30 segments morphing between square (empty) ↔ thin bar (filled)
 //   - Scroll / clic / drag
 //   - PulseAudio control via pactl (pavucontrol-compatible)
 //   - Active screen only
 //   - Click-through outside the active zone: the panel itself changes
-//     de largeur et de hauteur pour ne couvrir que ce qui est utile.
+//     in width and height to only cover what is useful.
 // ═════════════════════════════════════════════════════════════════════
 
 ShellRoot {
@@ -92,8 +92,8 @@ ShellRoot {
     //   One PanelWindow per screen
     //   - FIXED height: barHeight (plus label zone), centered vertically
     //   - Dynamic width: hoverWidth when hidden, wide when revealed
-    //   Tout ce qui est en dehors de cette zone est click-through natif
-    //   (pas de panel = pas de capture d'events).
+    //   Everything outside this zone is native click-through
+    //   (no panel = no event capture).
     // ═══════════════════════════════════
     Variants {
         model: Quickshell.screens
@@ -116,7 +116,7 @@ ShellRoot {
                                   || hideTimer.running
 
             // Width: just the hover zone when hidden, extended when revealed
-            // Hauteur : toujours celle de la barre (+ marge pour label)
+            // Height: always the bar's height (+ label margin)
             implicitWidth: revealed
                 ? (root.leftOffset + root.barWidth + 10)
                 : root.hoverWidth
@@ -133,7 +133,7 @@ ShellRoot {
                 repeat: false
             }
 
-            // ── Zone de hover au bord (toujours active) ──
+            // ── Hover zone at the edge (always active) ──
             MouseArea {
                 id: hoverArea
                 hoverEnabled: true
@@ -206,7 +206,7 @@ ShellRoot {
                     }
                 }
 
-                // MouseArea d'interaction : scroll / clic / drag
+                // Interaction MouseArea: scroll / click / drag
                 MouseArea {
                     id: barMouseArea
                     anchors.fill: parent

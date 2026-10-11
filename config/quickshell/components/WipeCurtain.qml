@@ -1,6 +1,6 @@
 import QtQuick
 
-// WipeCurtain — rideau NieR identique au player HTML v4
+// WipeCurtain — NieR curtain identical to the HTML v4 player
 // Content placed INSIDE this component is clipped by the animation
 // Usage : WipeCurtain { id: wipe; anchors.fill: parent; Rectangle { ... } }
 
@@ -14,10 +14,10 @@ Item {
     signal revealFinished
     signal hideFinished
 
-    // Clip sur tout le composant
+    // Clip on the whole component
     clip: true
 
-    // ── CONTENU (ce qu'on met dedans) ──
+    // ── CONTENT (whatever goes inside) ──
     default property alias contentData: contentItem.data
 
     Item {

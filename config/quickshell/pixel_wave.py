@@ -3,18 +3,18 @@
 Pixel Wave Video Generator
 ═══════════════════════════════════════════════════════════════
 
-Génère une vidéo MP4 reproduisant la phase d'apparition (reveal)
-de la vague de pixels du lockscreen NieR.
+Generates an MP4 video reproducing the appearance phase (reveal)
+of the NieR lockscreen pixel wave.
 
-Pixels sépia qui apparaissent en vague depuis le centre, avec
-soulèvement par ressort au passage du front.
+Sepia pixels appearing in a wave from the center, with
+a spring lift at the wave front.
 
 Usage :
     python pixel_wave.py                        # default: 1920x1080 @60fps
     python pixel_wave.py -w 2560 -H 1440        # custom resolution
-    python pixel_wave.py --fps 60 -o wave.mp4   # fps + fichier
+    python pixel_wave.py --fps 60 -o wave.mp4   # fps + output file
 
-Dépendances (Arch Linux) :
+Dependencies (Arch Linux):
     sudo pacman -S python-pillow python-numpy ffmpeg
 
 ═══════════════════════════════════════════════════════════════
@@ -33,29 +33,29 @@ from pathlib import Path
 try:
     import numpy as np
 except ImportError:
-    sys.exit("❌ numpy manquant : sudo pacman -S python-numpy")
+    sys.exit("❌ numpy missing: sudo pacman -S python-numpy")
 
 try:
     from PIL import Image
 except ImportError:
-    sys.exit("❌ Pillow manquant : sudo pacman -S python-pillow")
+    sys.exit("❌ Pillow missing: sudo pacman -S python-pillow")
 
 if not shutil.which("ffmpeg"):
-    sys.exit("❌ ffmpeg manquant : sudo pacman -S ffmpeg")
+    sys.exit("❌ ffmpeg missing: sudo pacman -S ffmpeg")
 
 
 # ═══════════════════════════════════════════════════════════════
 # PARAMETERS (faithfully reproduced from the original HTML)
 # ═══════════════════════════════════════════════════════════════
-CELL = 7            # taille du pixel visible
-STEP = 8            # pas de la grille (CELL + GAP 1px)
-FRONT_W = 1.2       # largeur du front de vague
+CELL = 7            # visible pixel size
+STEP = 8            # grid step (CELL + 1px GAP)
+FRONT_W = 1.2       # wave front width
 LIFT_MAX = 7.0      # max lift at the wave front
-SPRING_K = 0.28     # constante du ressort
-SPRING_D = 0.62     # amortissement
+SPRING_K = 0.28     # spring constant
+SPRING_D = 0.62     # damping
 WAVE_SPEED = 7.2    # propagation speed (cells/frame at 60fps reference)
 
-# Couleur de fond (bg sombre du lockscreen)
+# Background color (lockscreen dark bg)
 BG_R, BG_G, BG_B = 20, 16, 11  # #14100B
 
 # Sepia palette: lit pixel = (R, G, B) × (brightness × progress)
@@ -76,7 +76,7 @@ def default_output() -> Path:
 # SIMULATION
 # ═══════════════════════════════════════════════════════════════
 def build_grid(width: int, height: int):
-    """Construit la grille et les buffers de simulation."""
+    """Build the grid and the simulation buffers."""
     cols = width // STEP
     rows = height // STEP
     off_x = (width - cols * STEP) // 2
@@ -89,7 +89,7 @@ def build_grid(width: int, height: int):
     target_color = np.array(
         [0.78 + rng.random() * 0.14 for _ in range(n)], dtype=np.float32
     )
-    # Jitter radial (rend le front plus organique)
+    # Radial jitter (makes the front more organic)
     jitter = np.array(
         [(rng.random() - 0.5) * 4.0 for _ in range(n)], dtype=np.float32
     )
@@ -114,7 +114,7 @@ def build_grid(width: int, height: int):
 
 
 def max_dist(cx: float, cy: float, cols: int, rows: int) -> float:
-    """Distance maximale d'un point à un coin de la grille."""
+    """Maximum distance from a point to a grid corner."""
     return max(
         math.hypot(cx - c, cy - r)
         for c, r in [(0, 0), (cols - 1, 0), (0, rows - 1), (cols - 1, rows - 1)]
@@ -122,7 +122,7 @@ def max_dist(cx: float, cy: float, cols: int, rows: int) -> float:
 
 
 def step_simulation(state, waves, speed_scale: float):
-    """Avance la simulation d'une frame."""
+    """Advance the simulation by one frame."""
     cols = state["cols"]
     rows = state["rows"]
     n = state["n"]
@@ -140,11 +140,11 @@ def step_simulation(state, waves, speed_scale: float):
     lift_vel[mask] = 0
 
     # Pre-compute cell coordinates
-    # (optimisation vectorielle)
+    # (vectorized optimization)
     c_idx = np.arange(n) % cols
     r_idx = np.arange(n) // cols
 
-    # 2. Propagation des vagues
+    # 2. Wave propagation
     for w in waves:
         if w["done"]:
             continue
@@ -153,7 +153,7 @@ def step_simulation(state, waves, speed_scale: float):
             w["done"] = True
             continue
 
-        # Distance de chaque cellule au centre de la vague
+        # Distance of each cell from the wave center
         d = np.sqrt((c_idx - w["cx"]) ** 2 + (r_idx - w["cy"]) ** 2)
         df = w["r"] - (d + jitter)
 
@@ -162,12 +162,12 @@ def step_simulation(state, waves, speed_scale: float):
         if not np.any(active):
             continue
 
-        # Courbe d'ease smoothstep sur le front
+        # Smoothstep easing curve on the front
         t = np.clip((df + FRONT_W) / (FRONT_W * 2), 0.0, 1.0)
         ease = t * t * (3.0 - 2.0 * t)
 
         if w["dir"] == 1:
-            # Reveal : le pixel prend la valeur max atteinte
+            # Reveal: pixel takes the max reached value
             np.maximum(progress, ease * active, out=progress)
         else:
             inv = 1.0 - ease
@@ -191,7 +191,7 @@ def step_simulation(state, waves, speed_scale: float):
 # RENDU
 # ═══════════════════════════════════════════════════════════════
 def render_frame(state, width: int, height: int) -> np.ndarray:
-    """Render la frame courante en numpy array (H, W, 3) uint8."""
+    """Render the current frame into a numpy array (H, W, 3) uint8."""
     # Fond uniforme
     img = np.full((height, width, 3), (BG_R, BG_G, BG_B), dtype=np.uint8)
 
@@ -203,7 +203,7 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
     lift = state["lift"]
     target_color = state["target_color"]
 
-    # Couleur de chaque cellule : v = min(1, p * target)
+    # Color of each cell: v = min(1, p * target)
     v = np.minimum(1.0, progress * target_color)
 
     # Two passes: settled pixels (lift ≤ 0.3) then lifted pixels (lift > 0.3)
@@ -227,13 +227,13 @@ def render_frame(state, width: int, height: int) -> np.ndarray:
                 gg = int(min(255, vi * SEPIA_G))
                 bb = int(min(255, vi * SEPIA_B))
 
-                # Taille effective (grossit avec le lift)
+                # Effective size (grows with the lift)
                 size = int(CELL + lv + 0.5)
                 half = lv / 2.0
                 px = off_x + c * STEP - int(half)
                 py = off_y + r * STEP - int(half)
 
-                # Clamp aux bornes de l'image
+                # Clamp to image bounds
                 x1 = max(0, px)
                 y1 = max(0, py)
                 x2 = min(width, px + size)
@@ -255,12 +255,12 @@ def generate_video(
     output: Path,
     quality: str = "high",
 ):
-    """Génère la vidéo en pipant les frames vers ffmpeg."""
+    """Generate the video by piping frames to ffmpeg."""
     # Create the output directory if it doesn't exist
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    print(f"▸ Résolution : {width}×{height} @ {fps}fps")
-    print(f"▸ Durée      : {duration:.1f}s")
+    print(f"▸ Resolution : {width}×{height} @ {fps}fps")
+    print(f"▸ Duration   : {duration:.1f}s")
     print(f"▸ Sortie     : {output}")
     print()
 
@@ -273,7 +273,7 @@ def generate_video(
     cols = state["cols"]
     rows = state["rows"]
 
-    # Lance la vague depuis le centre (reveal, dir=1)
+    # Launch the wave from the center (reveal, dir=1)
     cx = 0.5 * cols
     cy = 0.5 * rows
     waves = [
@@ -312,7 +312,7 @@ def generate_video(
         str(output),
     ]
 
-    print("▸ Lancement ffmpeg...")
+    print("▸ Launching ffmpeg...")
     proc = subprocess.Popen(
         ffmpeg_cmd,
         stdin=subprocess.PIPE,
@@ -340,17 +340,17 @@ def generate_video(
         proc.stdin.close()
         rc = proc.wait()
         if rc != 0:
-            sys.exit(f"\n❌ ffmpeg a échoué (code {rc})")
+            sys.exit(f"\n❌ ffmpeg failed (code {rc})")
     except BrokenPipeError:
-        sys.exit("\n❌ ffmpeg a fermé le pipe prématurément")
+        sys.exit("\n❌ ffmpeg closed the pipe prematurely")
     except KeyboardInterrupt:
         proc.terminate()
-        sys.exit("\n⚠ Interrompu par l'utilisateur")
+        sys.exit("\n⚠ Interrupted by the user")
 
     print()
-    print(f"✓ Vidéo générée : {output.resolve()}")
+    print(f"✓ Video generated : {output.resolve()}")
     size_mb = output.stat().st_size / (1024 * 1024)
-    print(f"✓ Taille        : {size_mb:.2f} MB")
+    print(f"✓ Size        : {size_mb:.2f} MB")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -358,7 +358,7 @@ def generate_video(
 # ═══════════════════════════════════════════════════════════════
 def main():
     p = argparse.ArgumentParser(
-        description="Génère une vidéo de la vague de pixels NieR (phase reveal).",
+        description="Generates a NieR pixel-wave video (reveal phase).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemples :
@@ -373,22 +373,22 @@ Exemples :
     p.add_argument("--fps", type=int, default=60, help="images par seconde")
     p.add_argument(
         "-d", "--duration", type=float, default=2.5,
-        help="durée en secondes (défaut 2.5)",
+        help="duration in seconds (default 2.5)",
     )
     p.add_argument(
         "-o", "--output", type=Path, default=default_output(),
-        help="fichier de sortie (.mp4) — défaut : ~/.config/quickshell/videos/wave.mp4",
+        help="output file (.mp4) — default: ~/.config/quickshell/videos/wave.mp4",
     )
     p.add_argument(
         "-q", "--quality", choices=["low", "medium", "high"], default="high",
-        help="qualité d'encodage",
+        help="encoding quality",
     )
     args = p.parse_args()
 
     if args.width % STEP != 0 or args.height % STEP != 0:
         print(
-            f"⚠ Les dimensions {args.width}×{args.height} ne sont pas multiples "
-            f"de {STEP} — la grille sera légèrement décentrée (pas grave)."
+            f"⚠ Dimensions {args.width}×{args.height} are not multiples "
+            f"of {STEP} — the grid will be slightly off-center (harmless)."
         )
 
     generate_video(

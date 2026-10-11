@@ -4,7 +4,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
-//   Brightness bar verticale — bord droit
+//   Vertical brightness bar — right edge
 //   - Same interaction as VolumeBar: hover / scroll / click / drag
 //   - Backlight control via brightnessctl
 //   - Active screen only

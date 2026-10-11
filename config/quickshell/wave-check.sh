@@ -5,7 +5,7 @@
 # (reveal + hide) exist. If not, generates them (blocking).
 #
 # Usage :
-#   - Lancer manuellement : ./wave-check.sh
+#   - Manual run: ./wave-check.sh
 #   - At startup: exec-once = ~/.config/quickshell/wave-check.sh
 # ═════════════════════════════════════════════════════════════════════
 
@@ -33,7 +33,7 @@ LAST_FRAME_SCRIPT="$QS_DIR/ext_last_fr.py"
 # ── Preparation ──
 mkdir -p "$VIDEOS_DIR" "$LOG_DIR"
 
-# Redirection stdout + stderr vers le log (avec timestamp)
+# Redirect stdout + stderr to the log (with timestamp)
 exec > >(while IFS= read -r line; do printf '[%s] %s\n' "$(date +%H:%M:%S)" "$line"; done >> "$LOG_FILE") 2>&1
 
 echo "═══════════════════════════════════════════════════════════"
@@ -47,7 +47,7 @@ missing_scripts=()
 [[ -f "$HIDE_SCRIPT"   ]] || missing_scripts+=("$HIDE_SCRIPT")
 [[ -f "$LAST_FRAME_SCRIPT" ]] || missing_scripts+=("$LAST_FRAME_SCRIPT")
 if (( ${#missing_scripts[@]} > 0 )); then
-    echo "❌ Script(s) générateur(s) manquant(s) :"
+    echo "❌ Generator script(s) missing:"
     printf '   - %s\n' "${missing_scripts[@]}"
     echo "Abandon."
     exit 1
@@ -57,12 +57,12 @@ fi
 if [[ -f "$REVEAL_VIDEO" ]]; then
     echo "✓ wave_reveal.mp4 présent"
 else
-    echo "⚠ wave_reveal.mp4 manquant — génération…"
+    echo "⚠ wave_reveal.mp4 missing — generating…"
     python "$REVEAL_SCRIPT" -o "$REVEAL_VIDEO"
     if [[ -f "$REVEAL_VIDEO" ]]; then
-        echo "✓ wave_reveal.mp4 généré"
+        echo "✓ wave_reveal.mp4 generated"
     else
-        echo "❌ échec génération wave_reveal.mp4"
+        echo "❌ wave_reveal.mp4 generation failed"
         exit 2
     fi
 fi
@@ -71,12 +71,12 @@ fi
 if [[ -f "$HIDE_VIDEO" ]]; then
     echo "✓ wave_hide.mp4 présent"
 else
-    echo "⚠ wave_hide.mp4 manquant — génération…"
+    echo "⚠ wave_hide.mp4 missing — generating…"
     python "$HIDE_SCRIPT" -o "$HIDE_VIDEO"
     if [[ -f "$HIDE_VIDEO" ]]; then
-        echo "✓ wave_hide.mp4 généré"
+        echo "✓ wave_hide.mp4 generated"
     else
-        echo "❌ échec génération wave_hide.mp4"
+        echo "❌ wave_hide.mp4 generation failed"
         exit 3
     fi
 fi
@@ -84,12 +84,12 @@ fi
 if [[ -f "$LAST_FRAME" ]]; then
     echo "✓ wave_last_frame.png présent"
 else
-    echo "⚠ wave_last_frame.png manquant — génération…"
+    echo "⚠ wave_last_frame.png missing — generating…"
     python "$LAST_FRAME_SCRIPT" "$REVEAL_VIDEO"
     if [[ -f "$LAST_FRAME" ]]; then
-        echo "✓ wave_last_frame.png généré"
+        echo "✓ wave_last_frame.png generated"
     else
-        echo "❌ échec génération wave_last_frame.png"
+        echo "❌ wave_last_frame.png generation failed"
         exit 4
     fi
 fi

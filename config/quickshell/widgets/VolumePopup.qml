@@ -4,10 +4,10 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 // ═════════════════════════════════════════════════════════════════════
-//   Volume popup horizontal — déclenché par le bouton VOL Waybar
-//   - Positionné sous le curseur au moment du clic
-//   - Scroll / clic / drag
-//   - Contrôle PulseAudio via pactl
+//   Horizontal volume popup — triggered by the VOL Waybar button
+//   - Positioned under the cursor at click time
+//   - Scroll / click / drag
+//   - PulseAudio control via pactl
 // ═════════════════════════════════════════════════════════════════════
 
 ShellRoot {

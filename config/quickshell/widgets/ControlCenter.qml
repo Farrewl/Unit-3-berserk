@@ -31,7 +31,7 @@ ShellRoot {
     // ── Layout ──
     readonly property int  slotGapV: 150
     readonly property int  slotGapH: 350
-    readonly property int  panShiftV: 320   // vertical (top/bottom) : centre l'ensemble sub+settings
+    readonly property int  panShiftV: 320   // vertical (top/bottom): centers the sub+settings ensemble
     readonly property int  panShiftH: 700   // horizontal (left/right): sub-menu crosses the screen
 
     // ── State ──
@@ -74,7 +74,7 @@ ShellRoot {
     function detailKey() { return slot + "." + sub }
     function subList(s)  { return root.subs[s] || [] }
 
-    // ── Construit la liste d'actions dynamique selon le sub focus ──
+    // ── Builds the dynamic actions list based on the sub focus ──
     function actList() {
         var key = detailKey()
         // Wi-Fi: toggle + one button per scanned network
@@ -115,7 +115,7 @@ ShellRoot {
             }
             return acts2
         }
-        // Audio Output : liste des sinks
+        // Audio Output: list of sinks
         if (key === "bottom.output") {
             var acts3 = []
             for (var k = 0; k < audioSinks.length; k++) {
@@ -165,7 +165,7 @@ ShellRoot {
         if (key === "right.dnd") {
             return [{key:"toggle-dnd", label: dndEnabled ? "Disable DND" : "Enable DND"}]
         }
-        // Autres : actions statiques du dictionnaire details
+        // Others: static actions from the details dictionary
         var dd = root.details[key]
         return dd ? dd.actions : []
     }
@@ -196,7 +196,7 @@ ShellRoot {
             return "Enabled · " + btDevices.length + " device" + (btDevices.length !== 1 ? "s" : "")
         }
         if (key === "bottom.output") {
-            // Trouver la description du default sink
+            // Find the default sink's description
             for (var i = 0; i < audioSinks.length; i++) {
                 if (audioSinks[i].isDefault) return audioSinks[i].description
             }
@@ -236,7 +236,7 @@ ShellRoot {
     property bool   wifiEnabled: false
     property string wifiCurrentSSID: ""
     property var    wifiNetworks: []   // [{ssid, signal, security, active}]
-    property string wifiPromptSSID: ""   // SSID en cours de saisie de mot de passe (vide = pas de prompt)
+    property string wifiPromptSSID: ""   // SSID currently entering a password (empty = no prompt)
     property string wifiError: ""        // error message after failed connection
 
     Timer {
@@ -381,7 +381,7 @@ ShellRoot {
     property var notifications: []     // [{id, summary, body, app, ts}]
     property int expandedNotifIdx: -1  // index de la notif expanded (-1 = aucune)
 
-    // Poll l'historique des notifs depuis le daemon Notifications.qml via IPC
+    // Poll the notif history from the Notifications.qml daemon over IPC
     Timer {
         interval: 1500
         running: root.open && root.slot === "right"
@@ -417,14 +417,14 @@ ShellRoot {
             }
         }
     }
-    // Process pour les actions vers le daemon notifs
+    // Process for actions to the notif daemon
     Process {
         id: notifActProc
         command: ["sh","-c","true"]
         running: false
     }
 
-    // Helpers : appellent l'IPC du daemon
+    // Helpers: call the daemon's IPC
     function dismissNotif(idx) {
         notifActProc.command = ["sh","-c","qs ipc call notifs dismissAt " + idx]
         notifActProc.running = true
@@ -499,7 +499,7 @@ ShellRoot {
         }
     }
 
-    // Process pour scan BT
+    // Process for BT scanning
     Process {
         id: btScanProc
         command: ["sh","-c","bluetoothctl --timeout 30 scan on"]
@@ -533,7 +533,7 @@ ShellRoot {
                     root.wifiPasswordInput = ""
                     root.wifiError = ""
                 } else {
-                    // erreur, on reste sur le prompt
+                    // on error, stay on the prompt
                     root.wifiError = "Connection failed"
                 }
                 refreshTimer.restart()
@@ -544,7 +544,7 @@ ShellRoot {
     // ── Process for running actions ──
     Process { id: actProc; command: ["sh","-c","true"]; running: false }
 
-    // Refresh state quand on change de slot
+    // Refresh state when changing slot
     onSlotChanged: {
         cancelWifiPrompt()
         if (slot === "top")    { pollWifi.running = true; pollBt.running = true }
@@ -559,7 +559,7 @@ ShellRoot {
     onLevelChanged: { if (level !== 3) cancelWifiPrompt() }
     onOpenChanged:  { if (!open) cancelWifiPrompt() }
 
-    // Cancel le prompt Wi-Fi proprement (fermeture du TextInput, reset focus au keyHandler)
+    // Cancel the Wi-Fi prompt cleanly (close the TextInput, reset focus to the keyHandler)
     function cancelWifiPrompt() {
         if (wifiPromptSSID === "") return
         wifiPromptSSID = ""
@@ -570,7 +570,7 @@ ShellRoot {
     function firstSub(s) { var l = subList(s); return l.length ? l[0].key : "" }
     function firstAction() { var l = actList(); return l.length ? l[0].key : "" }
 
-    // ── Dispatcher des actions de boutons ──
+    // ── Button action dispatcher ──
     function dispatchAction(slotKey, subKey, actionKey) {
         console.log("[ControlCenter] action:", slotKey + "." + subKey + "." + actionKey)
         var cmd = ""
@@ -601,7 +601,7 @@ ShellRoot {
                     return
                 }
             } else if (actionKey === "submit-password") {
-                // Soumission du mot de passe via le prompt
+                // Password submission via the prompt
                 cmd = "nmcli dev wifi connect '" + wifiPromptSSID.replace(/'/g, "'\\''") +
                       "' password '" + wifiPasswordInput.replace(/'/g, "'\\''") + "' 2>&1"
                 wifiSubmitProc.command = ["sh","-c", cmd]
@@ -747,7 +747,7 @@ ShellRoot {
     function close() {
         if (!open) return
         // Phase 1: reset level to 1 (slot=center) and trigger closing.
-        // Les slots reviennent au centre, le centre reste visible.
+        // The slots return to center; the center stays visible.
         level = 1; slot = "center"; sub = ""; action = ""
         closing = true
         closeTimer.start()
@@ -763,7 +763,7 @@ ShellRoot {
         interval: 290  // attendre la fin de l'animation des slots (250ms + marge)
         repeat: false
         onTriggered: {
-            // Phase 2 : on cache vraiment (fade out via opacity 0 dans le panel)
+            // Phase 2: actually hide (fade out via opacity 0 in the panel)
             open = false
             closing = false
         }
@@ -884,7 +884,7 @@ ShellRoot {
                 // Give focus to the Wi-Fi TextInput when the prompt is open
                 focus: root.open && !root.closing && isActive && root.wifiPromptSSID === ""
 
-                // Reprendre le focus clavier quand le prompt Wi-Fi se ferme
+                // Regain keyboard focus when the Wi-Fi prompt closes
                 Connections {
                     target: root
                     function onWifiPromptSSIDChanged() {
@@ -906,7 +906,7 @@ ShellRoot {
                     else if (k === Qt.Key_D || k === Qt.Key_Right)    { root.navigate("right"); e.accepted = true }
                 }
 
-                // ── Croix avec pan ──
+                // ── Cross with pan ──
                 Item {
                     id: cross
                     anchors.centerIn: parent
@@ -1077,7 +1077,7 @@ ShellRoot {
                 if (isCenter) return 0.4
                 return 0.28
             }
-            // L1 (et closing) : tous les slots clairs
+            // L1 (and closing): all slots light
             return 1.0
         }
         Behavior on opacity { NumberAnimation { duration: 320 } }
@@ -1248,7 +1248,7 @@ ShellRoot {
             }
         }
 
-        // Losanges aux coins du center
+        // Diamonds at the center's corners
         Repeater {
             model: sl.isCenter ? 4 : 0
             Rectangle {
@@ -1400,7 +1400,7 @@ ShellRoot {
                         font.pixelSize: 12
                         color: root.colInk
                         anchors.verticalCenter: parent.verticalCenter
-                        // largeur max : panneau total - dot - margin
+                        // max width: total panel - dot - margin
                         width: detailsCol.width - 26
                         elide: Text.ElideRight
                         wrapMode: Text.NoWrap
@@ -1415,15 +1415,15 @@ ShellRoot {
 
                 Item { width: 1; height: 14 }
 
-                // Liste scrollable des actions
-                // Pour les notifs (right.history) : composant NotifBtn avec expand
-                // Pour le reste : ActionBtn standard
+                // Scrollable list of actions
+                // For notifs (right.history): NotifBtn component with expand
+                // For the rest: standard ActionBtn
                 Item {
                     id: actListContainer
                     width: parent.width
                     property bool isNotifList: sl.slotKey === "right" && root.sub === "history"
                     property int actCount: root.actList().length
-                    // Hauteur adaptative max 8 visibles, mais hauteur d'item plus grande pour notifs expanded
+                    // Adaptive height, max 8 visible, taller items for expanded notifs
                     height: isNotifList
                         ? Math.min(actCount === 0 ? 1 : Math.max(actCount, 1), 5) * 56 + (root.expandedNotifIdx >= 0 ? 90 : 0)
                         : Math.min(actCount, 8) * 40
@@ -1487,7 +1487,7 @@ ShellRoot {
                         }
                     }
 
-                    // Indicateur de scroll visible (track + thumb)
+                    // Visible scroll indicator (track + thumb)
                     Rectangle {
                         anchors.right: parent.right
                         anchors.top: parent.top
@@ -1570,7 +1570,7 @@ ShellRoot {
                     }
                 }
 
-                // ── Slider Volume (visible quand bottom.volume) ──
+                // ── Volume slider (visible when bottom.volume) ──
                 Item {
                     width: parent.width
                     visible: sl.slotKey === "bottom" && root.sub === "volume"
@@ -1640,7 +1640,7 @@ ShellRoot {
                                 }
                                 onClicked: function(e) {
                                     // Simple click without drag: mute/unmute if on the cell to the right (beyond the current line)
-                                    // Sinon set vol
+                                    // Otherwise set vol
                                     if (Math.abs(e.x - lastX) < 3) {
                                         // It was just a click: setVol was already called, that's ok
                                     }
@@ -1660,7 +1660,7 @@ ShellRoot {
                             }
                         }
 
-                        // Indication mute clickable
+                        // Mute-clickable indicator
                         Text {
                             text: root.audioMuted ? "Muted · Click track to unmute" : "Right-click track to mute · Scroll to adjust"
                             font.family: "Inter"
@@ -1672,7 +1672,7 @@ ShellRoot {
                     }
                 }
 
-                // ── Prompt mot de passe Wi-Fi (visible quand wifiPromptSSID est set) ──
+                // ── Wi-Fi password prompt (visible when wifiPromptSSID is set) ──
                 Item {
                     width: parent.width
                     visible: sl.slotKey === "top" && root.sub === "wifi" && root.wifiPromptSSID !== ""
@@ -1805,7 +1805,7 @@ ShellRoot {
             }
         }
 
-        // Hover / clic sur la box
+        // Hover / click on the box
         MouseArea {
             anchors.fill: boxWrap
             hoverEnabled: true
@@ -1848,7 +1848,7 @@ ShellRoot {
             }
         }
 
-        // Fond opaque permanent
+        // Permanent opaque background
         Rectangle {
             anchors.fill: parent
             color: root.colCard
@@ -1905,7 +1905,7 @@ ShellRoot {
             }
         }
 
-        // Re-scramble quand devient focus
+        // Re-scramble when focused
         onIsFocusChanged: if (isFocus) subScramble.start()
 
         MouseArea {
@@ -1921,7 +1921,7 @@ ShellRoot {
         }
     }
 
-    // ── Bouton d'action ──
+    // ── Action button ──
     component ActionBtn: Item {
         id: btn
         property var    actionData
@@ -1953,7 +1953,7 @@ ShellRoot {
             Behavior on opacity { NumberAnimation { duration: 220 } }
         }
 
-        // Curtain au focus
+        // Curtain on focus
         Rectangle {
             anchors.fill: parent
             color: root.colInk
@@ -2008,7 +2008,7 @@ ShellRoot {
             }
         }
 
-        // Re-scramble quand on devient focus
+        // Re-scramble when becoming focused
         onIsFocusChanged: if (isFocus) btnScramble.start()
 
         MouseArea {
@@ -2022,7 +2022,7 @@ ShellRoot {
         }
     }
 
-    // ── Bouton Notification (avec expand/collapse) ──
+    // ── Notification button (with expand/collapse) ──
     component NotifBtn: Item {
         id: nbtn
         property var notifData
@@ -2119,7 +2119,7 @@ ShellRoot {
                 wrapMode: Text.NoWrap
             }
 
-            // Body (visible quand expanded)
+            // Body (visible when expanded)
             Text {
                 id: bodyLabel
                 anchors.top: summaryLabel.bottom
@@ -2137,7 +2137,7 @@ ShellRoot {
                 elide: Text.ElideRight
             }
 
-            // Metadata (visible quand expanded) : urgency, category, timeout, actions
+            // Metadata (visible when expanded): urgency, category, timeout, actions
             Text {
                 anchors.top: bodyLabel.visible ? bodyLabel.bottom : summaryLabel.bottom
                 anchors.topMargin: 4
@@ -2165,7 +2165,7 @@ ShellRoot {
             }
         }
 
-        // Bouton expand ▸ / ▾
+        // Expand button ▸ / ▾
         Item {
             id: expandBtn
             width: 24; height: parent.height
@@ -2192,7 +2192,7 @@ ShellRoot {
             }
         }
 
-        // MouseArea pour clic sur le corps : 1er clic = expand, 2e clic = invoke
+        // MouseArea for body clicks: 1st click = expand, 2nd click = invoke
         MouseArea {
             anchors.fill: parent
             anchors.rightMargin: 24   // ne pas couvrir le bouton expand
@@ -2211,7 +2211,7 @@ ShellRoot {
             }
         }
 
-        // Quand expanded, on agrandit la hauteur
+        // When expanded, increase the height
         states: State {
             name: "expanded"
             when: nbtn.expanded
@@ -2223,7 +2223,7 @@ ShellRoot {
 
     component ScrambleAnim: QtObject {
         id: anim
-        property Item target: null   // doit avoir une property "targetText"
+        property Item target: null   // must have a "targetText" property
         property int duration: 280
         property string chars: "▸◆▪▫░▒▓█/\\|-_=+*"
         property int _elapsed: 0
