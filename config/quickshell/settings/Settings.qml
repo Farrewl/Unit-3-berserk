@@ -92,7 +92,8 @@ QtObject {
     // ── KEYBINDS (must also be declared in hyprland.lua) ────────
     //   SUPER + Tab           → toggle Control Center (qs ctrl.sh)
     //   SUPER + Return        → terminal (kitty)
-    //   SUPER + M             → show/hide Now-Playing (+ auto-start YouTube Music)
+    //   SUPER + M             → open/focus YouTube Music
+    //   SUPER + SHIFT + M     → show/hide Now-Playing panel
     //   SUPER + SHIFT + V     → toggle audio visualizer
     //   SUPER + P             → wallpaper picker
 }

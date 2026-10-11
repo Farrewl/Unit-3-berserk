@@ -108,10 +108,11 @@ hl.bind("SUPER + Super_L", hl.dsp.exec_cmd("echo t >> /tmp/qs-menu"), { release 
 hl.bind("SUPER + Tab", hl.dsp.exec_cmd("~/.config/quickshell/ctrl.sh"))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("~/.config/quickshell/lock.sh"), { release = true })
 hl.bind("SUPER + Return", hl.dsp.exec_cmd("/usr/bin/kitty"))
+hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("~/.config/quickshell/player.sh"))
 hl.bind("SUPER + SHIFT + V", hl.dsp.exec_cmd("~/.config/quickshell/scripts/visualizer_toggle.sh toggle"))
 
 -- Applications
-hl.bind("SUPER + M", hl.dsp.exec_cmd("~/.config/quickshell/player.sh"))
+hl.bind("SUPER + M", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("pkill qs"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("~/.config/quickshell/wallpaper.sh"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("brave"))
