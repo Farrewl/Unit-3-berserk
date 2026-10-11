@@ -54,9 +54,13 @@ install_packages() {
     command -v paru >/dev/null && helper=paru
     command -v yay  >/dev/null && helper=yay
     if [[ -n "$helper" ]]; then
-        "$helper" -S --needed --noconfirm pamtester
+        if "$helper" -S --needed --noconfirm pamtester; then
+            ok "pamtester terpasang."
+        else
+            warn "Install pamtester gagal — dilewati. pamtester hanya alat tes PAM; lockscreen tetap berfungsi."
+        fi
     else
-        warn "Tidak ada paru/yay — melewatkan pamtester (lockscreen akan gagal validasi password)."
+        warn "Tidak ada paru/yay — melewatkan pamtester (hanya alat tes PAM; opsional)."
     fi
 
     command -v qs >/dev/null || warn "/usr/bin/qs tidak ditemukan — cek paket quickshell."
