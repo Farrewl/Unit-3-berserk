@@ -142,6 +142,16 @@ deploy_pam() {
     done
 }
 
+# ─── 3b. Greetd (autologin) ────────────────────────────────────────
+deploy_greetd() {
+    local src="$CONFIG_SRC/system/greetd/config.toml"
+    [[ -f "$src" ]] || { warn "Tidak ada greetd config di repo."; return; }
+    if [[ ! -f /etc/greetd/config.toml ]] || ! cmp -s "$src" /etc/greetd/config.toml; then
+        sudo install -D -m 644 "$src" /etc/greetd/config.toml
+        ok "greetd: /etc/greetd/config.toml (autologin → Hyprland uwsm)"
+    fi
+}
+
 # ─── 4. .bashrc ────────────────────────────────────────────────────
 deploy_bashrc() {
     local src="$CONFIG_SRC/bash/.bashrc"
@@ -220,6 +230,7 @@ main() {
     install_packages
     deploy_configs
     deploy_pam
+    deploy_greetd
     deploy_bashrc
     setup_dirs
     deploy_qshare

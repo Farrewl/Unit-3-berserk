@@ -1,0 +1,15 @@
+[terminal]
+vt = 1
+
+# Unit-3: autologin ke Hyprland (uwsm-managed).
+# greetd tidak menampilkan greeter password — boot langsung ke Hyprland,
+# lalu lockscreen Unit-3 (quickshell/lock.sh) menjadi satu-satunya pintu
+# auth (satu password: kunci keyring + buka sesi).
+[initial_session]
+command = "/usr/bin/uwsm start -e -D Hyprland hyprland.desktop"
+user = "ibnu"
+
+# Fallback greeter saat logout / jika autologin tidak dipakai.
+[default_session]
+command = "/usr/bin/noctalia-greeter-session"
+user = "greeter"
