@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
-#   deploy.sh — Unit-3 "Berserk" local installer (no clone needed)
+#   deploy.sh — Unit-3 local installer (no clone needed)
 #   Paket dari repo (quickshell & awww sudah tersedia di repo CachyOS),
-#   config di-deploy dari ./config (sudah di-retheme varian ink).
+#   config di-deploy dari ./config sesuai isi repo (base / sudah retheme).
 #   Jalankan dengan terminal biasa:  bash deploy.sh
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
@@ -36,7 +36,7 @@ sudo -v || fatal "Autentikasi sudo gagal."
 
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
     warn "Anda sedang BERADA di dalam sesi Hyprland aktif!"
-    warn "SEBAIKNYA: pindah dulu ke TTY (Ctrl+Alt+F2), login, baru jalankan\n  bash /home/ibnu/Projects/Unit-3-berserk/deploy.sh"
+    warn "SEBAIKNYA: pindah dulu ke TTY (Ctrl+Alt+F2), login, baru jalankan\n  bash $0"
     warn "Config baru akan aktif setelah logout & login ulang ke Hyprland."
 fi
 
@@ -124,7 +124,7 @@ deploy_configs() {
     log "chmod +x untuk script…"
     find "$CONFIG_HOME/hypr" "$CONFIG_HOME/quickshell" "$CONFIG_HOME/waybar" \
         -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod +x {} + 2>/dev/null || true
-    ok "Config berserk terpasang."
+    ok "Config Unit-3 terpasang."
 }
 
 # ─── 3. PAM ────────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ deploy_bashrc() {
         log "Backup ~/.bashrc lama."
     fi
     cp "$src" "$HOME/.bashrc"
-    ok ".bashrc terpasang (banner NieR + prompt berserk)."
+    ok ".bashrc terpasang (banner NieR + prompt)."
     if [[ ! -f "$HOME/.bashrc.local" ]]; then
         cat > "$HOME/.bashrc.local" <<'OVR'
 # Unit-3 user overrides — never touched by updates.
@@ -212,7 +212,7 @@ summary() {
 }
 
 main() {
-    log "Unit-3 Berserk deploy dimulai…"
+    log "Unit-3 deploy dimulai…"
     install_packages
     deploy_configs
     deploy_pam
